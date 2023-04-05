@@ -21,44 +21,29 @@ The specific objectives are as follows:
 
 <TODO: add description>
 
-<!-- This project adopts classical data mining and machine learning models, specifically focusing on supervised learning as our objective is to predict potential defaultees.  
-
-This project uses the programming language Python, due to its widespread popularity and collection of powerful open-source packages. Python libraries such as `numpy`, `pandas` and `scikit-learn` are utilized to perform data preprocessing, model training, prediction and evaluation.   -->
-
-The scope of this project is coding a simple yet production-ready dApp that consist of smart contracts deployed a provided test blockchain network and a UI working on a web browser with MetaMask extension activated. All blockchain interactions shall be conducted via MetaMask.
+The scope of this project is developing a simple yet production-ready dApp that consist of smart contracts deployed a provided test blockchain network and a UI working on a web browser with MetaMask extension activated. All blockchain interactions shall be conducted via MetaMask.
 
 The entire project is split into 3 parts: Smart Contract Programming, Front-end Interaction, and Final Group Presentation. Our team recommends that readers examine project code by following the order described in this documentation.
 
 ### Part 1: Smart Contract Programming
 
-<TODO: add description>
-<!-- One distinct characteristic of our dataset is that it is not divided into train or test sets. Therefore, extra steps are taken to manually divide and preprocess our dataset.  
-Our general data preprocessing workflow is as follows:
-
-1. Explore features and characteristics of dataset
-2. Drop columns of low data quality (e.g. large amounts of empty values)
-3. Determine k columns to keep in the dataset (feature selection)
-   - Performing elementary Lasso regression as a method of feature selection
-4. Split into training and testing sets
-5. Perform data cleaning
-   - Dealing with missing values
-6. Perform one-hot encoding on categorical values
-7. Perform data standardization / normalization on continuous numerical values
-8. Export preprocessed data to .csv files -->
+<TODO: add description on workflow>
 
 This hardhat project is initialized with the command `npx hardhat`.
 
 #### Part 1.1: Solidity Contracts
 
 <TODO: add description>
+<!-- This project uses the programming language Python, due to its widespread popularity and collection of powerful open-source packages. Python libraries such as `numpy`, `pandas` and `scikit-learn` are utilized to perform data preprocessing, model training, prediction and evaluation. -->
 
 Types are defined in and imported from the [`contracts/types/`](contract/contracts/types) directory.
 
-After writing the smart contracts, the contracts can be compiled using the command `npm start`. After compilation, 
+After writing the smart contracts, the contracts can be compiled using the command `npm start`. After compilation, 2 directories `artifacts/` and `cache` will be automatically generated. Do not manually modify these files.
 
 #### Part 1.2: Unit Testing with TypeScript
 
 <TODO: add description>
+<!-- This project uses the programming language Python, due to its widespread popularity and collection of powerful open-source packages. Python libraries such as `numpy`, `pandas` and `scikit-learn` are utilized to perform data preprocessing, model training, prediction and evaluation. -->
 
 After writing the unit tests, they can be executed using the command `npm test`. A complete log of the testing process will be available in the terminal.
 
@@ -67,9 +52,9 @@ Alternatively, instead of directly running unit tests, coverage can be obtained 
 ### Part 2: Front-end Interaction
 
 <TODO: add description>
+<!-- This project uses the programming language Python, due to its widespread popularity and collection of powerful open-source packages. Python libraries such as `numpy`, `pandas` and `scikit-learn` are utilized to perform data preprocessing, model training, prediction and evaluation. -->
 
 This Next.js project is initialized with the command `npx create-next-app@latest`.
-<!-- In this project, we utilize 3 supervised classification models. The order of model implementation and analysis is based on the sequence of teaching in ISOM3360 course syllabus. -->
 
 ## Repository structure
 
@@ -104,11 +89,12 @@ This Next.js project is initialized with the command `npx create-next-app@latest
    2. Run [`/scripts/deploy.ts`](contract/scripts/deploy.ts) using `npm` command (to be set up)
    3. <TODO: add instructions about viewing contract status and obtaining contracts addresses>
 2. In [`frontend/`](frontend):
-   1. In `.env`, add <TODO>
-   2. <TODO: add instructions regarding abi>
+   1. In `.env`, add <TODO: add instructions regarding storing contract address, either in `.env` or another file e.g. `config.ts`>
+   2. <TODO: add instructions regarding abi and types>
 
 ## Reference
 
 - [ISOM3000H Tutorial Documentation](https://docs.msbd5017.etdchain.net)
+- [ISOM3000H Lab Demo Repo](https://github.com/etherdata-blockchain/simple-voting-system)
 
 ## This is the end of documentation for ISOM3000H Group Project
