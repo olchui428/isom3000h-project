@@ -45,7 +45,19 @@ This hardhat project is initialized with the command `npx hardhat`.
 
 #### Part 1.1: Solidity Contracts
 
+<TODO: add description>
+
+Types are defined in and imported from the [`contracts/types/`](contract/contracts/types) directory.
+
+After writing the smart contracts, the contracts can be compiled using the command `npm start`. After compilation, 
+
 #### Part 1.2: Unit Testing with TypeScript
+
+<TODO: add description>
+
+After writing the unit tests, they can be executed using the command `npm test`. A complete log of the testing process will be available in the terminal.
+
+Alternatively, instead of directly running unit tests, coverage can be obtained with the command `npm run coverage`. Note that the TA expects >80% coverage for our project.
 
 ### Part 2: Front-end Interaction
 
@@ -69,12 +81,12 @@ This Next.js project is initialized with the command `npx create-next-app@latest
   - [`test/`](contract/test): directory that stores unit tests (each test file is one-to-one for each contract in [`contracts/`](contract/contracts))
   - `.env`: stores sensitive environment variables (not committed to GitHub)
 - [`frontend/`](frontend): directory that stores a Next.js project containing a simple UI to interact with deployed contracts from [`contract/`](contract) directory
-  - [`src/`](frontend/src): d
+  - [`src/`](frontend/src): directory that stores source code for the project
     - [`pages/`](frontend/src/pages): directory that stores pages available in this Next.js app
       - <TODO: add description about different .tsx files>
     - [`abi/`](frontend/src/abi): directory that stores abi files copied from [`contract/`](contract)
       - <TODO: add description about abi JSON files>
-  - `.env`: stores sensitive environment variables (not committed to GitHub)
+  - `.env.local`: stores sensitive environment variables (not committed to GitHub)
 - [`presentation/`](presentation): directory that stores presentation slides & supplementary materials (if any) for the presentation
   - <TODO: add when presentation slides are finalized>
 
@@ -83,7 +95,7 @@ This Next.js project is initialized with the command `npx create-next-app@latest
 1. In [`contract/`](contract):
    1. Run [`/scripts/deploy.ts`](contract/scripts/deploy.ts) using `npm` command (to be set up)
    2. <TODO: add instructions about viewing contract status and obtaining contracts addresses>
-2. In `frontend/`(frontend):
+2. In [`frontend/`](frontend):
    1. In `.env`, add <TODO>
    2. <TODO: add instructions regarding abi>
 
