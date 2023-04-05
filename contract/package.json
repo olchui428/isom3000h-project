@@ -1,0 +1,13 @@
+{
+  "name": "isom3000h-project-contract",
+  "scripts": {
+    "start": "echo \"start command not configured yet.\"",
+    "test": "hardhat test",
+    "coverage": "hardhat coverage",
+    "deploy": "echo \"deploy command not configured yet.\""
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "hardhat": "^2.13.0"
+  }
+}
