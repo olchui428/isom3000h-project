@@ -2,6 +2,7 @@
 
 This repository contains the source code of a dApp designed for this HKUST blockchain course project (Spring 2023).  
 Contributors (in alphabetical order):
+
 > [CHUI, On Lam](https://github.com/olchui428)
 
 > [HEUNG, Kai Him](https://github.com/AnsonH)
@@ -11,6 +12,7 @@ Contributors (in alphabetical order):
 ## <TODO: add project topic and goals>
 
 The goal of this project is to <TODO: add description>.
+
 The specific objectives are as follows:
 
 - <TODO: add objectives>
@@ -38,6 +40,8 @@ Our general data preprocessing workflow is as follows:
 6. Perform one-hot encoding on categorical values
 7. Perform data standardization / normalization on continuous numerical values
 8. Export preprocessed data to .csv files -->
+
+This hardhat project is initialized with the command `npx hardhat`.
 
 #### Part 1.1: Solidity Contracts
 
