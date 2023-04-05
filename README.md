@@ -19,10 +19,15 @@ The specific objectives are as follows:
 
 ## Methodology
 
-This project adopts <TODO: add description>
-<!-- classical data mining and machine learning models, specifically focusing on supervised learning as our objective is to predict potential defaultees.  
-This project uses the programming language Python, due to its widespread popularity and collection of powerful open-source packages. Python libraries such as `numpy`, `pandas` and `scikit-learn` are utilized to perform data preprocessing, model training, prediction and evaluation.  
-The entire project is split into 2 parts: data preprocessing and models analysis. Our team recommends that readers examine project code by following the order described in this documentation. -->
+<TODO: add description>
+
+<!-- This project adopts classical data mining and machine learning models, specifically focusing on supervised learning as our objective is to predict potential defaultees.  
+
+This project uses the programming language Python, due to its widespread popularity and collection of powerful open-source packages. Python libraries such as `numpy`, `pandas` and `scikit-learn` are utilized to perform data preprocessing, model training, prediction and evaluation.   -->
+
+The scope of this project is coding a simple yet production-ready dApp that consist of smart contracts deployed a provided test blockchain network and a UI working on a web browser with MetaMask extension activated. All blockchain interactions shall be conducted via MetaMask.
+
+The entire project is split into 3 parts: Smart Contract Programming, Front-end Interaction, and Final Group Presentation. Our team recommends that readers examine project code by following the order described in this documentation.
 
 ### Part 1: Smart Contract Programming
 
@@ -93,8 +98,11 @@ This Next.js project is initialized with the command `npx create-next-app@latest
 ## Instructions
 
 1. In [`contract/`](contract):
-   1. Run [`/scripts/deploy.ts`](contract/scripts/deploy.ts) using `npm` command (to be set up)
-   2. <TODO: add instructions about viewing contract status and obtaining contracts addresses>
+   1. Set up the provided etherdata network in MetaMask browser extension
+      1. <TODO: add instructions>
+      2. Obtain the account private key and place it in `.env` file in the format `PK=<Obtained Private Key>`
+   2. Run [`/scripts/deploy.ts`](contract/scripts/deploy.ts) using `npm` command (to be set up)
+   3. <TODO: add instructions about viewing contract status and obtaining contracts addresses>
 2. In [`frontend/`](frontend):
    1. In `.env`, add <TODO>
    2. <TODO: add instructions regarding abi>
