@@ -159,6 +159,7 @@ The deliverables include a set of presentation slides, a group presentation wher
 ## Reference
 
 - [ISOM3000H Tutorial Documentation](https://docs.msbd5017.etdchain.net)
-- [ISOM3000H Lab Demo Repo](https://github.com/etherdata-blockchain/simple-voting-system)
+- [ISOM3000H Lab Demo Repo (lottery system front-end)](https://github.com/sirily11/lottery-system-frontend)
+- [ISOM3000H Lab Demo Repo (voting system)](https://github.com/etherdata-blockchain/simple-voting-system)
 
 ## This is the end of documentation for ISOM3000H Group Project
