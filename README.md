@@ -9,17 +9,19 @@ Contributors (in alphabetical order):
 
 > [LEE, Ho Wan Owen](https://github.com/owen-hwlee)
 
-## <TODO: add project topic and goals>
+## Accreditation System
 
-The goal of this project is to <TODO: add description>.
+The goal of this project is to create a decentralized accreditation system for different organizations to issue certificates to applicants.
 
 The specific objectives are as follows:
 
-- <TODO: add objectives>
+- To allow organizations to mint and transfer certificate NFTs to applications
+- To allow employers to check certificates obtained by each employee
+- To provide a UI for such interaction
 
 ## Methodology
 
-The scope of this project is developing a simple yet production-ready dApp that consist of smart contracts deployed a provided test blockchain network and a UI working on a web browser with MetaMask extension activated. All blockchain interactions shall be conducted via MetaMask.
+The scope of this project is developing a simple yet production-ready dApp that consist of smart contracts deployed to a provided test blockchain network and a UI working on a web browser with MetaMask extension activated. All blockchain interactions shall be conducted via MetaMask.
 
 The entire project is split into 3 parts: [Smart Contract Programming](#part-1-smart-contract-programming), [Front-end Interaction](#part-2-front-end-interaction), and [Final Group Presentation](#part-3-final-group-presentation). Our team recommends that readers examine project code by following the order described in this documentation.
 
@@ -42,6 +44,7 @@ The directory for this subsection is [`contracts/`](contract/contracts).
 <TODO: add description>
 
 <TODO: if use Tokens, include description about ERC20 or ERC721>
+Since every certificate is in form of an NFT, the NFT contracts will be implemented based on the ERC721 token.
 
 Types are defined in and imported from the [`contracts/types/`](contract/contracts/types) directory.
 
