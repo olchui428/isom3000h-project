@@ -1,0 +1,13 @@
+
+{
+  "singleQuote": true,
+  "trailingComma": "none",
+  "overrides": [
+    {
+      "files": "*.sol",
+      "options": {
+        "printWidth": 100
+      }
+    }
+  ]
+}
