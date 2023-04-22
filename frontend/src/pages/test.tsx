@@ -5,7 +5,7 @@ import styles from "@/styles/Home.module.css";
 import { useCallback, useEffect, useState } from "react";
 import { ethers } from "ethers";
 // const ethers = require("ethers");
-import abi from "@/abi/MyNFT.json";
+import abi from "@/blockchain/abi/MyNFT.json";
 import * as dotenv from "dotenv";
 
 const NFT_ADDRESS = "0xEAc8c31dC0Cf7eC246A24df8bF3434e83e42f38f";
