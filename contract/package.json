@@ -4,11 +4,14 @@
     "start": "hardhat compile",
     "test": "hardhat test",
     "coverage": "hardhat coverage",
-    "deploy": "hardhat run scripts/deploy.ts --network etherdata"
+    "deploy": "hardhat run scripts/deploy.ts --network etherdata",
+    "testnet": "hardhat run scripts/deploy.ts --network polygon",
+    "local": "hardhat run scripts/deploy.ts --network local"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",
     "@openzeppelin/contracts": "^4.8.3",
+    "@types/node": "^18.15.13",
     "hardhat": "^2.13.0"
   },
   "dependencies": {
