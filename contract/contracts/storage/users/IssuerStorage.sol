@@ -9,7 +9,7 @@ contract IssuerStorage {
 
     // -------------------- Contract addresses --------------------
     
-    /// @dev Boolean flag to see if addresses have been fully deployed
+    /// @dev Boolean flag to see if contracts have been fully deployed
     bool private _areAddressesFilled = false;
 
     /// @dev Wallet address of deployer, similar to admin address
