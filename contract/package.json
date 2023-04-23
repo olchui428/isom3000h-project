@@ -2,6 +2,8 @@
   "name": "isom3000h-project-contract",
   "scripts": {
     "start": "hardhat compile",
+    "clean": "hardhat clean",
+    "clear_logs": "rm -r ./scripts/logs || del /q \"./scripts/logs\"",
     "test": "hardhat test",
     "coverage": "hardhat coverage",
     "deploy": "hardhat run scripts/deploy.ts --network etherdata",
