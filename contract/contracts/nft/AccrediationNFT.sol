@@ -43,7 +43,7 @@ contract AccreditationNFT is ERC721 {
     // -------------------- Setting up contracts --------------------
 
     /// @notice Deploys an NFT contract for Certificates
-    /// @param usersContractAddress: think add what parameters, aka need to which contracts this contract will call
+    /// @param usersContractAddress TODO: think add what parameters, aka need to which contracts this contract will call
     constructor(string memory usersContractAddress) ERC721("AccreditationNFT", "ACCRED") {
         _deployerAddress = payable(msg.sender);
         usersContractAddress;
@@ -73,7 +73,6 @@ contract AccreditationNFT is ERC721 {
     modifier validateBurn() {
         _;
     }
-
     function burn(uint256 certId) public returns (bool) {
         // TODO: delete Cert entry from mapping
         _burn(certId);
