@@ -4,7 +4,9 @@ This repository contains the source code of a dApp designed for this HKUST block
 Contributors (in alphabetical order):
 
 > [CHUI, On Lam](https://github.com/olchui428)
+
 > [HEUNG, Kai Him](https://github.com/AnsonH)
+
 > [LEE, Ho Wan Owen](https://github.com/owen-hwlee)
 
 ## Accreditation System
