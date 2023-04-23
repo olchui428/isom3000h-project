@@ -35,6 +35,8 @@ contract CertificateStorage {
     // /// @dev Storage contract for Applicants
     // ApplicantStorage applicantStorage;
 
+    // TODO: add Contracts
+
     // ========================= Functions & Modifiers =========================
 
     // -------------------- Setting up contracts --------------------
