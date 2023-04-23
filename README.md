@@ -4,9 +4,7 @@ This repository contains the source code of a dApp designed for this HKUST block
 Contributors (in alphabetical order):
 
 > [CHUI, On Lam](https://github.com/olchui428)
-
 > [HEUNG, Kai Him](https://github.com/AnsonH)
-
 > [LEE, Ho Wan Owen](https://github.com/owen-hwlee)
 
 ## Accreditation System
@@ -26,7 +24,6 @@ Note that all Certificates and Accreditations issued are public (obviously becau
 
 This accreditation system is rather complex for a beginner, and many terms seemingly convey similar concepts. As such, the terminology used in this project shall be explained in this section:
 
-<!-- TODO: add definition -->
 - Issuer: An organization that defines and announces Accreditations, and issues Certificates to Applicants
 - Applicant: An individual/entity that applies for an Accreditation and can receive Certificates from Issuers
 - Accreditation: a type of qualification that Applicants can apply for, e.g. public examination such as HKDSE/IB/GCE and product quality standards such as ISO-XXXXX, an NFT is minted with the Issuer as owner
@@ -139,8 +136,12 @@ The deliverables include a set of presentation slides, a group presentation wher
   - [`contracts/`](contract/contracts): directory that stores a Solidity smart contract source files
     - [`types/`](contract/contracts/types): directory that stores Soldity types used in the project
       - <TODO: add descriptions>
-    - [`Storage.sol`](contract/contracts/Storage.sol): Solidity smart contract that handles storage
-    - <TODO: add added directories and add descriptions>
+    - [`storage/`](contract/contracts/storage): directory that stores storage contracts
+      - <TODO: add descriptions>
+    - [`nft/`](contract/contracts/nft): directory that stores NFT contracts
+      - <TODO: add descriptions>
+    - [`utils/`](contract/contracts/utils): directory that stores Soldity utility libraries and functions used in the project
+      - [`Set.sol`](contract/contracts/utils/Set.sol): contains helper library to facilitate data management in storage contracts
   - [`scripts/`](contract/scripts): directory that stores deployment and other miscellaneous scripts
     - [`deploy.ts`](contract/scripts/deploy.ts): script for deployment of contracts in [`contracts/`](contract/contracts) to blockchain
   - [`test/`](contract/test): directory that stores unit tests (each test file is one-to-one for each contract in [`contracts/`](contract/contracts), with the exception of type definition files in [`contracts/types/`](contract/contracts/types))
