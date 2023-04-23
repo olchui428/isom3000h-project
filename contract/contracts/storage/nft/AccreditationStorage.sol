@@ -37,6 +37,8 @@ contract AccreditationStorage {
 
     // ========================= Functions & Modifiers =========================
 
+    // -------------------- Setting up contracts --------------------
+
     /// @notice Deploys a storage contract for Accreditation
     /// @param issuerStorageAddress: think add what parameters, aka need to which contracts this contract will call
     constructor(string memory issuerStorageAddress) {
@@ -56,6 +58,8 @@ contract AccreditationStorage {
         _areAddressesFilled = true;
         // TODO: add required addresses + initialize Contract variables
     }
+
+    // -------------------- Functions --------------------
 
     // TODO: add CRUD functions
 

@@ -7,18 +7,54 @@ import "../types/nft/Certificate.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
+/// @title An NFT smart contract for defining and announcing Accreditations
+/// This smart contract inherits ERC721 token and can launch Accreditations in the form of NFTs
 contract AccreditationNFT is ERC721 {
     using Counters for Counters.Counter;
+    // ========================= Variables =========================
+
+    // -------------------- Contract addresses --------------------
+    
+    /// @dev Boolean flag to see if contracts have been fully deployed
+    bool private _areAddressesFilled = false;
+
+    /// @dev Wallet address of deployer, similar to admin address
+    address payable private _deployerAddress;
+
+    // /// @dev Address of deployed ApplicantStorage contract
+    // address private _applicantStorageAddress;
+    
+    // -------------------- Variables --------------------
+
+    /// @dev Iterator to generate unique token IDs
     Counters.Counter private _tokenIds;
 
-    // TODO: think add what parameters, aka need to which contracts this contract will call
-    constructor(string memory usersContractAddress) ERC721("AccreditationNFT", "Accred") {}
+    // -------------------- Contracts --------------------
+
+    // /// @dev Storage contract for Issuers
+    // IssuerStorage issuerStorage;
+    // /// @dev Storage contract for Applicants
+    // ApplicantStorage applicantStorage;
+
+    // TODO: add Contracts
+
+    // ========================= Functions & Modifiers =========================
+
+    // -------------------- Setting up contracts --------------------
+
+    /// @notice Deploys an NFT contract for Certificates
+    /// @param usersContractAddress: think add what parameters, aka need to which contracts this contract will call
+    constructor(string memory usersContractAddress) ERC721("AccreditationNFT", "ACCRED") {
+        _deployerAddress = payable(msg.sender);
+        usersContractAddress;
+    }
+
+    // -------------------- Functions --------------------
 
     // TODO: add validation
     modifier validateBeforeIssue() {
         _;
     }
-
     // TODO: add verification
     // TODO: add arguments
     function issueCertificate(
