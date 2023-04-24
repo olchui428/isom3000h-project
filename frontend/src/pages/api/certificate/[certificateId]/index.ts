@@ -91,7 +91,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const exportType: CertificateFormats = req.body?.exportType;
 
   const { rpc } = networkConfig;
-  ContractAddresses.CERTIFICATE_NFT;
+  ContractAddresses.CERTIFICATE_ENDPOINT;
   const provider = new ethers.providers.JsonRpcProvider(rpc);
   // TODO: try to make passed address as a Signer
   const signer = provider.getSigner();

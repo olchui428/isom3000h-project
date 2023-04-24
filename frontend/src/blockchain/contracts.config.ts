@@ -11,9 +11,10 @@ type NetworkConfigType = {
 
 // Local network
 enum LocalContractsAddresses {
-  USERS_CONTRACT = "",
-  ACCREDITATION_NFT = "",
-  CERTIFICATE_NFT = "",
+  ISSUER_ENDPOINT = "",
+  APPLICANT_ENDPOINT = "",
+  ACCREDITATION_ENDPOINT = "",
+  CERTIFICATE_ENDPOINT = "",
 }
 const localNet: NetworkConfigType = {
   name: "local",
@@ -22,9 +23,10 @@ const localNet: NetworkConfigType = {
 
 // Test network
 enum TestContractsAddresses {
-  USERS_CONTRACT = "",
-  ACCREDITATION_NFT = "",
-  CERTIFICATE_NFT = "",
+  ISSUER_ENDPOINT = "",
+  APPLICANT_ENDPOINT = "",
+  ACCREDITATION_ENDPOINT = "",
+  CERTIFICATE_ENDPOINT = "",
 }
 const testNet: NetworkConfigType = {
   name: "polygon",
@@ -33,9 +35,10 @@ const testNet: NetworkConfigType = {
 
 // Prod network
 enum ProdContractsAddresses {
-  USERS_CONTRACT = "",
-  ACCREDITATION_NFT = "",
-  CERTIFICATE_NFT = "",
+  ISSUER_ENDPOINT = "",
+  APPLICANT_ENDPOINT = "",
+  ACCREDITATION_ENDPOINT = "",
+  CERTIFICATE_ENDPOINT = "",
 }
 const prodNet: NetworkConfigType = {
   name: "etherdata",
