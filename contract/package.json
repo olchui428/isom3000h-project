@@ -6,9 +6,10 @@
     "clear_logs": "rm -r ./scripts/logs || del /q \"./scripts/logs\"",
     "test": "hardhat test",
     "coverage": "hardhat coverage",
-    "deploy": "hardhat run scripts/deploy.ts --network etherdata",
-    "testnet": "hardhat run scripts/deploy.ts --network polygon",
-    "local": "hardhat run scripts/deploy.ts --network local"
+    "deploy:prod": "hardhat run scripts/deploy.ts --network etherdata",
+    "deploy:testnet": "hardhat run scripts/deploy.ts --network polygon",
+    "deploy:local": "hardhat run scripts/deploy.ts --network local",
+    "deploy": "echo This command has been deprecated. Please execute one of `deploy:prod`, `deploy:testnet` and `deploy:local`, and make sure your environment variables are properly set up in .env file."
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",

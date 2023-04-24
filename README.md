@@ -9,7 +9,7 @@ Contributors (in alphabetical order):
 
 ## Accreditation System
 
-The goal of this project is to create a decentralized Accreditation system for different organizations to issue Certificates to Applicants.
+The goal of this project is to create a decentralized Accreditation system for different organizations (Issuers) to issue Certificates to Applicants.
 
 The specific objectives are as follows:
 
@@ -62,60 +62,79 @@ Types are defined in and imported from the [`contracts/types/`](contract/contrac
 - [`Issuer`](contract/contracts/types/users/Issuer.sol):
 - [`Applicant`](contract/contracts/types/users/Applicant.sol):
 
-An additional type [`CompleteCert`](contract/contracts/types/nft/Certificate.sol) has been implemented to facilitate end users to obtain complete Certificate information, along with the corresponding Accreditation info. Note that this type is only used to return data to end users, and is not used within contracts.
+An additional type [`CompleteCert`](contract/contracts/types/CompleteCert.sol) has been implemented to facilitate end users to obtain complete Certificate information, along with the corresponding Accreditation info. Note that this type is only used to return data to end users, and is not used within Contracts.
 
 ##### Part 1.1.2: Storage
 
-Storage of data is a vital part of the application. The data management system should not expose mutator functions to unauthorized addresses, and should only return data if the requesting address is authorized.
+Storage of data is a vital part of the application. The data management system formed by the following 4 storage Contracts acts as a database. These Contracts should only return data if the requesting address is an authorized Contract address.
 
 Each internally used type has its own Storage system:
 
-<TODO: add descriptions for each contract>
+<TODO: add descriptions for each Contract>
 
-- [`CertificateStorage`](contract/contracts/storage/nft/CertificateStorage.sol):
-- [`AccreditationStorage`](contract/contracts/storage/nft/AccreditationStorage.sol):
 - [`IssuerStorage`](contract/contracts/storage/users/IssuerStorage.sol):
 - [`ApplicantStorage`](contract/contracts/storage/users/ApplicantStorage.sol):
+- [`AccreditationStorage`](contract/contracts/storage/nft/AccreditationStorage.sol):
+- [`CertificateStorage`](contract/contracts/storage/nft/CertificateStorage.sol):
 
 A utility library [`Set.sol`](contract/contracts/utils/Set.sol) to facilitate storage functionalities has also been implemented.
 
 ##### Part 1.1.3: NFT
 
-Since every Certificate and Accreditation is issued or established in form of an NFT, the NFT contracts will be implemented based on the ERC721 token standard. Specifically, 2 smart contracts will inherit the ERC721 token implemented by OpenZeppelin:
+Since every Certificate and Accreditation is issued or established in form of an NFT, the NFT Contracts will be implemented based on the ERC721 token standard. Specifically, 2 smart Contracts will inherit the ERC721 token implemented by OpenZeppelin:
 
-<TODO: add descriptions for each contract>
+<TODO: add descriptions for each Contract>
 
 - [`CertificateNFT`](contract/contracts/nft/CertificateNFT.sol):
 - [`AccreditationNFT`](contract/contracts/nft/AccrediationNFT.sol):
 
 Note that despite both Certificates and Accreditations have NFT issued to their corresponding owners to signify ownership, Certificate NFTs are much more significant than Accreditation NFTs because the degree of accountability required for Certificate owners and handlers is much higher.
 
-After writing the smart contracts, the contracts can be compiled to EVM bytecode using the command `npm start`. After compilation, 3 directories `artifacts/`, `cache/` and `typechain-types/` will be automatically generated. Do not manually modify these files.
+##### Part 1.1.4: Endpoints
+
+To clearly segregate the responsibilities of each Contract, each Contract should only have one functionality. Hence, an endpoint Contract is created for each major use case. Functions in Contracts documented in above sections will not be callable by any addresses other than the explicitly authorized Contracts addresses. Instead, functions in these endpoint Contracts will serve as API endpoints or entry points to our system. The endpoint Contracts are as follows:
+
+<TODO: add descriptions for each Contract>
+
+- [`IssuerEndpoint`](contract/contracts/endpoints/IssuerEndpoint.sol):
+- [`ApplicantEndpoint`](contract/contracts/endpoints/ApplicantEndpoint.sol):
+- [`AccreditationEndpoint`](contract/contracts/endpoints/AccreditationEndpoint.sol):
+- [`CertificateEndpoint`](contract/contracts/endpoints/CertificateEndpoint.sol):
+
+##### Part 1.1.5: Compilation
+
+After writing the smart Contracts, the Contracts can be compiled to EVM bytecode using the command `npm start`. The unit test command `npm test`, coverage command `npm run coverage` and deployment command `npm run deploy:<insert environment>` will also compile the Contracts before performing the corresponding tasks.
+
+After compilation, 3 directories `artifacts/`, `cache/` and `typechain-types/` will be automatically generated. Do not manually modify these files.
 
 #### Part 1.2: Unit Testing with TypeScript
 
 TypeScript is used for unit testing due to compatibility with hardhat and the fact that similar code can be preliminarily tested and later reused for [front-end development](#part-2-front-end-interaction).
 
-Unit tests are written for each Storage and NFT contract, testing the correctness of functions defined in the smart contracts.
+Unit tests are written for each Storage, NFT, and Endpoint Contract, testing the correctness of functions defined in the smart Contracts.
 
 After writing the unit tests, they can be executed using the command `npm test`. A complete log of the testing process will be available in the terminal.
 
 Alternatively, instead of directly running unit tests, coverage can be obtained with the command `npm run coverage`. Note that the course TA expects >80% coverage for our project.
 
-Following the test-driven development pattern, test cases are written alongside contract implementation to make sure of contract feature correctness.
+Following the test-driven development pattern, test cases are written alongside Contract implementation to make sure of Contract feature correctness.
 
 #### Part 1.3: Contract Deployment
 
 A deployment script to a blockchain network is available at [`/scripts/deploy.ts`](contract/scripts/deploy.ts). For the purposes of our project, there are 3 possible networks to deploy to, each with description and corresponding commands below:
 
 - `etherdata`: The test net provided by the course TA. Expected to be the "Production" environment for presentation demo of the group project
-  - Deployment command: `npm run deploy`
+  - Deployment command: `npm run deploy:prod`
 - `polygon`: Since it was difficult to request for tokens on the provided `etherdata` network, our group searched for another test net to perform development on, and we found that [Polygon Mumbai](https://mumbai.polygonscan.com) provides such a service
-  - Deployment command: `npm run testnet`
+  - Deployment command: `npm run deploy:testnet`
 - `local`: A local test net created using [Ganache](https://trufflesuite.com/ganache), a GUI software that can create one-click blockchain networks
-  - Deployment command: `npm run local`
+  - Deployment command: `npm run deploy:local`
 
 Network details are configured in [`/hardhat.config.ts`](contract/hardhat.config.ts). See [Instructions](#instructions) section for more details.
+
+In case of errors or overwritten contracts, clean up of compiled files can be performed by the command `npm run clean`.
+
+During deployment, logs are generated, printed to console and saved into a log file at `/scripts/logs/`. The command `npm run clear_logs` can be used to delete all log files.
 
 ### Part 2: Front-end Interaction
 
@@ -139,6 +158,8 @@ The deliverables include a set of presentation slides, a group presentation wher
     - [`storage/`](contract/contracts/storage): directory that stores storage contracts
       - <TODO: add descriptions>
     - [`nft/`](contract/contracts/nft): directory that stores NFT contracts
+      - <TODO: add descriptions>
+    - [`endpoints/`](contract/contracts/endpoints): directory that stores endpoint contracts
       - <TODO: add descriptions>
     - [`utils/`](contract/contracts/utils): directory that stores Soldity utility libraries and functions used in the project
       - [`Set.sol`](contract/contracts/utils/Set.sol): contains helper library to facilitate data management in storage contracts
@@ -199,17 +220,17 @@ The deliverables include a set of presentation slides, a group presentation wher
 
       ```json
       "scripts": {
-        "deploy": "hardhat run scripts/deploy.ts --network etherdata",
-        "testnet": "hardhat run scripts/deploy.ts --network polygon",
-        "local": "hardhat run scripts/deploy.ts --network local"
+        "deploy:prod": "hardhat run scripts/deploy.ts --network etherdata",
+        "deploy:testnet": "hardhat run scripts/deploy.ts --network polygon",
+        "deploy:local": "hardhat run scripts/deploy.ts --network local"
       }
       ```
 
       - As mentioned in the previous step, `etherdata` is the network alias configured in [`/hardhat.config.ts`](contract/hardhat.config.ts)
-      - For our project, the networks `polygon` and `local` are also configured
-      - To deploy to `etherdata`, use `npm run deploy`
-      - To deploy to `polygon`, use `npm run testnet`
-      - To deploy to `local`, use `npm run local`
+      - For our project, the test networks `polygon` and `local` are also configured
+      - To deploy to `etherdata`, use `npm run deploy:prod`
+      - To deploy to `polygon`, use `npm run deploy:testnet`
+      - To deploy to `local`, use `npm run deploy:local`
    6. In [`/scripts/deploy.ts`](contract/scripts/deploy.ts), configure the smart contracts to be deployed:
 
       ```typescript
@@ -223,10 +244,11 @@ The deliverables include a set of presentation slides, a group presentation wher
       - The `ethers.getContractFactory()` method takes a string argument of the contract name (i.e. the title of a Solidity contract)
         - e.g. if a `SampleContract.sol` containing `contract SampleContract {}` is to be deployed, pass `"SampleContract"` into this method
       - Add the names of all contracts to be deployed to this file
-      - If a contract A calls functions from another contract B, first deploy contract B, and pass address fo contract B as an argument when deploying contract A with the .deploy() function
+      - If a contract A calls functions from another contract B, first deploy contract B, and pass address of contract B as an argument when deploying contract A with the .deploy() function
         - On Solidity, add contract B address as a parameter in constructor of contract A
+        - If contracts are codependent, create another setup function in contract A to store deployed address of contract B
    7. Deploy the smart contracts to a configured network using one of the npm commands specified in Step 5
-   8. After successful deployment, the smart contract addresses will be printed in the terminal output, and in a log file at `/scripts/logs/`. Contract addresses can be obtained for further use
+   8. After deployment, the smart contract addresses will be printed in the terminal output, and in a log file at `/scripts/logs/`. Contract addresses can be obtained for further use
       - Note that the logs will not be committed to GitHub
    9. Details of deployed contracts can be viewed on:
       - `etherdata`: [this web UI](https://stats.debugchain.net/contract)
