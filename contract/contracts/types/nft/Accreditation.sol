@@ -5,12 +5,20 @@ pragma solidity ^0.8.9;
 /// Accreditation stores the details of a type of digital certificate
 /// i.e. multiple Certificates can be issued for the purpose of a single Accreditation to different users
 struct Accreditation {
+    /// @param id NFT token ID, globally unique
     uint256 id;
+    /// @param issuer Address of Accreditation Issuer
     address payable issuer;
-    address nftAddress;
+    /// @param title Title/name of Accreditation
     string title;
+    /// @param createdAt The UTC time of creation of Accreditation / 1000 because Solidity
+    uint256 createdAt;
+    /// @param duration Duration of Accreditation before expiry, e.g. 2 years, stored in number of seconds. Input -1 if no expiry date
     uint256 duration;
-    string category;
+    /// @param nature Nature of Accreditation, e.g. Participation, Award, Appreciation, Achievement, Completion, Graduation, Exam, etc.
+    string nature;
+    /// @param description Textual description of the Accreditation
     string description;
+    /// @param versionId (Optional) if details of the Accreditation will be updated, e.g. duration or nature but no title change, need to issue a new NFT with same name and different versionId for clarity
     string versionId;
 }
