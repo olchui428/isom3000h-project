@@ -2,10 +2,12 @@
 pragma solidity ^0.8.9;
 
 import "hardhat/console.sol";
-import "../types/nft/Accreditation.sol";
-import "../types/nft/Certificate.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import { Accreditation } from "../types/nft/Accreditation.sol";
+import { Certificate } from "../types/nft/Certificate.sol";
+import { AccreditationStorage } from "../storage/nft/AccreditationStorage.sol";
+import { CertificateStorage } from "../storage/nft/CertificateStorage.sol";
 
 /// @title An NFT smart contract for defining and announcing Accreditations
 /// This smart contract inherits ERC721 token and can launch Accreditations in the form of NFTs
@@ -47,6 +49,20 @@ contract AccreditationNFT is ERC721 {
     constructor(string memory usersContractAddress) ERC721("AccreditationNFT", "ACCRED") {
         _deployerAddress = payable(msg.sender);
         usersContractAddress;
+    }
+    
+    modifier onlyDeployer() {
+        require(msg.sender == _deployerAddress);
+        _;
+    }
+    modifier addressHasNotBeenInitialized() {
+        require(!_areAddressesFilled);
+        _;
+    }
+
+    function setAddresses() external onlyDeployer addressHasNotBeenInitialized {
+        _areAddressesFilled = true;
+        // TODO: add required addresses + initialize Contract variables
     }
 
     // -------------------- Functions --------------------

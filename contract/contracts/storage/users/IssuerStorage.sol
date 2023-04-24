@@ -72,7 +72,7 @@ contract IssuerStorage {
     /// @return Status of the registration process, returns true if success, otherwise throw error
     function registerIssuer(string memory name) external newIssuer returns (bool) {
         address payable issuerAddress = payable(msg.sender);
-        _issuers[issuerAddress] = Issuer(name, issuerAddress, "", "");
+        // _issuers[issuerAddress] = Issuer(name, issuerAddress, "", "");
         return true;
     }
 
