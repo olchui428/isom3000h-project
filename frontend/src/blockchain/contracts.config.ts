@@ -42,7 +42,7 @@ const prodNet: NetworkConfigType = {
   rpc: "http://rpc.debugchain.net",
 };
 
-// Comment 2, leave 1
+// Depending on which environment, comment out the other 2
 export { LocalContractsAddresses as ContractAddresses, localNet as networkConfig };
 // export { TestContractsAddresses as ContractAddresses, TestNet as networkConfig };
 // export { ProdContractsAddresses as ContractAddresses, ProdNet as networkConfig };
