@@ -20,4 +20,10 @@ struct Certificate {
     string eventId;
     /// @param remarks (Optional) Remarks or words of encouragement, if the Issuer wishes to add any on the certificate
     string remarks;
+    /// @param isRevoked (Optional) Boolean to show if this Certificate was revoked, default value false
+    bool isRevoked;
+    /// @param revokeReason (Optional) Reason why this Certificate was revoked, if it is, otherwise stay blank
+    string revokeReason;
+    /// @param revokeTime (Optional) Timestamp when this Certificate was revoked, if it is. Default value = -1
+    uint256 revokeTime;
 }
