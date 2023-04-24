@@ -11,6 +11,7 @@ import { Applicant } from "./users/Applicant.sol";
 /// Only used when returning complete data to users
 /// @dev use cases: Displaying single certificate info to Applicant web interface, generating certificates
 struct CompleteCert {
+    // TODO: Destructure it later
     Certificate certificate;
     Accreditation accreditation;
     Issuer issuer;
