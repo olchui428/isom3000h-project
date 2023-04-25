@@ -96,10 +96,28 @@ contract AccreditationStorage {
     }
 
     function createAccreditation(
-        Accreditation memory accreditation
-    ) external validateCallFromNFT issuerExists(accreditation.issuer) returns (bool) {
-        _accreditations[accreditation.id] = accreditation;
-        _accredsByIssuer[accreditation.issuer].push(accreditation);
+        uint256 newAccredId,
+        address payable issuer,
+        string calldata title,
+        uint256 createdAt,
+        uint256 duration,
+        string calldata nature,
+        string calldata description
+    ) external validateCallFromNFT issuerExists(issuer) returns (bool) {
+        Accreditation memory newAccreditation = Accreditation(
+            newAccredId,
+            issuer,
+            title,
+            createdAt,
+            duration,
+            nature,
+            description,
+            false,
+            "",
+            0
+        );
+        _accreditations[newAccredId] = newAccreditation;
+        _accredsByIssuer[issuer].push(newAccreditation);
         return true;
     }
 
@@ -125,7 +143,11 @@ contract AccreditationStorage {
         uint256 id,
         string calldata revokeReason,
         uint256 revokeTime
-    ) external validateCallFromNFT returns (bool) {
+    )
+        external
+        validateCallFromNFT
+        returns (bool)
+    {
         Accreditation storage accred = _accreditations[id];
         accred.isRevoked = true;
         accred.revokeReason = revokeReason;

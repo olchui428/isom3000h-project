@@ -91,25 +91,18 @@ contract AccreditationNFT is ERC721 {
         uint256 createdAt,
         uint256 duration,
         string calldata nature,
-        string calldata description,
-        string calldata versionId
-    ) public validateCallFromEndpoint returns (uint256) {
+        string calldata description
+    ) external validateCallFromEndpoint returns (uint256) {
         uint256 newAccredId = _tokenIds.current();
 
         _accreditationStorage.createAccreditation(
-            Accreditation(
-                newAccredId,
-                issuer,
-                title,
-                createdAt,
-                duration,
-                nature,
-                description,
-                versionId,
-                false,
-                "",
-                0
-            )
+            newAccredId,
+            issuer,
+            title,
+            createdAt,
+            duration,
+            nature,
+            description
         );
 
         _safeMint(issuer, newAccredId);
@@ -125,14 +118,6 @@ contract AccreditationNFT is ERC721 {
         return _exists(id) && _accreditationStorage.isAccreditationExists(id);
     }
 
-    // // TODO: add validation before burning
-    // modifier validateBurn(uint256 id) {
-    //     _;
-    // }
-    // function _burnAccreditationById(uint256 id) private validateCallFromEndpoint validateBurn(id) returns (bool) {
-    //     _burn(certId);
-    // }
-
-    // // TODO: investigate the use case of burning Accreditation NFT, including validity of Certs
+    /// @dev Likely will not burn any NFTs because it does not make sense to deprive ownership of expired or revoked entities, implementation will hence not pass through NFT contract
     // function revokeAccreditationById(uint256 id) external returns (bool) {}
 }

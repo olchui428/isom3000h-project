@@ -50,9 +50,9 @@ contract AccreditationEndpoint {
     // -------------------- Functions --------------------
 
     modifier validateAccredInput(
-        string calldata title,
-        string calldata nature,
-        string calldata description
+        string memory title,
+        string memory nature,
+        string memory description
     ) {
         require(keccak256(abi.encodePacked(title)) != keccak256(abi.encodePacked("")));
         require(keccak256(abi.encodePacked(nature)) != keccak256(abi.encodePacked("")));
@@ -62,12 +62,11 @@ contract AccreditationEndpoint {
 
     function createAccreditation(
         address payable issuer,
-        string calldata title,
+        string memory title,
         uint256 createdAt,
         uint256 duration,
-        string calldata nature,
-        string calldata description,
-        string calldata versionId
+        string memory nature,
+        string memory description
     ) external validateAccredInput(title, nature, description) returns (uint256) {
         return
             _accreditationNFT.launchAccreditation(
@@ -76,8 +75,7 @@ contract AccreditationEndpoint {
                 createdAt,
                 duration,
                 nature,
-                description,
-                versionId
+                description
             );
     }
 
@@ -98,8 +96,8 @@ contract AccreditationEndpoint {
         return _accreditationStorage.getAccreditationsByAddress(inputAddress);
     }
 
-    // // TODO: investigate if revoking Accred means revoking Certs as well
+    // /// @dev it is decided that NFTs issued will not be burned
     // function revokeAccreditationById(uint256 id) external pure nftValidator(id) returns (bool) {
-    //     // return _accreditationNFT.revokeAccreditationById(id);
+    //     return _accreditationNFT.revokeAccreditationById(id);
     // }
 }

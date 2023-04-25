@@ -19,8 +19,6 @@ struct Accreditation {
     string nature;
     /// @param description Textual description of the Accreditation
     string description;
-    /// @param versionId (Optional) if details of the Accreditation will be updated, e.g. duration or nature but no title change, need to issue a new NFT with same name and different versionId for clarity
-    string versionId;
     /// @param isRevoked (Optional) Boolean to show if this Accreditation was revoked, default value false
     bool isRevoked;
     /// @param revokeReason (Optional) Reason why this Accreditation was revoked, if it is, otherwise stay blank
