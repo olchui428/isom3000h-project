@@ -96,30 +96,10 @@ contract AccreditationStorage {
     }
 
     function createAccreditation(
-        uint256 id,
-        address payable issuer,
-        string calldata title,
-        uint256 createdAt,
-        uint256 duration,
-        string calldata nature,
-        string calldata description,
-        string calldata versionId
-    ) external validateCallFromNFT issuerExists(issuer) returns (bool) {
-        Accreditation memory newAccred = Accreditation(
-            id,
-            issuer,
-            title,
-            createdAt,
-            duration,
-            nature,
-            description,
-            versionId,
-            false,
-            "",
-            0
-        );
-        _accreditations[id] = newAccred;
-        _accredsByIssuer[issuer].push(newAccred);
+        Accreditation memory accreditation
+    ) external validateCallFromNFT issuerExists(accreditation.issuer) returns (bool) {
+        _accreditations[accreditation.id] = accreditation;
+        _accredsByIssuer[accreditation.issuer].push(accreditation);
         return true;
     }
 

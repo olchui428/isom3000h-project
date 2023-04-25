@@ -54,9 +54,9 @@ contract AccreditationEndpoint {
         string calldata nature,
         string calldata description
     ) {
-        require(title != "");
-        require(nature != "");
-        require(description != "");
+        require(keccak256(abi.encodePacked(title)) != keccak256(abi.encodePacked("")));
+        require(keccak256(abi.encodePacked(nature)) != keccak256(abi.encodePacked("")));
+        require(keccak256(abi.encodePacked(description)) != keccak256(abi.encodePacked("")));
         _;
     }
 
@@ -68,23 +68,33 @@ contract AccreditationEndpoint {
         string calldata nature,
         string calldata description,
         string calldata versionId
-    ) external pure validateAccredInput returns (uint256) {
-        return _accreditationNFT.launchAccreditation();
+    ) external validateAccredInput(title, nature, description) returns (uint256) {
+        return
+            _accreditationNFT.launchAccreditation(
+                issuer,
+                title,
+                createdAt,
+                duration,
+                nature,
+                description,
+                versionId
+            );
     }
 
     modifier isAccreditationExists(uint256 id) {
         _accreditationNFT.isAccreditationExists(id);
+        _;
     }
 
     function getAccreditationById(
         uint256 id
-    ) external pure isAccreditionExists(id) returns (Accreditation calldata) {
+    ) external view isAccreditationExists(id) returns (Accreditation memory) {
         return _accreditationStorage.getAccreditationById(id);
     }
 
     function getAccreditationsByAddress(
         address payable inputAddress
-    ) external pure returns (Accreditation[] calldata) {
+    ) external view returns (Accreditation[] memory) {
         return _accreditationStorage.getAccreditationsByAddress(inputAddress);
     }
 

@@ -97,14 +97,19 @@ contract AccreditationNFT is ERC721 {
         uint256 newAccredId = _tokenIds.current();
 
         _accreditationStorage.createAccreditation(
-            newAccredId,
-            issuer,
-            title,
-            createdAt,
-            duration,
-            nature,
-            description,
-            versionId
+            Accreditation(
+                newAccredId,
+                issuer,
+                title,
+                createdAt,
+                duration,
+                nature,
+                description,
+                versionId,
+                false,
+                "",
+                0
+            )
         );
 
         _safeMint(issuer, newAccredId);
@@ -114,7 +119,9 @@ contract AccreditationNFT is ERC721 {
         return newAccredId;
     }
 
-    function isAccreditationExists(uint256 id) external view validateCallFromEndpoint returns (bool) {
+    function isAccreditationExists(
+        uint256 id
+    ) external view validateCallFromEndpoint returns (bool) {
         return _exists(id) && _accreditationStorage.isAccreditationExists(id);
     }
 
