@@ -3,6 +3,7 @@ pragma solidity ^0.8.9;
 
 import { Accreditation } from "../types/nft/Accreditation.sol";
 import { Certificate } from "../types/nft/Certificate.sol";
+import { CompleteCert } from "../types/CompleteCert.sol";
 
 contract CertificateEndpoint {
     // ========================= Variables =========================
@@ -40,4 +41,8 @@ contract CertificateEndpoint {
     // -------------------- Functions --------------------
 
     // TODO: add endpoint functions
+
+    function getCompleteCertById() external pure returns (CompleteCert memory) {
+
+    }
 }

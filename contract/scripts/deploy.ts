@@ -93,7 +93,7 @@ async function deploy() {
       // TODO: decide which addresses to input as argument
     ]);
     const accreditationStorage = await deployContract(ACCREDITATION_STORAGE, [
-      // TODO: decide which addresses to input as argument
+      issuerStorage.address,
     ]);
     const certificateStorage = await deployContract(CERTIFICATE_STORAGE, [
       // TODO: decide which addresses to input as argument
@@ -102,7 +102,7 @@ async function deploy() {
     // NFT Contracts
     createLog("NFT Contracts deployment:");
     const accreditationNFT = await deployContract(ACCREDITATION_NFT, [
-      // TODO: decide which addresses to input as argument
+      accreditationStorage.address,
     ]);
     const certificateNFT = await deployContract(CERTIFICATE_NFT, [
       // TODO: decide which addresses to input as argument
@@ -112,13 +112,14 @@ async function deploy() {
     createLog("Endpoint Contracts deployment:");
     const issuerEndpoint = await deployContract(ISSUER_ENDPOINT, [
       // TODO: decide which addresses to input as argument
-      issuerStorage!.address,
+      issuerStorage.address,
     ]);
     const applicantEndpoint = await deployContract(APPLICANT_ENDPOINT, [
       // TODO: decide which addresses to input as argument
     ]);
     const accreditationEndpoint = await deployContract(ACCREDITATION_ENDPOINT, [
-      // TODO: decide which addresses to input as argument
+      accreditationStorage.address,
+      accreditationNFT.address,
     ]);
     const certificateEndpoint = await deployContract(CERTIFICATE_ENDPOINT, [
       // TODO: decide which addresses to input as argument

@@ -52,11 +52,11 @@ contract CertificateStorage {
         require(msg.sender == _deployerAddress);
         _;
     }
-    modifier addressHasNotBeenInitialized() {
+    modifier addressesHaveNotBeenInitialized() {
         require(!_areAddressesFilled);
         _;
     }
-    function setAddresses() external onlyDeployer addressHasNotBeenInitialized {
+    function setAddresses() external onlyDeployer addressesHaveNotBeenInitialized {
         _areAddressesFilled = true;
         // TODO: add required addresses + initialize Contract variables
     }

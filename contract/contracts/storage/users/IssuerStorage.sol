@@ -15,6 +15,9 @@ contract IssuerStorage {
     /// @dev Wallet address of deployer, similar to admin address
     address payable private _deployerAddress;
 
+    /// @dev Address of deployed AccreditationStorage contract
+    address private _accreditationStorageAddress;
+
     // /// @dev Address of deployed ApplicantStorage contract
     // address private _applicantStorageAddress;
     
@@ -41,13 +44,14 @@ contract IssuerStorage {
         require(msg.sender == _deployerAddress);
         _;
     }
-    modifier addressHasNotBeenInitialized() {
+    modifier addressesHaveNotBeenInitialized() {
         require(!_areAddressesFilled);
         _;
     }
-    function setContractsAddresses() external onlyDeployer addressHasNotBeenInitialized {
+    function setContractsAddresses(address accreditationStorageAddress) external onlyDeployer addressesHaveNotBeenInitialized {
         _areAddressesFilled = true;
-        // TODO: add required addresses + initialize Contract variables
+        _accreditationStorageAddress = accreditationStorageAddress;
+        // TODO: add required addresses
         // applicantStorage = ApplicantStorage(address(0));
     }
 
@@ -77,16 +81,23 @@ contract IssuerStorage {
     }
 
     // // TODO
-    // modifier verifyGettingAddress(address payable targetAddress) {
+    // modifier verifyGettingAddress(address payable inputAddress) {
     //     require(msg.sender == );
-    //     require(targetAddress)
+    //     require(inputAddress)
     //     _;
     // }
-    // /// @notice This is a possible entry point from end users
-    // /// @notice Possible use cases include obtaining account data when the Issuer itself logs in
-    // /// @param targetAddress If the address is valid, it is used to search for an Issuer instance
-    // /// @return Issuer instance obtained by querying the targetAddress
-    // function getIssuerByAddress(address payable targetAddress) external verifyGettingAddress(targetAddress) returns (Issuer) {
-    //     return _issuers[targetAddress];
-    // }
+    /// @param inputAddress If the address is valid, it is used to search for an Issuer instance
+    /// @return Issuer instance obtained by querying the inputAddress
+    function getIssuerByAddress(address payable inputAddress) external view returns (Issuer memory) {
+        return _issuers[inputAddress];
+    }
+
+    modifier validateCallFromAccreditationStorage() {
+        require(msg.sender == _accreditationStorageAddress);
+        _;
+    }
+
+    function isIssuerExists(address payable inputAddress) external view returns (bool) {
+        return _issuers[inputAddress].issuerAddress == inputAddress;
+    }
 }
