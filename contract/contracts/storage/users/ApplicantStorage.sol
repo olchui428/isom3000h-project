@@ -35,7 +35,7 @@ contract ApplicantStorage {
     // -------------------- Setting up contracts --------------------
 
     /// @notice Deploys a storage contract for Applicant
-    /// @param someAddress TODO: think add what parameters, aka need to which contracts this contract will call
+    /// @param someAddress TODO: think add what parameters, aka need to decide which contracts this contract will call
     constructor(address someAddress) {
         _deployerAddress = payable(msg.sender);
         someAddress;

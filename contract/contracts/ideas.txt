@@ -28,15 +28,15 @@ Some mappings will make no sense, mark as n/a
 Data structure brainstorming via brute force:
 
 Accreditation ID    =>    Accreditation: 	    AccreditationStorage, mapping
-Accreditation ID    =>    Accreditation[]: 	    n/a
+Accreditation ID    =>    Accreditation[]: 	  n/a
 Accreditation ID    =>    Certificate: 		    n/a
 Accreditation ID    =>    Certificate[]: 	    CertificateStorage, mapping
 Accreditation ID    =>    Issuer: 		        ID => Acc => Issuer address => Issuer, mapping in IssuerStorage
-Accreditation ID    =>    Issuer[]: 		    n/a
-Accreditation ID    =>    Applicant: 		    n/a
+Accreditation ID    =>    Issuer[]: 		      n/a
+Accreditation ID    =>    Applicant: 		      n/a
 Accreditation ID    =>    Applicant[]: 		    ID => Acc => Cert[] => Applicant address[] => Applicant[]
 Certificate ID      =>    Accreditation: 	    ID => Cert => Acc ID => Acc
-Certificate ID      =>    Accreditation[]: 	    n/a
+Certificate ID      =>    Accreditation[]: 	  n/a
 Certificate ID      =>    Certificate: 		    CertificateStorage, mapping
 Certificate ID      =>    Certificate[]: 	    n/a
 Certificate ID      =>    Issuer: 		        ID => Cert => Issuer address => Issuer, mapping in CertificateStorage and IssuerStorage
@@ -67,20 +67,20 @@ After filtering away n/a:
 
  Accreditation ID    =>    Accreditation: 	    AccreditationStorage, mapping
  Accreditation ID    =>    Certificate[]: 	    CertificateStorage, mapping
- Accreditation ID    =>    Issuer: 		        ID => Acc => Issuer address => Issuer, mapping in IssuerStorage
- Accreditation ID    =>    Applicant[]: 		ID => Acc => Cert[] => Applicant address[] => Applicant[]
+ Accreditation ID    =>    Issuer: 		          ID => Acc => Issuer address => Issuer, mapping in IssuerStorage
+ Accreditation ID    =>    Applicant[]: 		    ID => Acc => Cert[] => Applicant address[] => Applicant[]
  Certificate ID      =>    Accreditation: 	    ID => Cert => Acc ID => Acc
- Certificate ID      =>    Certificate: 		CertificateStorage, mapping
- Certificate ID      =>    Issuer: 		        ID => Cert => Issuer address => Issuer, mapping in CertificateStorage and IssuerStorage
- Certificate ID      =>    Applicant: 		    ID => Cert => Applicant address => Applicant
-*Issuer address      =>    Accreditation[]: 	Issuer address => Accreditation[], mapping in AccreditationStorage
+ Certificate ID      =>    Certificate: 		    CertificateStorage, mapping
+ Certificate ID      =>    Issuer: 		          ID => Cert => Issuer address => Issuer, mapping in CertificateStorage and IssuerStorage
+ Certificate ID      =>    Applicant: 		      ID => Cert => Applicant address => Applicant
+*Issuer address      =>    Accreditation[]: 	  Issuer address => Accreditation[], mapping in AccreditationStorage
 ?Issuer address      =>    Certificate[]: 	    Issuer address => Certificate[], mapping in CertificateStorage
-*Issuer address      =>    Issuer: 		        IssuerStorage, mapping
- Issuer address      =>    Applicant[]: 		Issuer address => Acc[] => Applicant[] (flatten and create set), not sure if worth it, another use case is applicant register to issuer, add modifer
- Applicant address   =>    Accreditation[]: 	Applicant address => Cert[] => Acc[]
+*Issuer address      =>    Issuer: 		          IssuerStorage, mapping
+ Issuer address      =>    Applicant[]: 		    Issuer address => Acc[] => Applicant[] (flatten and create set), not sure if worth it, another use case is applicant register to issuer, add modifer
+ Applicant address   =>    Accreditation[]: 	  Applicant address => Cert[] => Acc[]
 *Applicant address   =>    Certificate[]: 	    Applicant address => Cert[], CertificateStorage, mapping
- Applicant address   =>    Issuer[]: 		    Applicant address => Cert[] => Issuer address[] => Issuer[]
-*Applicant address   =>    Applicant: 		    ApplicantStorage, mapping
+ Applicant address   =>    Issuer[]: 		        Applicant address => Cert[] => Issuer address[] => Issuer[]
+*Applicant address   =>    Applicant: 		      ApplicantStorage, mapping
 
 ###################################################################################################
 
