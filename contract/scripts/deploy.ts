@@ -1,4 +1,5 @@
 import fs from "fs";
+import { Contract } from "ethers";
 import { ethers, network } from "hardhat";
 import path from "path";
 
@@ -33,14 +34,18 @@ const CERTIFICATE_ENDPOINT = "CertificateEndpoint";
  *     - May be dependent on Set.sol
  * 2. Deploy NFT contracts
  *   - AccreditationNFT.sol
- *     - Dependent on AccreditationStorage.sol, CertificateStorage.sol
+ *     - Dependent on AccreditationStorage.sol
  *   - CertificateNFT.sol
  *     - Dependent on AccreditationStorage.sol, CertificateStorage.sol
  * 3. Deploy Endpoint contracts
  * TODO: update this
- *   - AccreditationNFT.sol
+ *   - IssuerEndpoint.sol
  *     - Dependent on AccreditationStorage.sol, CertificateStorage.sol
- *   - CertificateNFT.sol
+ *   - ApplicantEndpoint.sol
+ *     - Dependent on AccreditationStorage.sol, CertificateStorage.sol
+ *   - AccreditationEndpoint.sol
+ *     - Dependent on AccreditationStorage.sol, AccreditationNFT.sol
+ *   - CertificateEndpoint.sol
  *     - Dependent on AccreditationStorage.sol, CertificateStorage.sol
  *
  * Note: deployment of types and libraries are not required
@@ -77,15 +82,38 @@ async function deploy() {
       );
       return contract;
     } catch (error) {
-      const errorLog = `ERROR when deploying Contract ${contractName} at ${new Date().toUTCString()}`;
-      createLog(errorLog);
+      createLog(`ERROR when deploying Contract ${contractName} at ${new Date().toUTCString()}`);
       createLog(error);
       throw error;
     }
   };
 
-  // Deploy contracts sequentially, input dependent contract addresses as argument
+  /**
+   * Helper function to help set addresses to a deployed Contract
+   * @param contractName Name of Contract, only passed for logging purposes
+   * @param contract Contract to add addresses to
+   * @param addresses Array of deployed Contract addresses to add to `contract`
+   */
+  const setContractAddresses = async (
+    contractName: string,
+    contract: Contract,
+    addresses: string[]
+  ) => {
+    try {
+      createLog("Initializing: " + contractName);
+      await contract.setAddresses(...addresses);
+      createLog(`Contract ${contractName} initialized at ${new Date().toUTCString()}`);
+    } catch (error) {
+      createLog(`ERROR when initializing Contract ${contractName} at ${new Date().toUTCString()}`);
+      createLog(error);
+      throw error;
+    }
+  };
+
+  // Deploy and initialize contracts sequentially, input dependent contract addresses as argument
   try {
+    // Deploy Contracts
+
     // Storage Contracts
     createLog("Storage Contracts deployment:");
     const issuerStorage = await deployContract(ISSUER_STORAGE);
@@ -125,7 +153,43 @@ async function deploy() {
       // TODO: decide which addresses to input as argument
     ]);
 
+    // Initialize Contracts (aka set addresses of earlier deployed Contracts for each deployed Contract)
+
     // TODO: figure out any Contracts deployed earlier will need the later deployed Contract addresses
+
+    // Storage Contracts
+    createLog("Storage Contracts initialization:");
+    await setContractAddresses(ISSUER_STORAGE, issuerStorage, [
+      // TODO: decide which addresses to input as argument
+      issuerEndpoint.address,
+    ]);
+    await setContractAddresses(APPLICANT_STORAGE, applicantStorage, [
+      // TODO: decide which addresses to input as argument
+      applicantEndpoint.address,
+    ]);
+    await setContractAddresses(ACCREDITATION_STORAGE, accreditationStorage, [
+      // TODO: decide which addresses to input as argument
+      accreditationNFT.address,
+      accreditationEndpoint.address,
+    ]);
+    await setContractAddresses(CERTIFICATE_STORAGE, certificateStorage, [
+      // TODO: decide which addresses to input as argument
+      certificateNFT.address,
+      certificateEndpoint.address,
+    ]);
+
+    // NFT Contracts
+    createLog("NFT Contracts initialization:");
+    await setContractAddresses(ACCREDITATION_NFT, accreditationNFT, [
+      // TODO: decide which addresses to input as argument
+      accreditationEndpoint.address,
+    ]);
+    await setContractAddresses(CERTIFICATE_NFT, certificateNFT, [
+      // TODO: decide which addresses to input as argument
+      certificateEndpoint.address,
+    ]);
+
+    // No need to initialize Endpoint Contracts
 
     createLog(`\nDeployment success at ${new Date().toUTCString()}!`);
   } catch (error) {

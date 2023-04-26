@@ -9,7 +9,8 @@
     "deploy:prod": "hardhat run scripts/deploy.ts --network etherdata",
     "deploy:testnet": "hardhat run scripts/deploy.ts --network polygon",
     "deploy:local": "hardhat run scripts/deploy.ts --network local",
-    "deploy": "echo This command has been deprecated. Please execute one of `deploy:prod`, `deploy:testnet` and `deploy:local`, and make sure your environment variables are properly set up in .env file."
+    "deploy": "echo This command has been deprecated. Please execute one of `deploy:prod`, `deploy:testnet` and `deploy:local`, and make sure your environment variables are properly set up in .env file.",
+    "help": "hardhat help"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",
