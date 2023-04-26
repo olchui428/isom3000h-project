@@ -3,35 +3,35 @@ import { ethers } from "hardhat";
 
 const CONTRACT_NAME = "ApplicantStorage";
 
-describe(`Given ${CONTRACT_NAME}`, function () {
-  // TODO
-  it("Should be able to award", async function () {
-    // Deploy NFT Smart Contract
+describe.only(`Given ${CONTRACT_NAME}`, () => {
+  it("Should test registerApplicant, isApplicantExists, getApplicantByAddress", async () => {
+    // Deploy ApplicantStorage Smart Contract
     const [owner, otherAddress, ...rest] = await ethers.getSigners();
     const Contract = await ethers.getContractFactory(CONTRACT_NAME);
     const contract = await Contract.deploy();
     await contract.deployed();
 
-    // Award item to owner
-    let tx = await contract.awardItem(owner.address, "https://www.google.com");
-    await tx.wait();
+    // Create applicant
+    const _applicant = {
+      name: "Owen Lee",
+      applicantAddress: owner.address,
+    };
 
-    // Check
-    let tokenOwner = await contract.ownerOf(0);
-    expect(tokenOwner).to.equal(owner.address);
+    // Register applicant
+    console.log("Using address ", _applicant.applicantAddress);
+    await contract.registerApplicant(_applicant.name);
+    console.log("Registered applicant with ", _applicant);
 
-    let tokenURI = await contract.tokenURI(0);
-    expect(tokenURI).to.equal("https://www.google.com");
+    // Checking if applicant exists in Storage
+    const exists = await contract.isApplicantExists(_applicant.applicantAddress);
+    console.log("Checking if applicant exists: ", exists);
 
-    // Award item to otherAddress
-    tx = await contract.awardItem(otherAddress.address, "https://www.google.com/hk");
-    await tx.wait();
+    // Getting applicant
+    const applicant = await contract.getApplicantByAddress(_applicant.applicantAddress);
+    console.log(`Get applicant by address (${_applicant.applicantAddress}): ${applicant}`);
 
-    // Check
-    tokenOwner = await contract.ownerOf(1);
-    expect(tokenOwner).to.equal(otherAddress.address);
-
-    tokenURI = await contract.tokenURI(1);
-    expect(tokenURI).to.equal("https://www.google.com/hk");
+    // Assertions
+    expect(applicant.name).to.equal(_applicant.name);
+    expect(applicant.applicantAddress).to.equal(_applicant.applicantAddress);
   });
 });

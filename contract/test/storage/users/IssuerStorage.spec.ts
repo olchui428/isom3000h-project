@@ -4,7 +4,6 @@ import { ethers } from "hardhat";
 const CONTRACT_NAME = "IssuerStorage";
 
 describe.only(`Given ${CONTRACT_NAME}`, async () => {
-  // TODO
   it("Should test registerIssuer, getIssuerByAddress, isExistingIssuer", async () => {
     // Deploy IssuerStorage Smart Contract
     const [owner, otherAddress, ...rest] = await ethers.getSigners();
@@ -37,5 +36,6 @@ describe.only(`Given ${CONTRACT_NAME}`, async () => {
     expect(issuer.name).to.equal(_issuer.name);
     expect(issuer.description).to.equal(_issuer.description);
     expect(issuer.logoUrl).to.equal(_issuer.logoUrl);
+    expect(issuer.issuerAddress).to.equal(_issuer.issuerAddress);
   });
 });
