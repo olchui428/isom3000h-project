@@ -8,7 +8,7 @@ contract IssuerStorage {
     // ========================= Variables =========================
 
     // -------------------- Contract addresses --------------------
-    
+
     /// @dev Boolean flag to see if contracts have been fully deployed
     bool private _areAddressesFilled = false;
 
@@ -20,7 +20,7 @@ contract IssuerStorage {
 
     // /// @dev Address of deployed ApplicantStorage contract
     // address private _applicantStorageAddress;
-    
+
     // -------------------- Variables --------------------
 
     /// @dev Get Issuer by Issuer address
@@ -48,7 +48,10 @@ contract IssuerStorage {
         require(!_areAddressesFilled);
         _;
     }
-    function setContractsAddresses(address accreditationStorageAddress) external onlyDeployer addressesHaveNotBeenInitialized {
+
+    function setContractsAddresses(
+        address accreditationStorageAddress
+    ) external onlyDeployer addressesHaveNotBeenInitialized {
         _areAddressesFilled = true;
         _accreditationStorageAddress = accreditationStorageAddress;
         // TODO: add required addresses
@@ -64,9 +67,10 @@ contract IssuerStorage {
     modifier newIssuer() {
         Issuer memory i = _issuers[msg.sender];
         // If possible check all fields of the struct, but this is enough because a payable address cannot be 0-value
-        require((i.issuerAddress != address(0)));
+        require(i.issuerAddress == address(0));
         _;
     }
+
     /// @notice Registers an Issuer into the system
     /// @notice This is a possible entry point from end users
     /// @notice Possible use cases include a new Wallet trying to register itself as a new Issuer
@@ -74,9 +78,19 @@ contract IssuerStorage {
     /// @param name: Name of the company
     // TODO: add params
     /// @return Status of the registration process, returns true if success, otherwise throw error
-    function registerIssuer(string memory name) external newIssuer returns (bool) {
+    function registerIssuer(
+        string memory name,
+        string memory description,
+        string memory logoUrl
+    ) external newIssuer returns (bool) {
         address payable issuerAddress = payable(msg.sender);
-        // _issuers[issuerAddress] = Issuer(name, issuerAddress, "", "");
+        _issuers[issuerAddress] = Issuer(
+            name,
+            issuerAddress,
+            description,
+            logoUrl,
+            block.timestamp
+        );
         return true;
     }
 
@@ -88,7 +102,9 @@ contract IssuerStorage {
     // }
     /// @param inputAddress If the address is valid, it is used to search for an Issuer instance
     /// @return Issuer instance obtained by querying the inputAddress
-    function getIssuerByAddress(address payable inputAddress) external view returns (Issuer memory) {
+    function getIssuerByAddress(
+        address payable inputAddress
+    ) external view returns (Issuer memory) {
         return _issuers[inputAddress];
     }
 
@@ -97,6 +113,8 @@ contract IssuerStorage {
         _;
     }
 
+    /// @param inputAddress If the address is valid, it is used to search for an Issuer instance
+    /// @return Whether the input address exists as an issuer
     function isIssuerExists(address payable inputAddress) external view returns (bool) {
         return _issuers[inputAddress].issuerAddress == inputAddress;
     }

@@ -3,35 +3,39 @@ import { ethers } from "hardhat";
 
 const CONTRACT_NAME = "IssuerStorage";
 
-describe(`Given ${CONTRACT_NAME}`, function () {
-  // TODO
-  it("Should be able to award", async function () {
-    // Deploy NFT Smart Contract
+describe.only(`Given ${CONTRACT_NAME}`, async () => {
+  it("Should test registerIssuer, getIssuerByAddress, isExistingIssuer", async () => {
+    // Deploy IssuerStorage Smart Contract
     const [owner, otherAddress, ...rest] = await ethers.getSigners();
     const Contract = await ethers.getContractFactory(CONTRACT_NAME);
     const contract = await Contract.deploy();
     await contract.deployed();
 
-    // Award item to owner
-    let tx = await contract.awardItem(owner.address, "https://www.google.com");
-    await tx.wait();
+    // Create issuer
+    const _issuer = {
+      name: "ABC Company",
+      description: "It is a shitty company",
+      logoUrl: "https://picsum.photos/200/300",
+      issuerAddress: owner.address,
+    };
 
-    // Check
-    let tokenOwner = await contract.ownerOf(0);
-    expect(tokenOwner).to.equal(owner.address);
+    // Register issuer
+    console.log("Using address ", _issuer.issuerAddress);
+    await contract.registerIssuer(_issuer.name, _issuer.description, _issuer.logoUrl);
+    console.log("Registered issuer with ", _issuer);
 
-    let tokenURI = await contract.tokenURI(0);
-    expect(tokenURI).to.equal("https://www.google.com");
+    // Checking if issuer exists in Storage
+    const exists = await contract.isIssuerExists(_issuer.issuerAddress);
+    console.log("Checking if issuer exists: ", exists);
 
-    // Award item to otherAddress
-    tx = await contract.awardItem(otherAddress.address, "https://www.google.com/hk");
-    await tx.wait();
+    // Getting issuer
+    const issuer = await contract.getIssuerByAddress(_issuer.issuerAddress);
+    console.log(`Get issuer by address (${_issuer.issuerAddress}): ${issuer}`);
 
-    // Check
-    tokenOwner = await contract.ownerOf(1);
-    expect(tokenOwner).to.equal(otherAddress.address);
-
-    tokenURI = await contract.tokenURI(1);
-    expect(tokenURI).to.equal("https://www.google.com/hk");
+    // Assertions
+    expect(issuer.name).to.equal(_issuer.name);
+    expect(issuer.description).to.equal(_issuer.description);
+    expect(issuer.logoUrl).to.equal(_issuer.logoUrl);
+    expect(issuer.issuerAddress).to.equal(_issuer.issuerAddress);
   });
 });
