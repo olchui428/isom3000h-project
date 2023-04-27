@@ -139,6 +139,7 @@ During deployment, logs are generated, printed to console and saved into a log f
 ### Part 2: Front-end Interaction
 
 <TODO: add description>
+
 <!-- This project uses the programming language Python, due to its widespread popularity and collection of powerful open-source packages. Python libraries such as `numpy`, `pandas` and `scikit-learn` are utilized to perform data preprocessing, model training, prediction and evaluation. -->
 
 This Next.js project with TypeScript is initialized with the command `npx create-next-app@latest`.
@@ -185,17 +186,23 @@ The deliverables include a set of presentation slides, a group presentation wher
 
 ## Instructions
 
-1. In [`contract/`](contract):
+1. Install dependencies:
+   ```bash
+   cd contract && npm install
+   cd ../frontend && npm install
+   ```
+2. In [`contract/`](contract):
+
    1. Set up the provided etherdata network in MetaMask browser extension:
-      1. Add the [*network*](https://docs.msbd5017.etdchain.net/Chapter1/rpc#network-details) on MetaMask according to the instructions in [this tutorial](https://docs.msbd5017.etdchain.net/Chapter1/rpc#network-details)
-      2. Obtain the account private key and place it in `.env` file in the format `PROD_PK=<Obtained Private Key>`
-   2. *[Optional]* Set up a test network in MetaMask
-      1. Add the [*network*](https://mumbai.polygonscan.com) on MetaMask by scrolling to the bottom, finding the MetaMask icon and clicking it
-      2. Obtain the account private key and place it in `.env` file in the format `TEST_PK=<Obtained Private Key>`
-   3. *[Optional]* Set up a local test network on Ganache
+      1. Add the [_network_](https://docs.msbd5017.etdchain.net/Chapter1/rpc#network-details) on MetaMask according to the instructions in [this tutorial](https://docs.msbd5017.etdchain.net/Chapter1/rpc#network-details)
+      2. Obtain the [account private key](https://support.metamask.io/hc/en-us/articles/360015289632-How-to-export-an-account-s-private-key) and place it in `contract/.env` file in the format `PROD_PK=<Obtained Private Key>`
+   2. _[Optional]_ Set up a test network in MetaMask
+      1. Add the [_network_](https://mumbai.polygonscan.com) on MetaMask by scrolling to the bottom, finding the "Add Mumbai Network" button at the bottom right corner and clicking it
+      2. Obtain the account private key and place it in `contract/.env` file in the format `TEST_PK=<Obtained Private Key>`
+   3. _[Optional]_ Set up a local test network on Ganache
       1. Create a quick local network on Ganache
-      2. Obtain an account private key and place it in `.env` file in the format `LOCAL_PK=<Obtained Private Key>`
-      3. If the port number on Ganache is inconsistent with the default in the `.env` file, replace the field with the number shown on Ganache
+      2. Obtain an account private key and place it in `contract/.env` file in the format `LOCAL_PK=<Obtained Private Key>`
+      3. If the port number on Ganache is inconsistent with the default in the `contract/.env` file, replace the field with the number shown on Ganache
    4. In [`/hardhat.config.ts`](contract/hardhat.config.ts), set up the target deployment network:
 
       ```typescript
@@ -216,6 +223,7 @@ The deliverables include a set of presentation slides, a group presentation wher
       - `url` field stores the RPC endpoint
       - `accounts` field scrapes the account private key from the `.env` file and passes it as part of the deployment information
       - More networks are configured for project use
+
    5. In [`/package.json`](contract/package.json), configure the deployment command:
 
       ```json
@@ -231,6 +239,7 @@ The deliverables include a set of presentation slides, a group presentation wher
       - To deploy to `etherdata`, use `npm run deploy:prod`
       - To deploy to `polygon`, use `npm run deploy:testnet`
       - To deploy to `local`, use `npm run deploy:local`
+
    6. In [`/scripts/deploy.ts`](contract/scripts/deploy.ts), configure the smart contracts to be deployed:
 
       ```typescript
@@ -247,6 +256,7 @@ The deliverables include a set of presentation slides, a group presentation wher
       - If a contract A calls functions from another contract B, first deploy contract B, and pass address of contract B as an argument when deploying contract A with the .deploy() function
         - On Solidity, add contract B address as a parameter in constructor of contract A
         - If contracts are codependent, create another setup function in contract A to store deployed address of contract B
+
    7. Deploy the smart contracts to a configured network using one of the npm commands specified in Step 5
    8. After deployment, the smart contract addresses will be printed in the terminal output, and in a log file at `/scripts/logs/`. Contract addresses can be obtained for further use
       - Note that the logs will not be committed to GitHub
@@ -254,7 +264,8 @@ The deliverables include a set of presentation slides, a group presentation wher
       - `etherdata`: [this web UI](https://stats.debugchain.net/contract)
       - `polygon`: [this web UI](https://mumbai.polygonscan.com)
       - `local`: Ganache UI
-2. In [`frontend/`](frontend):
+
+3. In [`frontend/`](frontend):
    1. In `.env.local`, add <TODO: add variables if any>
    2. Fill in the blockchain network and deployed contract information in [`contracts.config.ts`](frontend/src/blockchain/contracts.config.ts)
    3. Copy the abi JSON files from `contract/artitacts/contracts/*`

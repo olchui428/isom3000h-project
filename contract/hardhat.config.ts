@@ -5,7 +5,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 // Helper function to parse PK from .env file to account array for config
-const parseEnvPKToAccounts: (pk: string) => string[] = (pk) => {
+const parseEnvPKToAccounts: (pk: string | undefined) => string[] = (pk) => {
   if (pk === undefined || pk === "") {
     return [];
   }
@@ -34,7 +34,9 @@ const config: HardhatUserConfig = {
     },
     // local: local test network created using Ganache, regarded as dev env for our project, 7545 is default port number of Ganache test network
     local: {
-      url: `http://127.0.0.1:${process.env.LOCAL_PORT !== undefined ? process.env.LOCAL_PORT : 7545}`,
+      url: `http://127.0.0.1:${
+        process.env.LOCAL_PORT !== undefined ? process.env.LOCAL_PORT : 7545
+      }`,
       accounts: parseEnvPKToAccounts(process.env.LOCAL_PK),
     },
   },
