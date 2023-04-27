@@ -1,3 +1,4 @@
+import { UserType } from "@/types/UserType";
 import { useState } from "react";
 
 // TODO: write a hook for connecting to MetaMask

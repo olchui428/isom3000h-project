@@ -1,8 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { ContractAddresses, networkConfig } from "@/blockchain/contracts.config";
+import { CertificateFormats } from "@/types/CertificateFormats";
 import { createCanvas, loadImage, registerFont } from "canvas";
 import { ethers } from "ethers";
 import type { NextApiRequest, NextApiResponse } from "next";
+import path from "path";
 
 const fileFormats = {
   PDF: "application/pdf",
@@ -15,7 +17,7 @@ const generateCertificate = async (certificateData: any, exportType: Certificate
   console.log("Certificate data:", certificateData);
   console.log("\nBegin to generate Certificate ...");
   // Load image
-  const certificateTemplatePath = "@/img/cert_template.png";
+  const certificateTemplatePath: string = path.join(process.cwd(), `/public/vercel.svg`);   // TODO: change to `/public/img/....png`
   const certImage = await loadImage(certificateTemplatePath);
   console.log("Image loaded");
 
@@ -82,7 +84,7 @@ const generateCertificate = async (certificateData: any, exportType: Certificate
  * This API uses node-canvas to return a rendered image of a certificate
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const userAddress = req.headers?.walletAddress as string | undefined;
+  const userAddress = req.body?.walletAddress;
   if (!userAddress) {
     res.status(403).send("Error: did not provide wallet address.");
   }

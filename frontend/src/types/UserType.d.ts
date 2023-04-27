@@ -3,3 +3,5 @@ enum UserType {
   ISSUER = "issuer",
   OUTSIDER = "n/a",
 }
+
+export { UserType };

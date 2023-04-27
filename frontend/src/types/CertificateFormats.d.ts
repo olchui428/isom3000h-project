@@ -3,3 +3,5 @@ enum CertificateFormats {
   JPG = "JPG",
   PDF = "PDF",
 }
+
+export { CertificateFormats };
