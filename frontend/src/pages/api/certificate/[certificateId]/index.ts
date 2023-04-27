@@ -68,13 +68,12 @@ const generateCertificate = async (certificateData: any, exportType: Certificate
     case CertificateFormats.PDF:
       return canvas.toBuffer("application/pdf", {
         // TODO: configure these
-        //     title?: string
-        // author?: string
-        // subject?: string
-        // keywords?: string
-        // creator?: string
-        // creationDate?: Date
-        // modDate?: Date
+        // title: `Certificate for ${}`,
+        // author: `${Issuer.name}`,
+        // // subject: string,
+        // // keywords: string,
+        // creator: `${Issuer.name}`,
+        // creationDate: new Date(),
       });
   }
 };
@@ -108,5 +107,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // TODO: return image buffer of drawn cert
   const certificateBuffer = await generateCertificate(completeCert, exportType);
   res.setHeader("Content-Type", fileFormats[exportType]);
-  res.send(certificateBuffer);
+  return res.send(certificateBuffer);
 }
