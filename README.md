@@ -195,13 +195,14 @@ The deliverables include a set of presentation slides, a group presentation wher
 
    1. Set up the provided etherdata network in MetaMask browser extension:
       1. Add the [_network_](https://docs.msbd5017.etdchain.net/Chapter1/rpc#network-details) on MetaMask according to the instructions in [this tutorial](https://docs.msbd5017.etdchain.net/Chapter1/rpc#network-details)
-      2. Obtain the [account private key](https://support.metamask.io/hc/en-us/articles/360015289632-How-to-export-an-account-s-private-key) and place it in `contract/.env` file in the format `PROD_PK=<Obtained Private Key>`
+      2. Obtain the [account private key](https://support.metamask.io/hc/en-us/articles/360015289632-How-to-export-an-account-s-private-key) and place it in `contract/.env` file in the format `PROD_PK=0x<Obtained Private Key>`
+         > **Note**: Remember to add `0x` in front of the private key
    2. _[Optional]_ Set up a test network in MetaMask
       1. Add the [_network_](https://mumbai.polygonscan.com) on MetaMask by scrolling to the bottom, finding the "Add Mumbai Network" button at the bottom right corner and clicking it
-      2. Obtain the account private key and place it in `contract/.env` file in the format `TEST_PK=<Obtained Private Key>`
+      2. Obtain the account private key and place it in `contract/.env` file in the format `TEST_PK=0x<Obtained Private Key>`
    3. _[Optional]_ Set up a local test network on Ganache
       1. Create a quick local network on Ganache
-      2. Obtain an account private key and place it in `contract/.env` file in the format `LOCAL_PK=<Obtained Private Key>`
+      2. Obtain an account private key and place it in `contract/.env` file in the format `LOCAL_PK=0x<Obtained Private Key>`
       3. If the port number on Ganache is inconsistent with the default in the `contract/.env` file, replace the field with the number shown on Ganache
    4. In [`/hardhat.config.ts`](contract/hardhat.config.ts), set up the target deployment network:
 

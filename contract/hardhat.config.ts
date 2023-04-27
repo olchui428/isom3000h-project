@@ -5,7 +5,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 // Helper function to parse PK from .env file to account array for config
-const parseEnvPKToAccounts: (pk: string | undefined) => string[] = (pk) => {
+const parseEnvPKToAccounts = (pk: string | undefined): string[] => {
   if (pk === undefined || pk === "") {
     return [];
   }
