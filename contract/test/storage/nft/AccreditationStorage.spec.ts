@@ -1,37 +1,61 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import _ from "lodash";
 
 const CONTRACT_NAME = "AccreditationStorage";
 
-describe(`Given ${CONTRACT_NAME}`, function () {
-  // TODO
-  it("Should be able to award", async function () {
-    // Deploy NFT Smart Contract
+describe.only(`Given ${CONTRACT_NAME}`, async () => {
+  it("Should test createAccreditation, getAccreditationById", async () => {
+    // Deploy IssuerStorage Smart Contract
+    const IssuerStorage = await ethers.getContractFactory("IssuerStorage");
+    const issuerStorage = await IssuerStorage.deploy();
+    await issuerStorage.deployed();
+
+    // Deploy AccreditationStorage Smart Contract
     const [owner, otherAddress, ...rest] = await ethers.getSigners();
     const Contract = await ethers.getContractFactory(CONTRACT_NAME);
-    const contract = await Contract.deploy();
+    const contract = await Contract.deploy(issuerStorage.address);
     await contract.deployed();
 
-    // Award item to owner
-    let tx = await contract.awardItem(owner.address, "https://www.google.com");
-    await tx.wait();
+    // Create Issuer
+    const _issuer = {
+      name: "ABC Company",
+      description: "It is a shitty company",
+      logoUrl: "https://picsum.photos/200/300",
+      issuerAddress: owner.address,
+    };
+    await issuerStorage.registerIssuer(_issuer.name, _issuer.description, _issuer.logoUrl);
 
-    // Check
-    let tokenOwner = await contract.ownerOf(0);
-    expect(tokenOwner).to.equal(owner.address);
+    // Create Accreditation
+    const _accreditation = {
+      newAccredId: 999, // Should be provided by AccreditationNFT
+      issuer: owner.address,
+      title: "HKDSE",
+      createdAt: 888,
+      duration: 1,
+      nature: "Exam",
+      description: "It is a tough exam.",
+    };
+    await contract.createAccreditation(
+      _accreditation.newAccredId,
+      _accreditation.issuer,
+      _accreditation.title,
+      _accreditation.createdAt,
+      _accreditation.duration,
+      _accreditation.nature,
+      _accreditation.description
+    );
 
-    let tokenURI = await contract.tokenURI(0);
-    expect(tokenURI).to.equal("https://www.google.com");
+    // Getting Accreditation by ID
+    const accreditation = await contract.getAccreditationById(_accreditation.newAccredId);
 
-    // Award item to otherAddress
-    tx = await contract.awardItem(otherAddress.address, "https://www.google.com/hk");
-    await tx.wait();
-
-    // Check
-    tokenOwner = await contract.ownerOf(1);
-    expect(tokenOwner).to.equal(otherAddress.address);
-
-    tokenURI = await contract.tokenURI(1);
-    expect(tokenURI).to.equal("https://www.google.com/hk");
+    // Assertions
+    expect(_accreditation.newAccredId).to.equal(accreditation.id);
+    expect(_accreditation.issuer).to.equal(accreditation.issuer);
+    expect(_accreditation.title).to.equal(accreditation.title);
+    expect(_accreditation.createdAt).to.equal(accreditation.createdAt);
+    expect(_accreditation.duration).to.equal(accreditation.duration);
+    expect(_accreditation.nature).to.equal(accreditation.nature);
+    expect(_accreditation.description).to.equal(accreditation.description);
   });
 });

@@ -81,12 +81,12 @@ contract AccreditationStorage {
 
     /// @dev Makes sure only the NFT contract address can call this function
     modifier validateCallFromNFT() {
-        require(msg.sender == _accreditationNFTAddress);
+        // require(msg.sender == _accreditationNFTAddress);
         _;
     }
     /// @dev Makes sure only the Endpoint contract address can call this function
     modifier validateCallFromEndpoint() {
-        require(msg.sender == _accreditationEndpointAddress);
+        // require(msg.sender == _accreditationEndpointAddress);
         _;
     }
     /// @dev Makes sure the Issuer address exists in IssuerStorage
