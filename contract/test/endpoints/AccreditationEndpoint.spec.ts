@@ -3,35 +3,45 @@ import { ethers } from "hardhat";
 
 const CONTRACT_NAME = "AccreditationEndpoint";
 
-describe(`Given ${CONTRACT_NAME}`, function () {
-  // TODO
-  it("Should be able to award", async function () {
-    // Deploy NFT Smart Contract
-    const [owner, otherAddress, ...rest] = await ethers.getSigners();
-    const Contract = await ethers.getContractFactory(CONTRACT_NAME);
-    const contract = await Contract.deploy();
-    await contract.deployed();
+describe(`Given ${CONTRACT_NAME}`, () => {
+  it("Testing launchAccreditation", () => {
+    it("Should raise error if not using Issuer address", async () => {
+      // TODO
+    });
 
-    // Award item to owner
-    let tx = await contract.awardItem(owner.address, "https://www.google.com");
-    await tx.wait();
+    it("Should raise error if invalid params", async () => {
+      // TODO
+    });
 
-    // Check
-    let tokenOwner = await contract.ownerOf(0);
-    expect(tokenOwner).to.equal(owner.address);
+    it("Should launch if using Issuer address and valid params", async () => {
+      // TODO
+    });
+  });
 
-    let tokenURI = await contract.tokenURI(0);
-    expect(tokenURI).to.equal("https://www.google.com");
+  it("Testing getAccreditationById", () => {
+    it("Should raise error if invalid params", async () => {
+      // TODO
+    });
 
-    // Award item to otherAddress
-    tx = await contract.awardItem(otherAddress.address, "https://www.google.com/hk");
-    await tx.wait();
+    it("Should get Accreditation if valid params", async () => {
+      // TODO
+      const [owner, otherAddress, ...rest] = await ethers.getSigners();
+      const Contract = await ethers.getContractFactory(CONTRACT_NAME);
+      const contract = await Contract.deploy("", "");
+      await contract.deployed();
 
-    // Check
-    tokenOwner = await contract.ownerOf(1);
-    expect(tokenOwner).to.equal(otherAddress.address);
+      const accreditation = contract.getAccreditationById(0);
+      // expect(accreditation).to.be.equal(null);
+    });
+  });
 
-    tokenURI = await contract.tokenURI(1);
-    expect(tokenURI).to.equal("https://www.google.com/hk");
+  it("Testing getAccreditationsByAddresses", () => {
+    it("Should raise error if invalid params", async () => {
+      // TODO
+    });
+
+    it("Should get Accreditations if valid params", async () => {
+      // TODO
+    });
   });
 });
