@@ -13,11 +13,14 @@ const fileFormats = {
 };
 
 // Helper function to generate certificate image
-const generateCertificate = async (certificateData: any, exportType: CertificateFormats) => {
+const generateCertificate = async (
+  certificateData: any,
+  exportType: CertificateFormats
+): Promise<Buffer> => {
   console.log("Certificate data:", certificateData);
   console.log("\nBegin to generate Certificate ...");
   // Load image
-  const certificateTemplatePath: string = path.join(process.cwd(), `/public/vercel.svg`);   // TODO: change to `/public/img/....png`
+  const certificateTemplatePath: string = path.join(process.cwd(), `/public/vercel.svg`); // TODO: change to `/public/img/....png`
   const certImage = await loadImage(certificateTemplatePath);
   console.log("Image loaded");
 
@@ -78,7 +81,6 @@ const generateCertificate = async (certificateData: any, exportType: Certificate
   }
 };
 
-// TODO: add CompleteCert type to NextApiResponse<> after compilation from deploying smart contracts
 /**
  * This API uses node-canvas to return a rendered image of a certificate
  */
