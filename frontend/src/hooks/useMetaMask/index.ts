@@ -131,6 +131,26 @@ const useMetaMask = () => {
   };
 
   const AccreditationEndpoint = () => {
+    const launchAccreditation = async () =>
+      // TODO: add params
+      {
+        if (!signer) return;
+        try {
+          const accreditationEndpoint = new ethers.Contract(
+            ContractAddresses.ACCREDITATION_ENDPOINT,
+            accreditationEndpointABI,
+            signer
+          );
+          const tx = await accreditationEndpoint
+            .launchAccreditation
+            // TODO: add params
+            ();
+          await tx.wait();
+        } catch (error) {
+          alert(`Error at AccreditationEndpoint.launchAccreditation: ${error}`);
+        }
+      };
+
     const getAccreditationById = async (id: number) => {
       if (!signer) return;
       try {
@@ -141,7 +161,7 @@ const useMetaMask = () => {
         );
         return await accreditationEndpoint.getAccreditationById(id);
       } catch (error) {
-        alert(`Error at AccreditationEndpoint: ${error}`);
+        alert(`Error at AccreditationEndpoint.getAccreditationById: ${error}`);
       }
     };
 
@@ -155,17 +175,14 @@ const useMetaMask = () => {
         );
         return await accreditationEndpoint.getAccreditationsByAddress(address);
       } catch (error) {
-        alert(`Error at AccreditationEndpoint: ${error}`);
+        alert(`Error at AccreditationEndpoint.getAccreditationsByAddress: ${error}`);
       }
-      // TODO: complete implementation
     };
 
-    // TODO: add endpoint functions
-
     return {
+      launchAccreditation,
       getAccreditationById,
       getAccreditationsByAddress,
-      // TODO: add endpoint functions
     };
   };
 
