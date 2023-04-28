@@ -60,7 +60,7 @@ contract AccreditationEndpoint {
         _;
     }
 
-    function createAccreditation(
+    function launchAccreditation(
         address payable issuer,
         string memory title,
         uint256 createdAt,
