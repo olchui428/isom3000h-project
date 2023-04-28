@@ -6,6 +6,7 @@ import { abi as accreditationEndpointABI } from "@/blockchain/abi/AccreditationE
 import { abi as certificateEndpointABI } from "@/blockchain/abi/CertificateEndpoint.json";
 import { ethers } from "ethers";
 import { ContractAddresses } from "@/blockchain/contracts.config";
+import axios from "axios";
 
 // TODO: add finalized ABI
 
@@ -211,6 +212,11 @@ const useMetaMask = () => {
     };
   };
 
+  const generateCertificate = async (certificateId: number) => {
+    // TODO: refine
+    return await axios.get(`/api/certificate/${certificateId}`);
+  };
+
   return {
     userType,
     login,
@@ -219,6 +225,7 @@ const useMetaMask = () => {
     applicantEndpoint: ApplicantEndpoint(),
     accreditationEndpoint: AccreditationEndpoint(),
     certificateEndpoint: CertificateEndpoint(),
+    generateCertificate,
   };
 };
 
