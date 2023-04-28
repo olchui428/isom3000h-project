@@ -66,9 +66,12 @@ async function deploy() {
    * Helper function to deploy a contract and return deployment address
    * @param contractName Name of Contract to be deployed
    * @param deployArgs (Optional) Array of Contract addresses. Only required if the Contract requires other Contract addresses to deploy.
-   * @returns Contract - returns a deployed Contract object
+   * @returns A deployed Contract object
    */
-  const deployContract = async (contractName: string, deployArgs: string[] = []) => {
+  const deployContract = async (
+    contractName: string,
+    deployArgs: string[] = []
+  ): Promise<Contract> => {
     try {
       createLog("Deploying: " + contractName);
       const Contract = await ethers.getContractFactory(contractName);
