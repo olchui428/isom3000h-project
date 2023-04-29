@@ -1,12 +1,10 @@
-import Frame from "@/components/Frame";
-import "@/styles/globals.css";
+import CssBaseline from "@mui/material/CssBaseline";
 import type { AppProps } from "next/app";
-import "normalize.css";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
-      <Frame />
+      <CssBaseline />
       <Component {...pageProps} />
     </>
   );
