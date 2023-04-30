@@ -120,14 +120,12 @@ async function deploy() {
     // Storage Contracts
     createLog("Storage Contracts deployment:");
     const issuerStorage = await deployContract(ISSUER_STORAGE);
-    const applicantStorage = await deployContract(APPLICANT_STORAGE, [
-      // TODO: decide which addresses to input as argument
-    ]);
+    const applicantStorage = await deployContract(APPLICANT_STORAGE);
     const accreditationStorage = await deployContract(ACCREDITATION_STORAGE, [
       issuerStorage.address,
     ]);
     const certificateStorage = await deployContract(CERTIFICATE_STORAGE, [
-      // TODO: decide which addresses to input as argument
+      applicantStorage.address,
     ]);
 
     // NFT Contracts
@@ -135,48 +133,38 @@ async function deploy() {
     const accreditationNFT = await deployContract(ACCREDITATION_NFT, [
       accreditationStorage.address,
     ]);
-    const certificateNFT = await deployContract(CERTIFICATE_NFT, [
-      // TODO: decide which addresses to input as argument
-    ]);
+    const certificateNFT = await deployContract(CERTIFICATE_NFT, [certificateStorage.address]);
 
     // Endpoint Contracts
     createLog("Endpoint Contracts deployment:");
-    const issuerEndpoint = await deployContract(ISSUER_ENDPOINT, [
-      // TODO: decide which addresses to input as argument
-      issuerStorage.address,
-    ]);
-    const applicantEndpoint = await deployContract(APPLICANT_ENDPOINT, [
-      // TODO: decide which addresses to input as argument
-    ]);
+    const issuerEndpoint = await deployContract(ISSUER_ENDPOINT, [issuerStorage.address]);
+    const applicantEndpoint = await deployContract(APPLICANT_ENDPOINT, [applicantStorage.address]);
     const accreditationEndpoint = await deployContract(ACCREDITATION_ENDPOINT, [
       accreditationStorage.address,
       accreditationNFT.address,
     ]);
     const certificateEndpoint = await deployContract(CERTIFICATE_ENDPOINT, [
-      // TODO: decide which addresses to input as argument
+      issuerStorage.address,
+      applicantStorage.address,
+      accreditationStorage.address,
+      certificateStorage.address,
+      certificateNFT.address,
     ]);
 
     // Initialize Contracts (aka set addresses of earlier deployed Contracts for each deployed Contract)
 
-    // TODO: figure out any Contracts deployed earlier will need the later deployed Contract addresses
-
     // Storage Contracts
     createLog("Storage Contracts initialization:");
     await setContractAddresses(ISSUER_STORAGE, issuerStorage, [
-      // TODO: decide which addresses to input as argument
+      accreditationStorage.address,
       issuerEndpoint.address,
     ]);
-    await setContractAddresses(APPLICANT_STORAGE, applicantStorage, [
-      // TODO: decide which addresses to input as argument
-      applicantEndpoint.address,
-    ]);
+    await setContractAddresses(APPLICANT_STORAGE, applicantStorage, [applicantEndpoint.address]);
     await setContractAddresses(ACCREDITATION_STORAGE, accreditationStorage, [
-      // TODO: decide which addresses to input as argument
       accreditationNFT.address,
       accreditationEndpoint.address,
     ]);
     await setContractAddresses(CERTIFICATE_STORAGE, certificateStorage, [
-      // TODO: decide which addresses to input as argument
       certificateNFT.address,
       certificateEndpoint.address,
     ]);
@@ -184,13 +172,9 @@ async function deploy() {
     // NFT Contracts
     createLog("NFT Contracts initialization:");
     await setContractAddresses(ACCREDITATION_NFT, accreditationNFT, [
-      // TODO: decide which addresses to input as argument
       accreditationEndpoint.address,
     ]);
-    await setContractAddresses(CERTIFICATE_NFT, certificateNFT, [
-      // TODO: decide which addresses to input as argument
-      certificateEndpoint.address,
-    ]);
+    await setContractAddresses(CERTIFICATE_NFT, certificateNFT, [certificateEndpoint.address]);
 
     // No need to initialize Endpoint Contracts
 
