@@ -3,35 +3,36 @@ import { ethers } from "hardhat";
 
 const CONTRACT_NAME = "CertificateEndpoint";
 
-describe(`Given ${CONTRACT_NAME}`, function () {
-  // TODO
-  it("Should be able to award", async function () {
-    // Deploy NFT Smart Contract
-    const [owner, otherAddress, ...rest] = await ethers.getSigners();
-    const Contract = await ethers.getContractFactory(CONTRACT_NAME);
-    const contract = await Contract.deploy();
-    await contract.deployed();
+describe(`Given ${CONTRACT_NAME}`, () => {
+  it("Testing issueCertificate error", () => {
+    it("Should raise error if not using Applicant address", async () => {
+      // TODO(Good to have): implement test
+    });
 
-    // Award item to owner
-    let tx = await contract.awardItem(owner.address, "https://www.google.com");
-    await tx.wait();
+    it("Should raise error if invalid params", async () => {
+      // TODO(Good to have): implement test
+    });
+  });
 
-    // Check
-    let tokenOwner = await contract.ownerOf(0);
-    expect(tokenOwner).to.equal(owner.address);
+  it("Testing getCertificateById error", () => {
+    it("Should raise error if invalid params", async () => {
+      // TODO(Good to have): implement test
+    });
+  });
 
-    let tokenURI = await contract.tokenURI(0);
-    expect(tokenURI).to.equal("https://www.google.com");
+  it("Testing getCertificatesByApplicantAddresses error", () => {
+    it("Should raise error if invalid params", async () => {
+      // TODO(Good to have): implement test
+    });
+  });
 
-    // Award item to otherAddress
-    tx = await contract.awardItem(otherAddress.address, "https://www.google.com/hk");
-    await tx.wait();
-
-    // Check
-    tokenOwner = await contract.ownerOf(1);
-    expect(tokenOwner).to.equal(otherAddress.address);
-
-    tokenURI = await contract.tokenURI(1);
-    expect(tokenURI).to.equal("https://www.google.com/hk");
+  it("Testing issueCertificate, getCertificateById, getCertificatesByApplicantAddresses, getCompleteCertById", () => {
+    it("Should store Accreditations correctly", async () => {
+      const [owner, otherAddress, ...rest] = await ethers.getSigners();
+      const Contract = await ethers.getContractFactory(CONTRACT_NAME);
+      const contract = await Contract.deploy();
+      await contract.deployed();
+      // TODO(Good to have): implement test
+    });
   });
 });

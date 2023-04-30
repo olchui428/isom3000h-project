@@ -4,44 +4,35 @@ import { ethers } from "hardhat";
 const CONTRACT_NAME = "AccreditationEndpoint";
 
 describe(`Given ${CONTRACT_NAME}`, () => {
-  it("Testing launchAccreditation", () => {
+  it("Testing launchAccreditation error", () => {
     it("Should raise error if not using Issuer address", async () => {
-      // TODO
+      // TODO(Good to have): implement test
     });
 
     it("Should raise error if invalid params", async () => {
-      // TODO
-    });
-
-    it("Should launch if using Issuer address and valid params", async () => {
-      // TODO
+      // TODO(Good to have): implement test
     });
   });
 
-  it("Testing getAccreditationById", () => {
+  it("Testing getAccreditationById error", () => {
     it("Should raise error if invalid params", async () => {
-      // TODO
+      // TODO(Good to have): implement test
     });
+  });
 
-    it("Should get Accreditation if valid params", async () => {
-      // TODO
+  it("Testing getAccreditationsByIssuerAddresses error", () => {
+    it("Should raise error if invalid params", async () => {
+      // TODO(Good to have): implement test
+    });
+  });
+
+  it("Testing launchAccreditation, getAccreditationById, getAccreditationsByIssuerAddresses", () => {
+    it("Should store Accreditations correctly", async () => {
       const [owner, otherAddress, ...rest] = await ethers.getSigners();
       const Contract = await ethers.getContractFactory(CONTRACT_NAME);
-      const contract = await Contract.deploy("", "");
+      const contract = await Contract.deploy();
       await contract.deployed();
-
-      const accreditation = contract.getAccreditationById(0);
-      // expect(accreditation).to.be.equal(null);
-    });
-  });
-
-  it("Testing getAccreditationsByAddresses", () => {
-    it("Should raise error if invalid params", async () => {
-      // TODO
-    });
-
-    it("Should get Accreditations if valid params", async () => {
-      // TODO
+      // TODO(Good to have): implement test
     });
   });
 });

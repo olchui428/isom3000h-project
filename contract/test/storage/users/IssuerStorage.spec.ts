@@ -21,7 +21,12 @@ describe.only(`Given ${CONTRACT_NAME}`, async () => {
 
     // Register issuer
     console.log("Using address ", _issuer.issuerAddress);
-    await contract.registerIssuer(_issuer.name, _issuer.description, _issuer.logoUrl);
+    await contract.createIssuer(
+      _issuer.issuerAddress,
+      _issuer.name,
+      _issuer.description,
+      _issuer.logoUrl
+    );
     console.log("Registered issuer with ", _issuer);
 
     // Checking if issuer exists in Storage

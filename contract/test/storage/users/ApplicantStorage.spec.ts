@@ -19,7 +19,7 @@ describe.only(`Given ${CONTRACT_NAME}`, () => {
 
     // Register applicant
     console.log("Using address ", _applicant.applicantAddress);
-    await contract.registerApplicant(_applicant.name);
+    await contract.createApplicant(_applicant.applicantAddress, _applicant.name);
     console.log("Registered applicant with ", _applicant);
 
     // Checking if applicant exists in Storage

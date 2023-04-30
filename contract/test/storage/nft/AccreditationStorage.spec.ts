@@ -24,7 +24,12 @@ describe.only(`Given ${CONTRACT_NAME}`, async () => {
       logoUrl: "https://picsum.photos/200/300",
       issuerAddress: owner.address,
     };
-    await issuerStorage.registerIssuer(_issuer.name, _issuer.description, _issuer.logoUrl);
+    await issuerStorage.createIssuer(
+      _issuer.issuerAddress,
+      _issuer.name,
+      _issuer.description,
+      _issuer.logoUrl
+    );
 
     // Create Accreditation
     const _accreditation = {

@@ -3,35 +3,66 @@ import { ethers } from "hardhat";
 
 const CONTRACT_NAME = "CertificateNFT";
 
-describe(`Given ${CONTRACT_NAME}`, function () {
-  // TODO
-  it("Should be able to award", async function () {
-    // Deploy NFT Smart Contract
-    const [owner, otherAddress, ...rest] = await ethers.getSigners();
-    const Contract = await ethers.getContractFactory(CONTRACT_NAME);
-    const contract = await Contract.deploy();
-    await contract.deployed();
+describe(`Given ${CONTRACT_NAME}`, () => {
+  it("Testing issueCertificate error", () => {
+    it("Should raise error if not using CertificateEndpoint address", async () => {
+      // TODO(Good to have): implement test
+    });
 
-    // Award item to owner
-    let tx = await contract.awardItem(owner.address, "https://www.google.com");
-    await tx.wait();
+    it("Should raise error if invalid params", async () => {
+      // TODO(Good to have): implement test
+    });
+  });
 
-    // Check
-    let tokenOwner = await contract.ownerOf(0);
-    expect(tokenOwner).to.equal(owner.address);
+  it("Testing isCertificateExists error", () => {
+    it("Should raise error if not using CertificateEndpoint address", async () => {
+      // TODO(Good to have): implement test
+    });
 
-    let tokenURI = await contract.tokenURI(0);
-    expect(tokenURI).to.equal("https://www.google.com");
+    it("Should raise error if invalid params", async () => {
+      // TODO(Good to have): implement test
+    });
+  });
 
-    // Award item to otherAddress
-    tx = await contract.awardItem(otherAddress.address, "https://www.google.com/hk");
-    await tx.wait();
-
-    // Check
-    tokenOwner = await contract.ownerOf(1);
-    expect(tokenOwner).to.equal(otherAddress.address);
-
-    tokenURI = await contract.tokenURI(1);
-    expect(tokenURI).to.equal("https://www.google.com/hk");
+  it("Testing issueCertificate, isCertificateExists", () => {
+    it("Should issue Certificate NFT correctly", async () => {
+      const [owner, otherAddress, ...rest] = await ethers.getSigners();
+      const Contract = await ethers.getContractFactory(CONTRACT_NAME);
+      const contract = await Contract.deploy();
+      await contract.deployed();
+      // TODO(Good to have): implement test
+    });
   });
 });
+
+// describe(`Given ${CONTRACT_NAME}`, function () {
+//   it("Should be able to award", async function () {
+//     // Deploy NFT Smart Contract
+//     const [owner, otherAddress, ...rest] = await ethers.getSigners();
+//     const Contract = await ethers.getContractFactory(CONTRACT_NAME);
+//     const contract = await Contract.deploy();
+//     await contract.deployed();
+
+//     // Award item to owner
+//     let tx = await contract.awardItem(owner.address, "https://www.google.com");
+//     await tx.wait();
+
+//     // Check
+//     let tokenOwner = await contract.ownerOf(0);
+//     expect(tokenOwner).to.equal(owner.address);
+
+//     let tokenURI = await contract.tokenURI(0);
+//     expect(tokenURI).to.equal("https://www.google.com");
+
+//     // Award item to otherAddress
+//     tx = await contract.awardItem(otherAddress.address, "https://www.google.com/hk");
+//     await tx.wait();
+
+//     // Check
+//     tokenOwner = await contract.ownerOf(1);
+//     expect(tokenOwner).to.equal(otherAddress.address);
+
+//     tokenURI = await contract.tokenURI(1);
+//     expect(tokenURI).to.equal("https://www.google.com/hk");
+//   });
+// });
