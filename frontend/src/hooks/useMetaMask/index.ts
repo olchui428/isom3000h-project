@@ -1,11 +1,7 @@
 import { UserType } from "@/types/UserType";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { abi as issuerEndpointABI } from "@/blockchain/abi/IssuerEndpoint.json";
-import { abi as applicantEndpointABI } from "@/blockchain/abi/ApplicantEndpoint.json";
-import { abi as accreditationEndpointABI } from "@/blockchain/abi/AccreditationEndpoint.json";
-import { abi as certificateEndpointABI } from "@/blockchain/abi/CertificateEndpoint.json";
 import { ethers } from "ethers";
-import { ContractAddresses } from "@/blockchain/contracts.config";
+import { ContractAddresses, issuerEndpointABI, applicantEndpointABI, accreditationEndpointABI, certificateEndpointABI } from "@/blockchain/contracts.config";
 import axios from "axios";
 
 // TODO: add finalized ABI
