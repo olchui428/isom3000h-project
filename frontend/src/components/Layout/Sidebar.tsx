@@ -5,6 +5,11 @@ import {
   Drawer,
   FormControl,
   InputLabel,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   MenuItem,
   Select,
   ThemeProvider,
@@ -12,6 +17,11 @@ import {
   createTheme,
 } from "@mui/material";
 import { blueGrey } from "@mui/material/colors";
+import SearchIcon from "@mui/icons-material/Search";
+import { NextLinkComposed } from "../NextLinkComposed";
+import HomeIcon from "@mui/icons-material/Home";
+import SendIcon from "@mui/icons-material/Send";
+import AddIcon from "@mui/icons-material/Add";
 
 interface SidebarProps {
   /** Width of the sidebar in px. */
@@ -45,13 +55,12 @@ function Sidebar({ width }: SidebarProps) {
         <Box
           sx={{
             minHeight: 64,
-            px: 2,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
           }}
         >
-          <FormControl fullWidth sx={{ mt: 2 }}>
+          <FormControl fullWidth sx={{ mt: 2, mx: 2 }}>
             <InputLabel id="user-type-label">User Type</InputLabel>
             <Select
               labelId="user-type-label"
@@ -68,12 +77,12 @@ function Sidebar({ width }: SidebarProps) {
             </Select>
           </FormControl>
         </Box>
-        {/* TODO: Think the links to each sub-page */}
-        <Box sx={{ pt: 3, px: 2 }}>
-          {sidebarSections.map((section) => (
-            <Box key={section.title} sx={{ mb: 3 }}>
+        <Box sx={{ pt: 3 }}>
+          {sidebarSections.map((section, index) => (
+            <Box key={index} sx={{ mb: 3 }}>
               <Typography
                 sx={{
+                  mx: 2,
                   color: blueGrey[300],
                   fontSize: 14,
                   fontWeight: 500,
@@ -82,7 +91,18 @@ function Sidebar({ width }: SidebarProps) {
               >
                 {section.title}
               </Typography>
-              {/* TODO: Insert links */}
+              <List>
+                {section.links.map((link) => {
+                  return link.visibleTo && !link.visibleTo.includes(userType) ? null : (
+                    <ListItem key={link.label} disablePadding>
+                      <ListItemButton component={NextLinkComposed} to={link.href}>
+                        <ListItemIcon>{link.icon}</ListItemIcon>
+                        <ListItemText primary={link.label} />
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                })}
+              </List>
             </Box>
           ))}
         </Box>
@@ -92,34 +112,57 @@ function Sidebar({ width }: SidebarProps) {
 }
 
 type SidebarSection = {
-  title: string;
+  title?: string;
   links: {
     icon: React.ReactNode;
     label: string;
     href: string;
+    /** If provided, only the specified user type(s) can see this link. */
+    visibleTo?: UserType[];
   }[];
 };
 
 const sidebarSections: SidebarSection[] = [
   {
+    links: [
+      {
+        icon: <HomeIcon />,
+        label: "Home",
+        href: "/",
+      },
+    ],
+  },
+  {
     title: "Accreditation",
-    links: [],
+    links: [
+      {
+        icon: <AddIcon />,
+        label: "Launch Accreditation",
+        href: "/accreditation/launch",
+        visibleTo: [UserType.ISSUER],
+      },
+      {
+        icon: <SearchIcon />,
+        label: "Search Accreditation",
+        href: "/accreditation/search",
+      },
+    ],
   },
   {
     title: "Certificate",
-    links: [],
-  },
-  {
-    title: "Issuer",
-    links: [],
-  },
-  {
-    title: "Applicant",
-    links: [],
-  },
-  {
-    title: "Search",
-    links: [],
+    links: [
+      {
+        icon: <SendIcon />,
+        label: "Issue Certificate",
+        href: "/certificate/issue",
+        visibleTo: [UserType.ISSUER],
+      },
+      {
+        icon: <SearchIcon />,
+        label: "Search Certificate",
+        href: "/certificate/search",
+      },
+    ],
   },
 ];
 

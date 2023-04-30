@@ -9,7 +9,7 @@ interface LayoutProps {
 }
 
 /** Width of the sidebar in pixels. */
-const sidebarWidth = 240;
+const sidebarWidth = 250;
 
 /**
  * Wrapper component for providing the layout.
