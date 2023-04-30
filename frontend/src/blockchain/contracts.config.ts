@@ -2,18 +2,16 @@
  * Stores necessary information regarding deployed and ready-for-use contracts for front-end to use
  */
 
-import { abi as issuerEndpointABI } from "@/blockchain/abi/IssuerEndpoint.json";
-import { abi as applicantEndpointABI } from "@/blockchain/abi/ApplicantEndpoint.json";
-import { abi as accreditationEndpointABI } from "@/blockchain/abi/AccreditationEndpoint.json";
-import { abi as certificateEndpointABI } from "@/blockchain/abi/CertificateEndpoint.json";
+import accreditationEndpoint from "@/blockchain/abi/AccreditationEndpoint.json";
+import applicantEndpoint from "@/blockchain/abi/ApplicantEndpoint.json";
+import certificateEndpoint from "@/blockchain/abi/CertificateEndpoint.json";
+import issuerEndpoint from "@/blockchain/abi/IssuerEndpoint.json";
 
 // Import and abstractionize endpoint contract ABIs
-export {
-  issuerEndpointABI,
-  applicantEndpointABI,
-  accreditationEndpointABI,
-  certificateEndpointABI,
-};
+export const issuerEndpointABI = issuerEndpoint.abi;
+export const applicantEndpointABI = applicantEndpoint.abi;
+export const accreditationEndpointABI = accreditationEndpoint.abi;
+export const certificateEndpointABI = certificateEndpoint.abi;
 
 type NetworkConfigType = {
   name: string;
