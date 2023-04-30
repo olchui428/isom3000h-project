@@ -1,4 +1,4 @@
-TODO: Must be deleted later !!!
+TODO(finalize project directoy): Must be deleted later !!!
 
 
 ###################################################################################################

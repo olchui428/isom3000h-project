@@ -7,7 +7,7 @@ contract CertificateStorage {
     // ========================= Variables =========================
 
     // -------------------- Contract addresses --------------------
-    
+
     /// @dev Boolean flag to see if contracts have been fully deployed
     bool private _areAddressesFilled = false;
 
@@ -16,7 +16,7 @@ contract CertificateStorage {
 
     // /// @dev Address of deployed ApplicantStorage contract
     // address private _applicantStorageAddress;
-    
+
     // -------------------- Variables --------------------
 
     /// @dev Get Certificate by its NFT Token ID
@@ -35,7 +35,7 @@ contract CertificateStorage {
     // /// @dev Storage contract for Applicants
     // ApplicantStorage applicantStorage;
 
-    // TODO: add Contracts
+    // TODO(MVP): add Contracts
 
     // ========================= Functions & Modifiers =========================
 
@@ -56,19 +56,21 @@ contract CertificateStorage {
         require(!_areAddressesFilled);
         _;
     }
+
     function setAddresses() external onlyDeployer addressesHaveNotBeenInitialized {
         _areAddressesFilled = true;
-        // TODO: add required addresses + initialize Contract variables
+        // TODO(MVP): add required addresses
     }
 
     // -------------------- Functions --------------------
 
-    // TODO: add CRUD functions
+    function getCertificateById(uint256 id) external view returns (Certificate memory) {}
+
+    // TODO(MVP): add CRUD functions
 
     // Should only be created when minting NFT
     // Individual Certificate can be accessed by everyone
     // Array view requires privilege
-    // Include an expiry date related burn method to be called from CertificateNFT
 
     // Map Certificate[] to Issuer address[]
     // Map Certificate[] to Applicant address[]

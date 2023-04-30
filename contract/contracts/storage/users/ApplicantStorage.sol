@@ -14,9 +14,10 @@ contract ApplicantStorage {
     /// @dev Wallet address of deployer, similar to admin address
     address payable private _deployerAddress;
 
-    // TODO: add addresses
-    // /// @dev Address of deployed ApplicantStorage contract
-    // address private _applicantStorageAddress;
+    /// @dev Address of deployed ApplicantEndpoint contract
+    address private _applicantEndpointAddress;
+
+    // TODO(MVP): add addresses
 
     // -------------------- Variables --------------------
 
@@ -28,7 +29,7 @@ contract ApplicantStorage {
 
     // -------------------- Contracts --------------------
 
-    // TODO: add Contracts
+    // TODO(MVP): add Contracts
 
     // ========================= Functions & Modifiers =========================
 
@@ -49,19 +50,20 @@ contract ApplicantStorage {
         _;
     }
 
-    function setAddresses() external onlyDeployer addressesHaveNotBeenInitialized {
+    function setAddresses(
+        address applicantEndpointAddress
+    ) external onlyDeployer addressesHaveNotBeenInitialized {
         _areAddressesFilled = true;
-        // TODO: add required addresses + initialize Contract variables
+        _applicantEndpointAddress = applicantEndpointAddress;
+        // TODO(MVP): add required addresses
     }
 
     // -------------------- Functions --------------------
 
-    // TODO: add CRUD functions
-
     /// @dev Verify the address does not exist in the `_applicants` mapping
     /// @dev This is equivalent to checking if all the fields of the obtained mapping object have 0-values
-    modifier newApplicant() {
-        Applicant memory i = _applicants[msg.sender];
+    modifier newApplicant(address payable applicantAddress) {
+        Applicant memory i = _applicants[applicantAddress];
         // If possible check all fields of the struct, but this is enough because a payable address cannot be 0-value
         require(i.applicantAddress == address(0));
         _;
@@ -72,25 +74,26 @@ contract ApplicantStorage {
     /// @notice Possible use cases include a new Wallet trying to register itself as a new Applicant
     /// @dev Add an Applicant to mapping
     /// @param name: Name of the company
-    // TODO: add params
+    // TODO(Good to have): add params
     /// @return Status of the registration process, returns true if success, otherwise throw error
-    function registerApplicant(string memory name) external newApplicant returns (bool) {
-        address payable applicantAddress = payable(msg.sender);
+    function createApplicant(
+        address payable applicantAddress,
+        string memory name
+    ) external newApplicant(applicantAddress) returns (bool) {
         _applicants[applicantAddress] = Applicant(name, applicantAddress, block.timestamp);
         return true;
     }
 
-    // // TODO
-    // modifier verifyGettingAddress(address payable inputAddress) {
-    //     require(msg.sender == );
-    //     require(inputAddress)
-    //     _;
-    // }
+    modifier verifyGettingAddress() {
+        require(msg.sender == _applicantEndpointAddress);
+        _;
+    }
+
     /// @param inputAddress If the address is valid, it is used to search for an Applicant instance
     /// @return Applicant instance obtained by querying the inputAddress
     function getApplicantByAddress(
         address payable inputAddress
-    ) external view returns (Applicant memory) {
+    ) external view verifyGettingAddress returns (Applicant memory) {
         return _applicants[inputAddress];
     }
 
@@ -104,4 +107,6 @@ contract ApplicantStorage {
     function isApplicantExists(address payable inputAddress) external view returns (bool) {
         return _applicants[inputAddress].applicantAddress == inputAddress;
     }
+
+    // TODO(MVP): add CRUD functions
 }

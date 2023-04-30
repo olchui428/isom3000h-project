@@ -18,6 +18,9 @@ contract IssuerStorage {
     /// @dev Address of deployed AccreditationStorage contract
     address private _accreditationStorageAddress;
 
+    /// @dev Address of deployed IssuerEndpoint contract
+    address private _issuerEndpointAddress;
+
     // /// @dev Address of deployed ApplicantStorage contract
     // address private _applicantStorageAddress;
 
@@ -27,9 +30,6 @@ contract IssuerStorage {
     mapping(address => Issuer) private _issuers;
 
     // -------------------- Contracts --------------------
-
-    // /// @dev Storage contract for Applicants
-    // ApplicantStorage applicantStorage;
 
     // ========================= Functions & Modifiers =========================
 
@@ -50,22 +50,23 @@ contract IssuerStorage {
     }
 
     function setContractsAddresses(
-        address accreditationStorageAddress
+        address accreditationStorageAddress,
+        address issuerEndpointAddress
     ) external onlyDeployer addressesHaveNotBeenInitialized {
         _areAddressesFilled = true;
         _accreditationStorageAddress = accreditationStorageAddress;
-        // TODO: add required addresses
-        // applicantStorage = ApplicantStorage(address(0));
+        _issuerEndpointAddress = issuerEndpointAddress;
+        // TODO(MVP): add required addresses
     }
 
     // -------------------- Functions --------------------
 
-    // TODO: add CRUD functions
+    // TODO(MVP): add CRUD functions
 
     /// @dev Verify the address does not exist in the `_issuers` mapping
     /// @dev This is equivalent to checking if all the fields of the obtained mapping object have 0-values
-    modifier newIssuer() {
-        Issuer memory i = _issuers[msg.sender];
+    modifier newIssuer(address payable inputAddress) {
+        Issuer memory i = _issuers[inputAddress];
         // If possible check all fields of the struct, but this is enough because a payable address cannot be 0-value
         require(i.issuerAddress == address(0));
         _;
@@ -76,35 +77,28 @@ contract IssuerStorage {
     /// @notice Possible use cases include a new Wallet trying to register itself as a new Issuer
     /// @dev Add an Issuer to mapping
     /// @param name: Name of the company
-    // TODO: add params
+    // TODO(Good to have): add params
     /// @return Status of the registration process, returns true if success, otherwise throw error
     function registerIssuer(
+        address payable inputAddress,
         string memory name,
         string memory description,
         string memory logoUrl
-    ) external newIssuer returns (bool) {
-        address payable issuerAddress = payable(msg.sender);
-        _issuers[issuerAddress] = Issuer(
-            name,
-            issuerAddress,
-            description,
-            logoUrl,
-            block.timestamp
-        );
+    ) external newIssuer(inputAddress) returns (bool) {
+        _issuers[inputAddress] = Issuer(name, inputAddress, description, logoUrl, block.timestamp);
         return true;
     }
 
-    // // TODO
-    // modifier verifyGettingAddress(address payable inputAddress) {
-    //     require(msg.sender == );
-    //     require(inputAddress)
-    //     _;
-    // }
+    modifier verifyGettingAddress() {
+        require(msg.sender == _issuerEndpointAddress);
+        _;
+    }
+
     /// @param inputAddress If the address is valid, it is used to search for an Issuer instance
     /// @return Issuer instance obtained by querying the inputAddress
     function getIssuerByAddress(
         address payable inputAddress
-    ) external view returns (Issuer memory) {
+    ) external view verifyGettingAddress returns (Issuer memory) {
         return _issuers[inputAddress];
     }
 

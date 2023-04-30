@@ -6,6 +6,6 @@ struct Issuer {
     address payable issuerAddress;
     string description;
     string logoUrl;
-    uint256 registeredAt;
-    // TODO: add more fields
+    uint256 createdAt;
+    // TODO(Good to have): add more fields
 }

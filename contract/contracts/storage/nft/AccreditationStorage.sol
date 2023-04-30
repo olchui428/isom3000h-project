@@ -127,7 +127,7 @@ contract AccreditationStorage {
         return _accreditations[id];
     }
 
-    function getAccreditationsByAddress(
+    function getAccreditationsByIssuerAddress(
         address payable inputAddress
     )
         external
@@ -143,11 +143,7 @@ contract AccreditationStorage {
         uint256 id,
         string calldata revokeReason,
         uint256 revokeTime
-    )
-        external
-        validateCallFromNFT
-        returns (bool)
-    {
+    ) external validateCallFromNFT returns (bool) {
         Accreditation storage accred = _accreditations[id];
         accred.isRevoked = true;
         accred.revokeReason = revokeReason;

@@ -90,12 +90,13 @@ contract AccreditationEndpoint {
         return _accreditationStorage.getAccreditationById(id);
     }
 
-    function getAccreditationsByAddress(
+    function getAccreditationsByIssuerAddress(
         address payable inputAddress
     ) external view returns (Accreditation[] memory) {
-        return _accreditationStorage.getAccreditationsByAddress(inputAddress);
+        return _accreditationStorage.getAccreditationsByIssuerAddress(inputAddress);
     }
 
+    // TODO(Good to have)
     // /// @dev it is decided that NFTs issued will not be burned
     // function revokeAccreditationById(uint256 id) external pure nftValidator(id) returns (bool) {
     //     return _accreditationNFT.revokeAccreditationById(id);

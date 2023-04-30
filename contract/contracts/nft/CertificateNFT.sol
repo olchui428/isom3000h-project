@@ -16,7 +16,7 @@ contract CertificateNFT is ERC721 {
     // ========================= Variables =========================
 
     // -------------------- Contract addresses --------------------
-    
+
     /// @dev Boolean flag to see if contracts have been fully deployed
     bool private _areAddressesFilled = false;
 
@@ -25,7 +25,7 @@ contract CertificateNFT is ERC721 {
 
     // /// @dev Address of deployed ApplicantStorage contract
     // address private _applicantStorageAddress;
-    
+
     // -------------------- Variables --------------------
 
     /// @dev Iterator to generate unique token IDs
@@ -38,7 +38,7 @@ contract CertificateNFT is ERC721 {
     // /// @dev Storage contract for Applicants
     // ApplicantStorage applicantStorage;
 
-    // TODO: add Contracts
+    // TODO(MVP): add Contracts
 
     // ========================= Functions & Modifiers =========================
 
@@ -62,44 +62,46 @@ contract CertificateNFT is ERC721 {
 
     function setAddresses() external onlyDeployer addressesHaveNotBeenInitialized {
         _areAddressesFilled = true;
-        // TODO: add required addresses + initialize Contract variables
+        // TODO(MVP): add required addresses
     }
 
     // -------------------- Functions --------------------
 
-    // TODO: add validation
     /// @dev Only Issuers can issue Certificates, validate if msg.sender === Issuer.address
     modifier validateBeforeIssue() {
+        // TODO(MVP): add validation
         _;
     }
-    // TODO: add verification
-    // TODO: add arguments
+
+    // TODO(MVP): add verification
+    // TODO(MVP): add arguments
     /// @notice Mints an new NFT as a certificate, stores Certificate data
     /// @dev Mints a new NFT, then calls CertificateStorage to store data
     function issueCertificate(
         address payable applicantAddress
-        // TODO: add arguments
-    ) 
+    )
         public
-        validateBeforeIssue()
+        // TODO(MVP): add arguments
+        validateBeforeIssue
         returns (uint256)
     {
         uint256 newCertId = _tokenIds.current();
-        // TODO: create new Cert and assign to mapping
-        
+        // TODO(MVP): create new Cert and assign to mapping
+
         _safeMint(applicantAddress, newCertId);
 
         _tokenIds.increment();
     }
-    
-    // TODO: add validation before burning
-    modifier validateBurn() {
-        _;
-    }
-    function _burnCert(uint256 certId) internal returns (bool) {
-        // TODO: delete Cert entry from mapping
-        _burn(certId);
-    }
+
+    // // TODO(Good to have): add validation before burning
+    // modifier validateBurn() {
+    //     _;
+    // }
+
+    // function _burnCert(uint256 certId) internal returns (bool) {
+    //     // TODO(Good to have): delete Cert entry from mapping
+    //     _burn(certId);
+    // }
 }
 
 // import "./types/Certificate.sol";
@@ -114,12 +116,6 @@ contract CertificateNFT is ERC721 {
 
 //     Counters.Counter private _certIds;
 //     mapping(uint256 => Certificate) private certificates;
-
-//     // ------ Modifiers
-//     modifier onlyCreator() {
-//         // TODO: design modifiers
-//         _;
-//     }
 
 //     // ------ Methods
 
