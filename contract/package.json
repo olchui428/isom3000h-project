@@ -2,8 +2,10 @@
   "name": "isom3000h-project-contract",
   "scripts": {
     "start": "hardhat compile",
-    "clean": "hardhat clean",
-    "clear_logs": "rm -r ./scripts/logs || del /q \"./scripts/logs\"",
+    "clean": "npm run clean:build & npm run clean:coverage & npm run clean:logs",
+    "clean:build": "hardhat clean && ((rm -r ./cache) || (rmdir /s /q \"./cache\"))",
+    "clean:coverage": "(rm -r ./coverage ./coverage.json) || (del /q \"coverage.json\" & rmdir /s /q \"./coverage\")",
+    "clean:logs": "(rm -r ./scripts/logs) || (rmdir /s /q \"./scripts/logs\")",
     "test": "hardhat test",
     "coverage": "hardhat coverage",
     "deploy:prod": "hardhat run scripts/deploy.ts --network etherdata",
