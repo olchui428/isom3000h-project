@@ -12,6 +12,18 @@ import axios from "axios";
 
 // TODO: add finalized ABI
 
+/**
+ * Number of confirmed mined blocks to wait for for low security operations
+ * Set to 1 because faster response time in sacrifice of security
+ */
+const LOW_SECURITY_NUM_CONFIRMS = 1;
+/**
+ * Number of confirmed mined blocks to wait for for high security operations
+ * The number should be much more than 1 to prevent double spend attack
+ * Set to 1 only for demo purposes
+ */
+const HIGH_SECURITY_NUM_CONFIRMS = 1;
+
 // TODO: write a hook for connecting to MetaMask and interacting with Smart Contract, so that front-end only need to call function from here
 const useMetaMask = () => {
   const [userType, setUserType] = useState<UserType>(UserType.OUTSIDER);
@@ -84,8 +96,12 @@ const useMetaMask = () => {
   // Reference: https://github.com/mdtanrikulu/use-metamask/blob/main/src/useMetamask.js
 
   const IssuerEndpoint = () => {
-    // TODO: replace with actual endpoint functions
-    const fakeFunction = async () => {
+    const registerIssuer = async (
+      issuerAddress: string,
+      name: string,
+      description: string,
+      logoUrl: string
+    ) => {
       if (!signer) return;
       try {
         const issuerEndpoint = new ethers.Contract(
@@ -93,24 +109,38 @@ const useMetaMask = () => {
           issuerEndpointABI,
           signer
         );
+        const tx = await issuerEndpoint.registerIssuer(issuerAddress, name, description, logoUrl);
         // Add this line if it is a creation transaction // wait for the transaction to be mined
-        // await tx.wait();
+        await tx.wait(LOW_SECURITY_NUM_CONFIRMS);
       } catch (error) {
-        alert(`Error at IssuerEndpoint: ${error}`);
+        console.log(`Error at IssuerEndpoint::registerIssuer(): ${error}`);
+        throw error;
       }
-      // TODO: complete implementation
     };
 
-    // TODO: add endpoint functions
+    const getIssuerByAddress = async (issuerAddress: string) => {
+      if (!signer) return;
+      try {
+        const issuerEndpoint = new ethers.Contract(
+          ContractAddresses.ISSUER_ENDPOINT,
+          issuerEndpointABI,
+          signer
+        );
+        return await issuerEndpoint.getIssuerByAddress(issuerAddress);
+      } catch (error) {
+        console.log(`Error at IssuerEndpoint::getIssuerByAddress(): ${error}`);
+        throw error;
+      }
+    };
 
     return {
-      // TODO: add endpoint functions
+      registerIssuer,
+      getIssuerByAddress,
     };
   };
 
   const ApplicantEndpoint = () => {
-    // TODO: replace with actual endpoint functions
-    const fakeFunction = async () => {
+    const registerApplicant = async (applicantAddress: string, name: string) => {
       if (!signer) return;
       try {
         const applicantEndpoint = new ethers.Contract(
@@ -118,41 +148,65 @@ const useMetaMask = () => {
           applicantEndpointABI,
           signer
         );
+        const tx = await applicantEndpoint.registerApplicant(applicantAddress, name);
         // Add this line if it is a creation transaction // wait for the transaction to be mined
-        // await tx.wait();
+        await tx.wait(LOW_SECURITY_NUM_CONFIRMS);
       } catch (error) {
-        alert(`Error at ApplicantEndpoint: ${error}`);
+        console.log(`Error at ApplicantEndpoint::registerApplicant(): ${error}`);
+        throw error;
       }
-      // TODO: complete implementation
     };
 
-    // TODO: add endpoint functions
+    const getApplicantByAddress = async (applicantAddress: string) => {
+      if (!signer) return;
+      try {
+        const applicantEndpoint = new ethers.Contract(
+          ContractAddresses.APPLICANT_ENDPOINT,
+          applicantEndpointABI,
+          signer
+        );
+        return await applicantEndpoint.getApplicantByAddress(applicantAddress);
+      } catch (error) {
+        console.log(`Error at ApplicantEndpoint::getApplicantByAddress(): ${error}`);
+        throw error;
+      }
+    };
 
     return {
-      // TODO: add endpoint functions
+      registerApplicant,
+      getApplicantByAddress,
     };
   };
 
   const AccreditationEndpoint = () => {
-    const launchAccreditation = async () =>
-      // TODO: add params
-      {
-        if (!signer) return;
-        try {
-          const accreditationEndpoint = new ethers.Contract(
-            ContractAddresses.ACCREDITATION_ENDPOINT,
-            accreditationEndpointABI,
-            signer
-          );
-          const tx = await accreditationEndpoint
-            .launchAccreditation
-            // TODO: add params
-            ();
-          await tx.wait();
-        } catch (error) {
-          alert(`Error at AccreditationEndpoint.launchAccreditation: ${error}`);
-        }
-      };
+    const launchAccreditation = async (
+      issuer: string,
+      title: string,
+      duration: Date,
+      nature: string,
+      description: string
+    ) => {
+      if (!signer) return;
+      try {
+        const accreditationEndpoint = new ethers.Contract(
+          ContractAddresses.ACCREDITATION_ENDPOINT,
+          accreditationEndpointABI,
+          signer
+        );
+        const tx = await accreditationEndpoint.launchAccreditation(
+          issuer,
+          title,
+          new Date(),
+          duration,
+          nature,
+          description
+        );
+        await tx.wait(HIGH_SECURITY_NUM_CONFIRMS);
+      } catch (error) {
+        console.log(`Error at AccreditationEndpoint::launchAccreditation(): ${error}`);
+        throw error;
+      }
+    };
 
     const getAccreditationById = async (id: number) => {
       if (!signer) return;
@@ -164,11 +218,12 @@ const useMetaMask = () => {
         );
         return await accreditationEndpoint.getAccreditationById(id);
       } catch (error) {
-        alert(`Error at AccreditationEndpoint.getAccreditationById: ${error}`);
+        console.log(`Error at AccreditationEndpoint::getAccreditationById(): ${error}`);
+        throw error;
       }
     };
 
-    const getAccreditationsByAddress = async (address: number) => {
+    const getAccreditationsByIssuerAddress = async (address: string) => {
       if (!signer) return;
       try {
         const accreditationEndpoint = new ethers.Contract(
@@ -176,22 +231,29 @@ const useMetaMask = () => {
           accreditationEndpointABI,
           signer
         );
-        return await accreditationEndpoint.getAccreditationsByAddress(address);
+        return await accreditationEndpoint.getAccreditationsByIssuerAddress(address);
       } catch (error) {
-        alert(`Error at AccreditationEndpoint.getAccreditationsByAddress: ${error}`);
+        console.log(`Error at AccreditationEndpoint::getAccreditationsByIssuerAddress(): ${error}`);
+        throw error;
       }
     };
 
     return {
       launchAccreditation,
       getAccreditationById,
-      getAccreditationsByAddress,
+      getAccreditationsByIssuerAddress,
     };
   };
 
   const CertificateEndpoint = () => {
-    // TODO: replace with actual endpoint functions
-    const fakeFunction = async () => {
+    const issueCertificate = async (
+      issuerAddress: string,
+      applicantAddress: string,
+      accreditationId: number,
+      level: string,
+      eventId: string,
+      remarks: string
+    ) => {
       if (!signer) return;
       try {
         const certificateEndpoint = new ethers.Contract(
@@ -199,24 +261,85 @@ const useMetaMask = () => {
           certificateEndpointABI,
           signer
         );
+        const tx = await certificateEndpoint.issueCertificate(
+          issuerAddress,
+          applicantAddress,
+          new Date(),
+          accreditationId,
+          level,
+          eventId,
+          remarks
+        );
         // Add this line if it is a creation transaction // wait for the transaction to be mined
-        // await tx.wait();
+        await tx.wait(HIGH_SECURITY_NUM_CONFIRMS);
       } catch (error) {
-        alert(`Error at CertificateEndpoint: ${error}`);
+        console.log(`Error at CertificateEndpoint::issueCertificate(): ${error}`);
+        throw error;
       }
-      // TODO: complete implementation
     };
 
-    // TODO: add endpoint functions
+    const getCertificateById = async (id: number) => {
+      if (!signer) return;
+      try {
+        const certificateEndpoint = new ethers.Contract(
+          ContractAddresses.CERTIFICATE_ENDPOINT,
+          certificateEndpointABI,
+          signer
+        );
+        return await certificateEndpoint.getCertificateById(id);
+      } catch (error) {
+        console.log(`Error at CertificateEndpoint::getCertificateById(): ${error}`);
+        throw error;
+      }
+    };
+
+    // TODO(Good to have): implement in endpoint contract then here
+    // const getCertificatesByApplicantAddress = async (address: string) => {
+    //   if (!signer) return;
+    //   try {
+    //     const certificateEndpoint = new ethers.Contract(
+    //       ContractAddresses.CERTIFICATE_ENDPOINT,
+    //       certificateEndpointABI,
+    //       signer
+    //     );
+    //     return await certificateEndpoint.getCertificatesByApplicantAddress(address);
+    //   } catch (error) {
+    //     console.log(`Error at CertificateEndpoint::getCertificatesByApplicantAddress(): ${error}`);
+    //     throw error;
+    //   }
+    // };
+
+    const getCompleteCertById = async (id: number) => {
+      if (!signer) return;
+      try {
+        const certificateEndpoint = new ethers.Contract(
+          ContractAddresses.CERTIFICATE_ENDPOINT,
+          certificateEndpointABI,
+          signer
+        );
+        return await certificateEndpoint.getCompleteCertById(id);
+      } catch (error) {
+        console.log(`Error at CertificateEndpoint::getCompleteCertById(): ${error}`);
+        throw error;
+      }
+    };
 
     return {
-      // TODO: add endpoint functions
+      issueCertificate,
+      getCertificateById,
+      // getCertificatesByApplicantAddress,
+      getCompleteCertById,
     };
   };
 
   const generateCertificate = async (certificateId: number) => {
     // TODO: refine
-    return await axios.get(`/api/certificate/${certificateId}`);
+    try {
+      return await axios.get(`/api/certificate/${certificateId}`);
+    } catch (error) {
+      console.log(`Error at generateCertificate(): ${error}`);
+      throw error;
+    }
   };
 
   return {
