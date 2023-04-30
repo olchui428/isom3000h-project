@@ -79,7 +79,7 @@ contract IssuerStorage {
     /// @param name: Name of the company
     // TODO(Good to have): add params
     /// @return Status of the registration process, returns true if success, otherwise throw error
-    function registerIssuer(
+    function createIssuer(
         address payable inputAddress,
         string memory name,
         string memory description,

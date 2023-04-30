@@ -55,7 +55,7 @@ contract IssuerEndpoint {
         string calldata description,
         string calldata logoUrl
     ) external returns (bool) {
-        return _issuerStorage.registerIssuer(issuerAddress, name, description, logoUrl);
+        return _issuerStorage.createIssuer(issuerAddress, name, description, logoUrl);
     }
 
     function getIssuerByAddress(
