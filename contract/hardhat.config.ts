@@ -29,6 +29,7 @@ const config: HardhatUserConfig = {
     },
     // polygon: test net we found ourselves, regarded as test env for our project
     polygon: {
+      // SETUP
       url: "https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78",
       accounts: parseEnvPKToAccounts(process.env.TEST_PK),
     },
