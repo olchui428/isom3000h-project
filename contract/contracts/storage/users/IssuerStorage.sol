@@ -49,7 +49,7 @@ contract IssuerStorage {
         _;
     }
 
-    function setContractsAddresses(
+    function setAddresses(
         address accreditationStorageAddress,
         address issuerEndpointAddress
     ) external onlyDeployer addressesHaveNotBeenInitialized {
