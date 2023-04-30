@@ -1,8 +1,12 @@
 import Layout from "@/components/Layout";
+import NotAllowed from "@/components/NotAllowed";
+import { useAppContext } from "@/contexts/app";
 import useMetaMask from "@/hooks/useMetaMask";
+import { UserType } from "@/types";
 import { useRouter } from "next/router";
 
 function AccreditationLaunch() {
+  const { userType } = useAppContext();
   const router = useRouter();
   const metaMask = useMetaMask();
 
@@ -13,7 +17,15 @@ function AccreditationLaunch() {
       router.push(`/accreditation/${newAccredId}`);
     }
   };
-  // TODO: only authorize Issuer enter this page
+
+  if (userType !== UserType.ISSUER) {
+    return (
+      <Layout title="Launch Accreditation">
+        <NotAllowed />
+      </Layout>
+    );
+  }
+
   // TODO: add form to allow creation of new accreditation
   // TODO: redirect to accreditation page of that new accreditation after successfully create
   return (
