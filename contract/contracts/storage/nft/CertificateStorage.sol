@@ -18,6 +18,12 @@ contract CertificateStorage {
     /// @dev Address of deployed ApplicantStorage contract
     address private _applicantStorageAddress;
 
+    /// @dev Address of deployed CertificateNFT contract
+    address private _certificateNFTAddress;
+
+    /// @dev Address of deployed CertificateEndpoint contract
+    address private _certificateEndpointAddress;
+
     // -------------------- Variables --------------------
 
     /// @dev Get Certificate by its NFT Token ID
@@ -63,9 +69,13 @@ contract CertificateStorage {
         _;
     }
 
-    function setAddresses() external onlyDeployer addressesHaveNotBeenInitialized {
+    function setAddresses(
+        address certificateNFTAddress,
+        address certificateEndpointAddress
+    ) external onlyDeployer addressesHaveNotBeenInitialized {
         _areAddressesFilled = true;
-        // TODO(MVP): add required addresses
+        _certificateNFTAddress = certificateNFTAddress;
+        _certificateEndpointAddress = certificateEndpointAddress;
     }
 
     // -------------------- Functions --------------------
