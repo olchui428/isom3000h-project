@@ -2,6 +2,7 @@
 pragma solidity ^0.8.9;
 
 import { Certificate } from "../../types/nft/Certificate.sol";
+import { ApplicantStorage } from "../users/ApplicantStorage.sol";
 
 contract CertificateStorage {
     // ========================= Variables =========================
@@ -14,8 +15,8 @@ contract CertificateStorage {
     /// @dev Wallet address of deployer, similar to admin address
     address payable private _deployerAddress;
 
-    // /// @dev Address of deployed ApplicantStorage contract
-    // address private _applicantStorageAddress;
+    /// @dev Address of deployed ApplicantStorage contract
+    address private _applicantStorageAddress;
 
     // -------------------- Variables --------------------
 
@@ -32,8 +33,9 @@ contract CertificateStorage {
 
     // /// @dev Storage contract for Issuers
     // IssuerStorage issuerStorage;
-    // /// @dev Storage contract for Applicants
-    // ApplicantStorage applicantStorage;
+
+    /// @dev Storage contract for Applicants
+    ApplicantStorage private _applicantStorage;
 
     // TODO(MVP): add Contracts
 
@@ -42,10 +44,14 @@ contract CertificateStorage {
     // -------------------- Setting up contracts --------------------
 
     /// @notice Deploys a storage contract for Certificate
-    /// @param someAddress TODO: think add what parameters, aka need to which contracts this contract will call
-    constructor(address someAddress) {
+    /// @param applicantStorageAddress address of deployed ApplicantStorage contract
+    constructor(address applicantStorageAddress) {
+        // Store addresses
         _deployerAddress = payable(msg.sender);
-        someAddress;
+        _applicantStorageAddress = applicantStorageAddress;
+
+        // Create Contract variables
+        _applicantStorage = ApplicantStorage(applicantStorageAddress);
     }
 
     modifier onlyDeployer() {

@@ -46,11 +46,12 @@ contract AccreditationStorage {
     // -------------------- Setting up contracts --------------------
 
     /// @notice Deploys a storage contract for Accreditation
-    /// @param issuerStorageAddress: think add what parameters, aka need to which contracts this contract will call
+    /// @param issuerStorageAddress address of deployed IssuerStorage contract
     constructor(address issuerStorageAddress) {
         // Store addresses
         _deployerAddress = payable(msg.sender);
         _issuerStorageAddress = issuerStorageAddress;
+
         // Create Contract variables
         _issuerStorage = IssuerStorage(issuerStorageAddress);
     }
