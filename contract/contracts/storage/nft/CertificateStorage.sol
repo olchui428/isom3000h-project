@@ -64,7 +64,50 @@ contract CertificateStorage {
 
     // -------------------- Functions --------------------
 
-    function getCertificateById(uint256 id) external view returns (Certificate memory) {}
+    // TODO(MVP): createCertificate modifier
+
+    function createCertificate(
+        uint256 newCertId,
+        address payable issuerAddress,
+        address payable applicantAddress,
+        uint256 createdAt,
+        uint256 accreditationId,
+        string memory level,
+        string memory eventId,
+        string memory remarks
+    ) external returns (bool) {
+        Certificate memory certificate = Certificate(
+            newCertId,
+            issuerAddress,
+            applicantAddress,
+            createdAt,
+            accreditationId,
+            level,
+            eventId,
+            remarks,
+            false,
+            "",
+            0
+        );
+        _certificates[newCertId] = certificate;
+        _certsByApplicant[applicantAddress].push(certificate);
+        _certsByAccred[accreditationId].push(certificate);
+        return true;
+    }
+
+    // TODO(MVP): getCertificateById modifier
+
+    function getCertificateById(uint256 id) external view returns (Certificate memory) {
+        return _certificates[id];
+    }
+
+    // TODO(MVP): getCertificatesByApplicantAddress modifier
+
+    function getCertificatesByApplicantAddress(
+        address payable inputAddress
+    ) external view returns (Certificate[] memory) {
+        return _certsByApplicant[inputAddress];
+    }
 
     // TODO(MVP): add CRUD functions
 

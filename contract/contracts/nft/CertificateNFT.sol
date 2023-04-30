@@ -23,8 +23,14 @@ contract CertificateNFT is ERC721 {
     /// @dev Wallet address of deployer, similar to admin address
     address payable private _deployerAddress;
 
+    /// @dev Address of deployed CertificateStorage contract
+    address private _certificateStorageAddress;
+
     // /// @dev Address of deployed ApplicantStorage contract
     // address private _applicantStorageAddress;
+
+    /// @dev Address of deployed CertificateEndpoint contract
+    address private _certificateEndpointAddress;
 
     // -------------------- Variables --------------------
 
@@ -38,6 +44,9 @@ contract CertificateNFT is ERC721 {
     // /// @dev Storage contract for Applicants
     // ApplicantStorage applicantStorage;
 
+    /// @dev Storage contract for Certificates
+    CertificateStorage private _certificateStorage;
+
     // TODO(MVP): add Contracts
 
     // ========================= Functions & Modifiers =========================
@@ -45,10 +54,20 @@ contract CertificateNFT is ERC721 {
     // -------------------- Setting up contracts --------------------
 
     /// @notice Deploys an NFT contract for Certificates
-    /// @param accreditationContractAddress TODO: think add what parameters, aka need to which contracts this contract will call
-    constructor(string memory accreditationContractAddress) ERC721("CertificateNFT", "CERT") {
+    // /// @param accreditationStorageAddress address of deployed AcccreditationStorage contract
+    /// @param certificateStorageAddress address of deployed CertificateStorage contract
+    constructor(
+        // address accreditationStorageAddress,
+        address certificateStorageAddress
+    ) ERC721("CertificateNFT", "CERT") {
+        // Store addresses
         _deployerAddress = payable(msg.sender);
-        accreditationContractAddress;
+        // _accreditationStorageAddress = accreditationStorageAddress;
+        _certificateStorageAddress = certificateStorageAddress;
+
+        // Create Contract variables
+        // _accreditationStorage = AccreditationStorage(accreditationStorageAddress);
+        _certificateStorage = CertificateStorage(certificateStorageAddress);
     }
 
     modifier onlyDeployer() {
@@ -60,8 +79,11 @@ contract CertificateNFT is ERC721 {
         _;
     }
 
-    function setAddresses() external onlyDeployer addressesHaveNotBeenInitialized {
+    function setAddresses(
+        address certificateEndpointAddress
+    ) external onlyDeployer addressesHaveNotBeenInitialized {
         _areAddressesFilled = true;
+        _certificateEndpointAddress = certificateEndpointAddress;
         // TODO(MVP): add required addresses
     }
 
@@ -78,19 +100,37 @@ contract CertificateNFT is ERC721 {
     /// @notice Mints an new NFT as a certificate, stores Certificate data
     /// @dev Mints a new NFT, then calls CertificateStorage to store data
     function issueCertificate(
-        address payable applicantAddress
+        address payable issuerAddress,
+        address payable applicantAddress,
+        uint256 createdAt,
+        uint256 accreditationId,
+        string memory level,
+        string memory eventId,
+        string memory remarks
     )
-        public
+        external
         // TODO(MVP): add arguments
         validateBeforeIssue
         returns (uint256)
     {
         uint256 newCertId = _tokenIds.current();
         // TODO(MVP): create new Cert and assign to mapping
+        _certificateStorage.createCertificate(
+            newCertId,
+            issuerAddress,
+            applicantAddress,
+            createdAt,
+            accreditationId,
+            level,
+            eventId,
+            remarks
+        );
 
         _safeMint(applicantAddress, newCertId);
 
         _tokenIds.increment();
+
+        return newCertId;
     }
 
     // // TODO(Good to have): add validation before burning

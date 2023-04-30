@@ -47,8 +47,11 @@ contract ApplicantEndpoint {
 
     // -------------------- Functions --------------------
 
-    function registerApplicant(string calldata name) external returns (bool) {
-        return _applicantStorage.createApplicant(payable(msg.sender), name);
+    function registerApplicant(
+        address payable applicantAddress,
+        string memory name
+    ) external returns (bool) {
+        return _applicantStorage.createApplicant(applicantAddress, name);
     }
 
     function getApplicantByAddress(

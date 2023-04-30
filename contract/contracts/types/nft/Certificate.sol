@@ -24,6 +24,6 @@ struct Certificate {
     bool isRevoked;
     /// @param revokeReason (Optional) Reason why this Certificate was revoked, if it is, otherwise stay blank
     string revokeReason;
-    /// @param revokeTime (Optional) Timestamp when this Certificate was revoked, if it is. Default value = -1
+    /// @param revokeTime (Optional) Timestamp when this Certificate was revoked, if it is. Default value = 0
     uint256 revokeTime;
 }
