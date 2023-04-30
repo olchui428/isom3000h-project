@@ -1,5 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { ContractAddresses, networkConfig } from "@/blockchain/contracts.config";
+import {
+  ContractAddresses,
+  certificateEndpointABI,
+  networkConfig,
+} from "@/blockchain/contracts.config";
 import { CertificateFormats } from "@/types/CertificateFormats";
 import { createCanvas, loadImage, registerFont } from "canvas";
 import { ethers } from "ethers";
@@ -20,7 +24,7 @@ const generateCertificate = async (
   console.log("Certificate data:", certificateData);
   console.log("\nBegin to generate Certificate ...");
   // Load image
-  const certificateTemplatePath: string = path.join(process.cwd(), `/public/vercel.svg`); // TODO: change to `/public/img/....png`
+  const certificateTemplatePath: string = path.join(process.cwd(), `/public/img/TODO.png`); // TODO: change image name
   const certImage = await loadImage(certificateTemplatePath);
   console.log("Image loaded");
 
@@ -71,43 +75,82 @@ const generateCertificate = async (
     case CertificateFormats.PDF:
       return canvas.toBuffer("application/pdf", {
         // TODO: configure these
-        // title: `Certificate for ${}`,
-        // author: `${Issuer.name}`,
+        title: `Certificate for ${certificateData.Certificate.title}`,
+        author: `${certificateData.Issuer.name}`,
         // // subject: string,
         // // keywords: string,
-        // creator: `${Issuer.name}`,
-        // creationDate: new Date(),
+        creator: `${certificateData.Issuer.name}`,
+        creationDate: new Date(),
       });
   }
 };
 
 /**
  * This API uses node-canvas to return a rendered image of a certificate
+ * There are 2 possible ways to obtain data for generating the Certificate
+ * 1. Get from blockchain - involves getting address wallet to approve spending money, getting data from endpoint
+ * 2. Pass data directly - need verify integrity
+ *
+ * Required body data:
+ * - exportType
+ *
+ * 2 choose 1 body data:
+ * - walletAddress
+ * - certData
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const userAddress = req.body?.walletAddress;
-  if (!userAddress) {
+  // None of the data obtaining methods are provided
+  if (!req.body && !req.body.certData && !req.body.walletAddress) {
     res.status(403).send("Error: did not provide wallet address.");
   }
+
   const { certificateId: certIdStr } = req.query as { certificateId: string };
+  let completeCert: any | null = null;
   const certificateId = parseInt(certIdStr);
   const exportType: CertificateFormats = req.body?.exportType;
 
-  const { rpc } = networkConfig;
-  ContractAddresses.CERTIFICATE_ENDPOINT;
-  const provider = new ethers.providers.JsonRpcProvider(rpc);
-  // TODO: try to make passed address as a Signer
-  const signer = provider.getSigner();
-  // TODO: import abi
-  // const contract = new ethers.Contract(ContractAddresses.CERTIFICATE_NFT, abi, signer);
-  const contract = { getCompleteCert: () => null };
-  const completeCert = contract.getCompleteCert();
+  if (req.body.certData) {
+    // Use provided data
+    try {
+      // TODO: verify integrity of cert data by adding type
+      const certData: any = req.body.certData! as any;
+      if ((certData.Certificate.id as number) !== certificateId) {
+        res.status(403).send("Certificate ID mismatch.");
+      }
+      completeCert = certData;
+    } catch (error) {
+      console.log("Error with certData:");
+      console.log(error);
+      res.status(404).send("Unable to obtain certificate data.");
+    }
+  } else if (req.body.walletAddress) {
+    // Use given wallet address to obtain money
+    const userAddress = req.body.walletAddress! as string;
+    const { rpc } = networkConfig;
+    ContractAddresses.CERTIFICATE_ENDPOINT;
+    const provider = new ethers.providers.JsonRpcProvider(rpc);
+    // TODO: try to make passed address as a Signer
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(
+      ContractAddresses.CERTIFICATE_ENDPOINT,
+      certificateEndpointABI,
+      signer
+    );
+    try {
+      completeCert = contract.getCompleteCert();
+    } catch (error) {
+      console.log("Error with getCompleteCert():");
+      res.status(404).send("Unable to obtain certificate data.");
+    }
+  }
 
-  // TODO: actually if can get cert from front-end hook then actually prefer front-end hook data, no need call blockchain waste money, dude already wasted money anyway
+  if (!completeCert) {
+    res.status(404).send("Unable to obtain certificate data.");
+  }
 
   // TODO: use node-canvas to draw cert
   // TODO: return image buffer of drawn cert
-  const certificateBuffer = await generateCertificate(completeCert, exportType);
+  const certificateBuffer = await generateCertificate(completeCert!, exportType);
   res.setHeader("Content-Type", fileFormats[exportType]);
   return res.send(certificateBuffer);
 }
