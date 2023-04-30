@@ -7,6 +7,14 @@ import { abi as applicantEndpointABI } from "@/blockchain/abi/ApplicantEndpoint.
 import { abi as accreditationEndpointABI } from "@/blockchain/abi/AccreditationEndpoint.json";
 import { abi as certificateEndpointABI } from "@/blockchain/abi/CertificateEndpoint.json";
 
+// Import and abstractionize endpoint contract ABIs
+export {
+  issuerEndpointABI,
+  applicantEndpointABI,
+  accreditationEndpointABI,
+  certificateEndpointABI,
+};
+
 type NetworkConfigType = {
   name: string;
   rpc: string;
@@ -60,11 +68,3 @@ const prodNet: NetworkConfigType = {
 export { LocalContractsAddresses as ContractAddresses, localNet as networkConfig };
 // export { TestContractsAddresses as ContractAddresses, TestNet as networkConfig };
 // export { ProdContractsAddresses as ContractAddresses, ProdNet as networkConfig };
-
-// Import and abstractionize endpoint contract ABIs
-export {
-  issuerEndpointABI,
-  applicantEndpointABI,
-  accreditationEndpointABI,
-  certificateEndpointABI,
-};
