@@ -24,13 +24,13 @@ const generateCertificate = async (
   console.log("Certificate data:", certificateData);
   console.log("\nBegin to generate Certificate ...");
   // Load image
-  const certificateTemplatePath: string = path.join(process.cwd(), `/public/img/TODO.png`); // TODO: change image name
+  const certificateTemplatePath: string = path.join(process.cwd(), `/public/img/TODO.png`); // TODO(Good to have): change image name
   const certImage = await loadImage(certificateTemplatePath);
   console.log("Image loaded");
 
   // Process fonts
-  const fontFilePath = ""; // TODO: add font file path
-  registerFont(fontFilePath, { family: "jin" }); // TODO: change family attribute
+  const fontFilePath = ""; // TODO(Good to have): add font file path
+  registerFont(fontFilePath, { family: "jin" }); // TODO(Good to have): change family attribute
   console.log("Font registered");
 
   // Generate Certificate
@@ -74,13 +74,12 @@ const generateCertificate = async (
       return canvas.toBuffer("image/png", { compressionLevel: 0 });
     case CertificateFormats.PDF:
       return canvas.toBuffer("application/pdf", {
-        // TODO: configure these
-        title: `Certificate for ${certificateData.Certificate.title}`,
-        author: `${certificateData.Issuer.name}`,
-        // // subject: string,
-        // // keywords: string,
-        creator: `${certificateData.Issuer.name}`,
-        creationDate: new Date(),
+        title: `Certificate for ${certificateData.accreditation.title}`,
+        author: `${certificateData.issuer.name}`,
+        // subject: string,
+        // keywords: string,
+        creator: `${certificateData.issuer.name}`,
+        creationDate: new Date(certificateData.certificate.createdAt),
       });
   }
 };
@@ -112,7 +111,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.body.certData) {
     // Use provided data
     try {
-      // TODO: verify integrity of cert data by adding type
+      // TODO(Good to have): verify integrity of cert data by adding type
       const certData: any = req.body.certData! as any;
       if ((certData.Certificate.id as number) !== certificateId) {
         res.status(403).send("Certificate ID mismatch.");
@@ -129,8 +128,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { rpc } = networkConfig;
     ContractAddresses.CERTIFICATE_ENDPOINT;
     const provider = new ethers.providers.JsonRpcProvider(rpc);
-    // TODO: try to make passed address as a Signer
-    const signer = provider.getSigner();
+    // TODO(Good to have): try to make passed address as a Signer
+    const signer = provider.getSigner(userAddress);
     const contract = new ethers.Contract(
       ContractAddresses.CERTIFICATE_ENDPOINT,
       certificateEndpointABI,
@@ -148,8 +147,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(404).send("Unable to obtain certificate data.");
   }
 
-  // TODO: use node-canvas to draw cert
-  // TODO: return image buffer of drawn cert
+  // TODO(Good to have): use node-canvas to draw cert
+  // TODO(Good to have): return image buffer of drawn cert
   const certificateBuffer = await generateCertificate(completeCert!, exportType);
   res.setHeader("Content-Type", fileFormats[exportType]);
   return res.send(certificateBuffer);
