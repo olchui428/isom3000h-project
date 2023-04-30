@@ -1,5 +1,7 @@
 import { AppContextProvider } from "@/contexts/app";
+import { muiLightTheme } from "@/theme/muiTheme";
 import { UserType } from "@/types";
+import { ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { getCookie, setCookie } from "cookies-next";
 import App, { AppContext, AppProps } from "next/app";
@@ -11,10 +13,12 @@ type AccreditationAppProps = Pick<AppProps, "Component" | "pageProps"> & {
 
 function AccreditationApp({ Component, pageProps, userType }: AccreditationAppProps) {
   return (
-    <AppContextProvider initUserType={userType}>
-      <CssBaseline />
-      <Component {...pageProps} />
-    </AppContextProvider>
+    <ThemeProvider theme={muiLightTheme}>
+      <AppContextProvider initUserType={userType}>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </AppContextProvider>
+    </ThemeProvider>
   );
 }
 

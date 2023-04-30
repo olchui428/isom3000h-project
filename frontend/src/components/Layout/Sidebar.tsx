@@ -1,5 +1,9 @@
 import { useAppContext } from "@/contexts/app";
 import { UserType } from "@/types";
+import AddIcon from "@mui/icons-material/Add";
+import HomeIcon from "@mui/icons-material/Home";
+import SearchIcon from "@mui/icons-material/Search";
+import SendIcon from "@mui/icons-material/Send";
 import {
   Box,
   Drawer,
@@ -14,23 +18,15 @@ import {
   Select,
   ThemeProvider,
   Typography,
-  createTheme,
 } from "@mui/material";
 import { blueGrey } from "@mui/material/colors";
-import SearchIcon from "@mui/icons-material/Search";
 import { NextLinkComposed } from "../NextLinkComposed";
-import HomeIcon from "@mui/icons-material/Home";
-import SendIcon from "@mui/icons-material/Send";
-import AddIcon from "@mui/icons-material/Add";
+import { muiDarkTheme } from "@/theme/muiTheme";
 
 interface SidebarProps {
   /** Width of the sidebar in px. */
   width: number;
 }
-
-const darkTheme = createTheme({
-  palette: { mode: "dark" },
-});
 
 /**
  * Sidebar shown at the left.
@@ -39,7 +35,7 @@ function Sidebar({ width }: SidebarProps) {
   const { userType, setUserType } = useAppContext();
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={muiDarkTheme}>
       <Drawer
         sx={{
           width,
