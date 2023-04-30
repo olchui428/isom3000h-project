@@ -1,63 +1,93 @@
-import { Avatar, Box, Drawer, Typography } from "@mui/material";
-import { blueGrey, orange } from "@mui/material/colors";
+import { useAppContext } from "@/contexts/app";
+import { UserType } from "@/types";
+import {
+  Box,
+  Drawer,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  ThemeProvider,
+  Typography,
+  createTheme,
+} from "@mui/material";
+import { blueGrey } from "@mui/material/colors";
 
 interface SidebarProps {
   /** Width of the sidebar in px. */
   width: number;
 }
 
+const darkTheme = createTheme({
+  palette: { mode: "dark" },
+});
+
 /**
  * Sidebar shown at the left.
  */
 function Sidebar({ width }: SidebarProps) {
+  const { userType, setUserType } = useAppContext();
+
   return (
-    <Drawer
-      sx={{
-        width,
-        flexShrink: 0,
-        "& .MuiDrawer-paper": {
-          width,
-          bgcolor: blueGrey[900],
-          color: (theme) => theme.palette.common.white,
-        },
-      }}
-      variant="permanent"
-      anchor="left"
-    >
-      <Box
+    <ThemeProvider theme={darkTheme}>
+      <Drawer
         sx={{
-          minHeight: 64,
-          px: 2,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          width,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width,
+            bgcolor: blueGrey[900],
+          },
         }}
+        variant="permanent"
+        anchor="left"
       >
-        {/* TODO: Allow switching between applicant and issuer */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Avatar sx={{ height: 36, width: 36, bgcolor: orange[700], fontSize: 18 }}>IS</Avatar>
-          <span>Issuer</span>
-        </Box>
-      </Box>
-      {/* TODO: Think the links to each sub-page */}
-      <Box sx={{ pt: 3, px: 2 }}>
-        {sidebarSections.map((section) => (
-          <Box key={section.title} sx={{ mb: 3 }}>
-            <Typography
+        <Box
+          sx={{
+            minHeight: 64,
+            px: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <FormControl fullWidth sx={{ mt: 2 }}>
+            <InputLabel id="user-type-label">User Type</InputLabel>
+            <Select
+              labelId="user-type-label"
+              label="User Type"
+              value={userType}
+              onChange={(event) => setUserType(event.target.value as UserType)}
               sx={{
-                color: blueGrey[300],
-                fontSize: 14,
-                fontWeight: 500,
-                textTransform: "uppercase",
+                color: "white",
+                "& .MuiSelect-select": { padding: "12px 14px" },
               }}
             >
-              {section.title}
-            </Typography>
-            {/* TODO: Insert links */}
-          </Box>
-        ))}
-      </Box>
-    </Drawer>
+              <MenuItem value={UserType.ISSUER}>Issuer</MenuItem>
+              <MenuItem value={UserType.APPLICANT}>Applicant</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+        {/* TODO: Think the links to each sub-page */}
+        <Box sx={{ pt: 3, px: 2 }}>
+          {sidebarSections.map((section) => (
+            <Box key={section.title} sx={{ mb: 3 }}>
+              <Typography
+                sx={{
+                  color: blueGrey[300],
+                  fontSize: 14,
+                  fontWeight: 500,
+                  textTransform: "uppercase",
+                }}
+              >
+                {section.title}
+              </Typography>
+              {/* TODO: Insert links */}
+            </Box>
+          ))}
+        </Box>
+      </Drawer>
+    </ThemeProvider>
   );
 }
 

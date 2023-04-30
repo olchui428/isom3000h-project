@@ -4,7 +4,7 @@ import {
   certificateEndpointABI,
   networkConfig,
 } from "@/blockchain/contracts.config";
-import { CertificateFormats } from "@/types/CertificateFormats";
+import { CertificateFormats } from "@/types";
 import { createCanvas, loadImage, registerFont } from "canvas";
 import { ethers } from "ethers";
 import type { NextApiRequest, NextApiResponse } from "next";
