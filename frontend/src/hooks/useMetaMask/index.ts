@@ -102,7 +102,6 @@ const useMetaMask = () => {
       description: string,
       logoUrl: string
     ) => {
-      // FIXME(Owen): `connectToTheMetaMask()` is unused, causing `signer` to always empty
       if (!signer) return;
       try {
         const issuerEndpoint = new ethers.Contract(
@@ -188,6 +187,7 @@ const useMetaMask = () => {
       nature: string,
       description: string
     ) => {
+      // FIXME(Owen): `connectToTheMetaMask()` is unused, causing `signer` to always empty
       if (!signer) return;
       try {
         const accreditationEndpoint = new ethers.Contract(
@@ -258,6 +258,7 @@ const useMetaMask = () => {
       eventId: string,
       remarks: string
     ) => {
+      // FIXME(Owen): `connectToTheMetaMask()` is unused, causing `signer` to always empty
       if (!signer) return;
       try {
         const certificateEndpoint = new ethers.Contract(
@@ -276,6 +277,8 @@ const useMetaMask = () => {
         );
         // Add this line if it is a creation transaction // wait for the transaction to be mined
         await tx.wait(HIGH_SECURITY_NUM_CONFIRMS);
+
+        // FIXME(Owen): Return the ID of new certificate
       } catch (error) {
         console.log(`Error at CertificateEndpoint::issueCertificate(): ${error}`);
         throw error;

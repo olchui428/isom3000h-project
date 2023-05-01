@@ -71,7 +71,7 @@ function AccreditationLaunch() {
           multiline
         />
         <DateTimePicker
-          label="Expiry Date (if any)"
+          label="Expiry Date"
           value={expiryDate}
           onChange={(date) => setExpiryDate(date)}
         />
@@ -87,7 +87,7 @@ function AccreditationLaunch() {
         open={hasError}
         onClose={() => setHasError(false)}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        autoHideDuration={60000}
+        autoHideDuration={6000}
         sx={{ maxWidth: "40%" }}
       >
         <Alert
