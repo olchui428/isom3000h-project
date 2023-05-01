@@ -102,6 +102,7 @@ const useMetaMask = () => {
       description: string,
       logoUrl: string
     ) => {
+      // FIXME(Owen): `connectToTheMetaMask()` is unused, causing `signer` to always empty
       if (!signer) return;
       try {
         const issuerEndpoint = new ethers.Contract(
@@ -182,7 +183,8 @@ const useMetaMask = () => {
     const launchAccreditation = async (
       issuer: string,
       title: string,
-      duration: Date,
+      /** Duration of Accreditation before expiry, e.g. 2 years, stored in number of seconds. Input -1 if no expiry date. */
+      duration: number,
       nature: string,
       description: string
     ) => {
@@ -202,6 +204,8 @@ const useMetaMask = () => {
           description
         );
         await tx.wait(HIGH_SECURITY_NUM_CONFIRMS);
+
+        // FIXME(Owen): Return the new accreditation ID
       } catch (error) {
         console.log(`Error at AccreditationEndpoint::launchAccreditation(): ${error}`);
         throw error;

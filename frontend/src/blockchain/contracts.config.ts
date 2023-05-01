@@ -20,7 +20,11 @@ type NetworkConfigType = {
 
 // TODO: fill in addresses of deployed contracts
 
-// Local network
+/**
+ * Local network.
+ *
+ * To obtain the addresses, run `npm run deploy:local` in `contract/` folder.
+ */
 enum LocalContractsAddresses {
   // SETUP
   ISSUER_ENDPOINT = "",

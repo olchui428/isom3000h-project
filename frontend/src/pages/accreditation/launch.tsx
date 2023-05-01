@@ -32,8 +32,11 @@ function AccreditationLaunch() {
 
   const launchAccreditation = async () => {
     try {
-      // FIXME: Should we pass `Date` here?
-      const duration = expiryDate ? expiryDate.toDate() : new Date();
+      let duration = -1;
+      if (expiryDate) {
+        duration = expiryDate.diff(new Date(), "second");
+      }
+
       await metaMask.accreditationEndpoint.launchAccreditation(
         "", // FIXME: Pass address
         name,
