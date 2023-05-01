@@ -114,6 +114,16 @@ contract CertificateEndpoint {
     // -------------------- Functions --------------------
 
     // TODO(MVP): issueCertificate modifier
+    event IssueCertificate(
+        uint256 id,
+        address payable issuerAddress,
+        address payable applicantAddress,
+        uint256 createdAt,
+        uint256 accreditationId,
+        string level,
+        string eventId,
+        string remarks
+    );
 
     function issueCertificate(
         address payable issuerAddress,
@@ -124,16 +134,26 @@ contract CertificateEndpoint {
         string memory eventId,
         string memory remarks
     ) external returns (uint256) {
-        return
-            _certificateNFT.issueCertificate(
-                issuerAddress,
-                applicantAddress,
-                createdAt,
-                accreditationId,
-                level,
-                eventId,
-                remarks
-            );
+        uint256 id = _certificateNFT.issueCertificate(
+            issuerAddress,
+            applicantAddress,
+            createdAt,
+            accreditationId,
+            level,
+            eventId,
+            remarks
+        );
+        emit IssueCertificate(
+            id,
+            issuerAddress,
+            applicantAddress,
+            createdAt,
+            accreditationId,
+            level,
+            eventId,
+            remarks
+        );
+        return 1;
     }
 
     // TODO(MVP): getCertificateById modifier

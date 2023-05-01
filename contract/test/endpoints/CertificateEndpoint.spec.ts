@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ethers, network } from "hardhat";
-import { Contract } from "ethers";
+import { Contract, utils } from "ethers";
 
 const CONTRACT_NAME = "CertificateEndpoint";
 
@@ -159,7 +159,7 @@ describe.only(`Given ${CONTRACT_NAME}`, () => {
       eventId: "777",
       remarks: "Good",
     };
-    await certificateEndpoint.issueCertificate(
+    const tx = await certificateEndpoint.issueCertificate(
       _certificate.issuerAddress,
       _certificate.applicantAddress,
       _certificate.createdAt,
@@ -168,10 +168,27 @@ describe.only(`Given ${CONTRACT_NAME}`, () => {
       _certificate.eventId,
       _certificate.remarks
     );
+    const receipt = await tx.wait();
+    const data = receipt.logs[1].data;
+    const [
+      id,
+      issuerAddress,
+      applicantAddress,
+      createdAt,
+      accreditationId,
+      level,
+      eventId,
+      remarks,
+    ] = utils.defaultAbiCoder.decode(
+      ["uint256", "address", "address", "uint256", "uint256", "string", "string", "string"],
+      data
+    );
 
     // Get Certificate by ID
-    const certificate = await certificateEndpoint.getCertificateById(0);
-    const certificateComplete = await certificateEndpoint.connect(applicantEndpoint.address).getCompleteCertById(0);
+    const certificate = await certificateEndpoint.getCertificateById(id.toString());
+    const certificateComplete = await certificateEndpoint
+      .connect(applicantEndpoint.address)
+      .getCompleteCertById(id.toString());
 
     // Assertions
     expect(_certificate.issuerAddress).to.equal(certificate.issuer);

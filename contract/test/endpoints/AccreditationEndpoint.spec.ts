@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ethers, network } from "hardhat";
-import { Contract } from "ethers";
+import { Contract, utils } from "ethers";
 
 const CONTRACT_NAME = "AccreditationEndpoint";
 
@@ -15,7 +15,7 @@ const APPLICANT_ENDPOINT = "ApplicantEndpoint";
 const ACCREDITATION_ENDPOINT = "AccreditationEndpoint";
 const CERTIFICATE_ENDPOINT = "CertificateEndpoint";
 
-describe.only(`Given ${CONTRACT_NAME}`, () => {
+describe(`Given ${CONTRACT_NAME}`, () => {
   it("Testing launchAccreditation error", () => {
     it("Should raise error if not using Issuer address", async () => {
       // TODO(Good to have): implement test
@@ -133,7 +133,7 @@ describe.only(`Given ${CONTRACT_NAME}`, () => {
       nature: "Exam",
       description: "It is a tough exam.",
     };
-    await accreditationEndpoint.launchAccreditation(
+    const tx = await accreditationEndpoint.launchAccreditation(
       _accreditation.issuer,
       _accreditation.title,
       _accreditation.createdAt,
@@ -141,9 +141,16 @@ describe.only(`Given ${CONTRACT_NAME}`, () => {
       _accreditation.nature,
       _accreditation.description
     );
+    const receipt = await tx.wait();
+    const data = receipt.logs[1].data;
+    const [id, issuer, title, createdAt, duration, nature, description] =
+      utils.defaultAbiCoder.decode(
+        ["uint256", "address", " string", "uint256", "uint256", "string", "string"],
+        data
+      );
 
     // Get Accreditation by ID
-    const accreditation = await accreditationEndpoint.getAccreditationById(0);
+    const accreditation = await accreditationEndpoint.getAccreditationById(id.toString());
 
     // Assertions
     expect(_accreditation.issuer).to.equal(accreditation.issuer);
