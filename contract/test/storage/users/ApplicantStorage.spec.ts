@@ -3,7 +3,7 @@ import { ethers } from "hardhat";
 
 const CONTRACT_NAME = "ApplicantStorage";
 
-describe.only(`Given ${CONTRACT_NAME}`, () => {
+describe(`Given ${CONTRACT_NAME}`, () => {
   it("Should test registerApplicant, isApplicantExists, getApplicantByAddress", async () => {
     const [owner, otherAddress, ...rest] = await ethers.getSigners();
     

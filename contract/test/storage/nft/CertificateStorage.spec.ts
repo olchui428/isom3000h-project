@@ -29,9 +29,7 @@ describe(`Given ${CONTRACT_NAME}`, () => {
   it("Testing createCertificate, getCertificateById, getCertificatesByApplicantAddresses", () => {
     it("Should store Accreditations correctly", async () => {
       const [owner, otherAddress, ...rest] = await ethers.getSigners();
-      const Contract = await ethers.getContractFactory(CONTRACT_NAME);
-      const contract = await Contract.deploy();
-      await contract.deployed();
+      
       // TODO(Good to have): implement test
     });
   });

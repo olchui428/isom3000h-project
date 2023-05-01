@@ -4,7 +4,7 @@ import _ from "lodash";
 
 const CONTRACT_NAME = "AccreditationStorage";
 
-describe.only(`Given ${CONTRACT_NAME}`, async () => {
+describe(`Given ${CONTRACT_NAME}`, async () => {
   it("Should test createAccreditation, getAccreditationById", async () => {
     // Deploy IssuerStorage Smart Contract
     const IssuerStorage = await ethers.getContractFactory("IssuerStorage");
@@ -20,7 +20,7 @@ describe.only(`Given ${CONTRACT_NAME}`, async () => {
     // Create Issuer
     const _issuer = {
       name: "ABC Company",
-      description: "It is a shitty company",
+      description: "It is a good company",
       logoUrl: "https://picsum.photos/200/300",
       issuerAddress: owner.address,
     };

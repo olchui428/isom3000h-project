@@ -3,7 +3,7 @@ import { ethers } from "hardhat";
 
 const CONTRACT_NAME = "IssuerEndpoint";
 
-describe.only(`Given ${CONTRACT_NAME}`, () => {
+describe(`Given ${CONTRACT_NAME}`, () => {
   it("Testing registerIssuer error", () => {
     it("Should raise error if Issuer address already registered", async () => {
       // TODO(Good to have): implement test
