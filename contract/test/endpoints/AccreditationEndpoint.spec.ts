@@ -1,7 +1,6 @@
 import { expect } from "chai";
 import { ethers, network } from "hardhat";
 import { Contract } from "ethers";
-import { add } from "lodash";
 
 const CONTRACT_NAME = "AccreditationEndpoint";
 
@@ -44,7 +43,6 @@ describe.only(`Given ${CONTRACT_NAME}`, () => {
 
     // ========== Deploy ==========
 
-
     // Storage Contracts
     createLog("Storage Contracts deployment:");
     const issuerStorage = await deployContract(ISSUER_STORAGE);
@@ -73,7 +71,9 @@ describe.only(`Given ${CONTRACT_NAME}`, () => {
     ]);
     const certificateEndpoint = await deployContract(CERTIFICATE_ENDPOINT, [
       issuerStorage.address,
+      issuerEndpoint.address,
       applicantStorage.address,
+      applicantEndpoint.address,
       accreditationStorage.address,
       certificateStorage.address,
       certificateNFT.address,
