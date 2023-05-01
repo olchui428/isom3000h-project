@@ -182,10 +182,12 @@ const useMetaMask = () => {
     const launchAccreditation = async (
       issuer: string,
       title: string,
-      duration: Date,
+      /** Duration of Accreditation before expiry, e.g. 2 years, stored in number of seconds. Input -1 if no expiry date. */
+      duration: number,
       nature: string,
       description: string
     ) => {
+      // FIXME(Owen): `connectToTheMetaMask()` is unused, causing `signer` to always empty
       if (!signer) return;
       try {
         const accreditationEndpoint = new ethers.Contract(
@@ -202,6 +204,8 @@ const useMetaMask = () => {
           description
         );
         await tx.wait(HIGH_SECURITY_NUM_CONFIRMS);
+
+        // FIXME(Owen): Return the new accreditation ID
       } catch (error) {
         console.log(`Error at AccreditationEndpoint::launchAccreditation(): ${error}`);
         throw error;
@@ -254,6 +258,7 @@ const useMetaMask = () => {
       eventId: string,
       remarks: string
     ) => {
+      // FIXME(Owen): `connectToTheMetaMask()` is unused, causing `signer` to always empty
       if (!signer) return;
       try {
         const certificateEndpoint = new ethers.Contract(
@@ -272,6 +277,8 @@ const useMetaMask = () => {
         );
         // Add this line if it is a creation transaction // wait for the transaction to be mined
         await tx.wait(HIGH_SECURITY_NUM_CONFIRMS);
+
+        // FIXME(Owen): Return the ID of new certificate
       } catch (error) {
         console.log(`Error at CertificateEndpoint::issueCertificate(): ${error}`);
         throw error;
