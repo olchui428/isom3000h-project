@@ -5,11 +5,20 @@ const CONTRACT_NAME = "ApplicantStorage";
 
 describe.only(`Given ${CONTRACT_NAME}`, () => {
   it("Should test registerApplicant, isApplicantExists, getApplicantByAddress", async () => {
-    // Deploy ApplicantStorage Smart Contract
     const [owner, otherAddress, ...rest] = await ethers.getSigners();
+    
+    // Deploy ApplicantStorage Smart Contract
     const Contract = await ethers.getContractFactory(CONTRACT_NAME);
     const contract = await Contract.deploy();
     await contract.deployed();
+
+    // Deploy ApplicantEndpoint Smart Contract
+    const ApplicantEndpoint = await ethers.getContractFactory("ApplicantEndpoint");
+    const applicantEndpoint = await ApplicantEndpoint.deploy(contract.address);
+    await applicantEndpoint.deployed();
+
+    // Set Addresses
+    await contract.setAddresses(applicantEndpoint.address)
 
     // Create applicant
     const _applicant = {
@@ -27,7 +36,7 @@ describe.only(`Given ${CONTRACT_NAME}`, () => {
     console.log("Checking if applicant exists: ", exists);
 
     // Getting applicant
-    const applicant = await contract.getApplicantByAddress(_applicant.applicantAddress);
+    const applicant = await contract.connect(applicantEndpoint.address).getApplicantByAddress(_applicant.applicantAddress);
     console.log(`Get applicant by address (${_applicant.applicantAddress}): ${applicant}`);
 
     // Assertions
