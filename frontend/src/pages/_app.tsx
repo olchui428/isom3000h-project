@@ -3,8 +3,10 @@ import { muiLightTheme } from "@/theme/muiTheme";
 import { UserType } from "@/types";
 import { ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 import { getCookie, setCookie } from "cookies-next";
 import App, { AppContext, AppProps } from "next/app";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 type AccreditationAppProps = Pick<AppProps, "Component" | "pageProps"> & {
   /** User type, which is determined from a cookie. Defaults to "Issuer". */
@@ -15,8 +17,10 @@ function AccreditationApp({ Component, pageProps, userType }: AccreditationAppPr
   return (
     <ThemeProvider theme={muiLightTheme}>
       <AppContextProvider initUserType={userType}>
-        <CssBaseline />
-        <Component {...pageProps} />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <CssBaseline />
+          <Component {...pageProps} />
+        </LocalizationProvider>
       </AppContextProvider>
     </ThemeProvider>
   );
