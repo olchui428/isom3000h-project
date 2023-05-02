@@ -96,12 +96,7 @@ const useMetaMask = () => {
   // Reference: https://github.com/mdtanrikulu/use-metamask/blob/main/src/useMetamask.js
 
   const IssuerEndpoint = () => {
-    const registerIssuer = async (
-      issuerAddress: string,
-      name: string,
-      description: string,
-      logoUrl: string
-    ) => {
+    const registerIssuer = async (name: string, description: string, logoUrl: string) => {
       if (!signer) return;
       try {
         const issuerEndpoint = new ethers.Contract(
@@ -109,9 +104,17 @@ const useMetaMask = () => {
           issuerEndpointABI,
           signer
         );
-        const tx = await issuerEndpoint.registerIssuer(issuerAddress, name, description, logoUrl);
+        const tx = await issuerEndpoint.registerIssuer(name, description, logoUrl);
         // Add this line if it is a creation transaction // wait for the transaction to be mined
-        await tx.wait(LOW_SECURITY_NUM_CONFIRMS);
+        const receipt = await tx.wait(LOW_SECURITY_NUM_CONFIRMS);
+        const data = receipt.logs[receipt.logs.length - 1].data;
+
+        // // TODO(MVP): decide return what
+        // const [issuerAddress, name, description, logoUrl, createdAt] =
+        //   ethers.utils.defaultAbiCoder.decode(
+        //     ["address", "string", "string", "string", "uint256"],
+        //     data
+        //   );
       } catch (error) {
         console.log(`Error at IssuerEndpoint::registerIssuer(): ${error}`);
         throw error;
@@ -119,12 +122,12 @@ const useMetaMask = () => {
     };
 
     const getIssuerByAddress = async (issuerAddress: string) => {
-      if (!signer) return;
+      if (!provider) return;
       try {
         const issuerEndpoint = new ethers.Contract(
           ContractAddresses.ISSUER_ENDPOINT,
           issuerEndpointABI,
-          signer
+          provider
         );
         return await issuerEndpoint.getIssuerByAddress(issuerAddress);
       } catch (error) {
@@ -140,7 +143,7 @@ const useMetaMask = () => {
   };
 
   const ApplicantEndpoint = () => {
-    const registerApplicant = async (applicantAddress: string, name: string) => {
+    const registerApplicant = async (name: string) => {
       if (!signer) return;
       try {
         const applicantEndpoint = new ethers.Contract(
@@ -148,9 +151,16 @@ const useMetaMask = () => {
           applicantEndpointABI,
           signer
         );
-        const tx = await applicantEndpoint.registerApplicant(applicantAddress, name);
+        const tx = await applicantEndpoint.registerApplicant(name);
         // Add this line if it is a creation transaction // wait for the transaction to be mined
-        await tx.wait(LOW_SECURITY_NUM_CONFIRMS);
+        const receipt = await tx.wait(LOW_SECURITY_NUM_CONFIRMS);
+        const data = receipt.logs[receipt.logs.length - 1].data;
+
+        // // TODO(MVP): decide return what
+        // const [applicantAddress, name, createdAt] = ethers.utils.defaultAbiCoder.decode(
+        //   ["address", "string", "uint256"],
+        //   data
+        // );
       } catch (error) {
         console.log(`Error at ApplicantEndpoint::registerApplicant(): ${error}`);
         throw error;
@@ -158,12 +168,12 @@ const useMetaMask = () => {
     };
 
     const getApplicantByAddress = async (applicantAddress: string) => {
-      if (!signer) return;
+      if (!provider) return;
       try {
         const applicantEndpoint = new ethers.Contract(
           ContractAddresses.APPLICANT_ENDPOINT,
           applicantEndpointABI,
-          signer
+          provider
         );
         return await applicantEndpoint.getApplicantByAddress(applicantAddress);
       } catch (error) {
@@ -203,9 +213,15 @@ const useMetaMask = () => {
           nature,
           description
         );
-        await tx.wait(HIGH_SECURITY_NUM_CONFIRMS);
-
-        // FIXME(Owen): Return the new accreditation ID
+        // Wait for `HIGH_SECURITY_NUM_CONFIRMS` blocks to be mined
+        const receipt = await tx.wait(HIGH_SECURITY_NUM_CONFIRMS);
+        // Retrieve data from emitted event
+        const data = receipt.logs[receipt.logs.length - 1].data;
+        const [id, ...eventData] = ethers.utils.defaultAbiCoder.decode(
+          ["uint256", "address", "string", "uint256", "uint256", "string", "string"],
+          data
+        );
+        return id;
       } catch (error) {
         console.log(`Error at AccreditationEndpoint::launchAccreditation(): ${error}`);
         throw error;
@@ -213,12 +229,12 @@ const useMetaMask = () => {
     };
 
     const getAccreditationById = async (id: number) => {
-      if (!signer) return;
+      if (!provider) return;
       try {
         const accreditationEndpoint = new ethers.Contract(
           ContractAddresses.ACCREDITATION_ENDPOINT,
           accreditationEndpointABI,
-          signer
+          provider
         );
         return await accreditationEndpoint.getAccreditationById(id);
       } catch (error) {
@@ -228,12 +244,12 @@ const useMetaMask = () => {
     };
 
     const getAccreditationsByIssuerAddress = async (address: string) => {
-      if (!signer) return;
+      if (!provider) return;
       try {
         const accreditationEndpoint = new ethers.Contract(
           ContractAddresses.ACCREDITATION_ENDPOINT,
           accreditationEndpointABI,
-          signer
+          provider
         );
         return await accreditationEndpoint.getAccreditationsByIssuerAddress(address);
       } catch (error) {
@@ -275,10 +291,15 @@ const useMetaMask = () => {
           eventId,
           remarks
         );
-        // Add this line if it is a creation transaction // wait for the transaction to be mined
-        await tx.wait(HIGH_SECURITY_NUM_CONFIRMS);
-
-        // FIXME(Owen): Return the ID of new certificate
+        // Wait for `HIGH_SECURITY_NUM_CONFIRMS` blocks to be mined
+        const receipt = await tx.wait(HIGH_SECURITY_NUM_CONFIRMS);
+        // Retrieve data from emitted event
+        const data = receipt.logs[receipt.logs.length - 1].data;
+        const [id, ...eventData] = ethers.utils.defaultAbiCoder.decode(
+          ["uint256", "uint256", "address", "address", "uint256", "string", "string", "string"],
+          data
+        );
+        return id;
       } catch (error) {
         console.log(`Error at CertificateEndpoint::issueCertificate(): ${error}`);
         throw error;
@@ -286,12 +307,12 @@ const useMetaMask = () => {
     };
 
     const getCertificateById = async (id: number) => {
-      if (!signer) return;
+      if (!provider) return;
       try {
         const certificateEndpoint = new ethers.Contract(
           ContractAddresses.CERTIFICATE_ENDPOINT,
           certificateEndpointABI,
-          signer
+          provider
         );
         return await certificateEndpoint.getCertificateById(id);
       } catch (error) {
@@ -317,12 +338,12 @@ const useMetaMask = () => {
     // };
 
     const getCompleteCertById = async (id: number) => {
-      if (!signer) return;
+      if (!provider) return;
       try {
         const certificateEndpoint = new ethers.Contract(
           ContractAddresses.CERTIFICATE_ENDPOINT,
           certificateEndpointABI,
-          signer
+          provider
         );
         return await certificateEndpoint.getCompleteCertById(id);
       } catch (error) {
