@@ -24,21 +24,24 @@ const generateCertificate = async (
   console.log("Certificate data:", certificateData);
   console.log("\nBegin to generate Certificate ...");
   // Load image
-  const certificateTemplatePath: string = path.join(process.cwd(), `/public/img/TODO.png`); // TODO(Good to have): change image name
+  const certificateTemplatePath: string = path.join(
+    process.cwd(),
+    `/public/img/certificate_template.jpeg`
+  );
   const certImage = await loadImage(certificateTemplatePath);
   console.log("Image loaded");
 
-  // Process fonts
-  const fontFilePath = ""; // TODO(Good to have): add font file path
-  registerFont(fontFilePath, { family: "jin" }); // TODO(Good to have): change family attribute
-  console.log("Font registered");
+  // // Process fonts
+  // const fontFilePath = ""; // TODO(Good to have): add font file path
+  // registerFont(fontFilePath, { family: "jin" }); // TODO(Good to have): change family attribute
+  // console.log("Font registered");
 
   // Generate Certificate
 
   // Load image into Canvas
-  const canvas = createCanvas(certImage.width / 10, certImage.height / 10);
+  const canvas = createCanvas(certImage.width, certImage.height);
   const ctx = canvas.getContext("2d");
-  ctx.drawImage(certImage, 0, 0, certImage.width / 10, certImage.height / 10);
+  ctx.drawImage(certImage, 0, 0, certImage.width, certImage.height);
   console.log("Image drawn onto canvas");
 
   // Draw details onto Certificate
@@ -113,7 +116,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       // TODO(Good to have): verify integrity of cert data by adding type
       const certData: any = req.body.certData! as any;
-      if ((certData.Certificate.id as number) !== certificateId) {
+      if ((certData.certificate.id as number) !== certificateId) {
         res.status(403).send("Certificate ID mismatch.");
       }
       completeCert = certData;
@@ -128,12 +131,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { rpc } = networkConfig;
     ContractAddresses.CERTIFICATE_ENDPOINT;
     const provider = new ethers.providers.JsonRpcProvider(rpc);
-    // TODO(Good to have): try to make passed address as a Signer
-    const signer = provider.getSigner(userAddress);
     const contract = new ethers.Contract(
       ContractAddresses.CERTIFICATE_ENDPOINT,
       certificateEndpointABI,
-      signer
+      provider
     );
     try {
       completeCert = contract.getCompleteCert();
