@@ -6,6 +6,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import SendIcon from "@mui/icons-material/Send";
 import {
   Box,
+  Button,
   Drawer,
   FormControl,
   InputLabel,
@@ -19,9 +20,10 @@ import {
   ThemeProvider,
   Typography,
 } from "@mui/material";
-import { blueGrey } from "@mui/material/colors";
+import { blueGrey, orange } from "@mui/material/colors";
 import { NextLinkComposed } from "../NextLinkComposed";
 import { muiDarkTheme } from "@/theme/muiTheme";
+import useMetaMask from "@/hooks/useMetaMask";
 
 interface SidebarProps {
   /** Width of the sidebar in px. */
@@ -32,7 +34,8 @@ interface SidebarProps {
  * Sidebar shown at the left.
  */
 function Sidebar({ width }: SidebarProps) {
-  const { userType, setUserType } = useAppContext();
+  const { address, userType, setUserType } = useAppContext();
+  const { connectToMetaMask } = useMetaMask();
 
   return (
     <ThemeProvider theme={muiDarkTheme}>
@@ -50,28 +53,43 @@ function Sidebar({ width }: SidebarProps) {
       >
         <Box
           sx={{
+            pt: 2,
+            px: 2,
             minHeight: 64,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
           }}
         >
-          <FormControl fullWidth sx={{ mt: 2, mx: 2 }}>
-            <InputLabel id="user-type-label">User Type</InputLabel>
-            <Select
-              labelId="user-type-label"
-              label="User Type"
-              value={userType}
-              onChange={(event) => setUserType(event.target.value as UserType)}
+          {address ? (
+            <FormControl fullWidth>
+              <InputLabel id="user-type-label">User Type</InputLabel>
+              <Select
+                labelId="user-type-label"
+                label="User Type"
+                value={userType}
+                onChange={(event) => setUserType(event.target.value as UserType)}
+                sx={{
+                  color: "white",
+                  "& .MuiSelect-select": { padding: "12px 14px" },
+                }}
+              >
+                <MenuItem value={UserType.ISSUER}>Issuer</MenuItem>
+                <MenuItem value={UserType.APPLICANT}>Applicant</MenuItem>
+              </Select>
+            </FormControl>
+          ) : (
+            <Button
+              onClick={() => connectToMetaMask()}
+              variant="contained"
               sx={{
-                color: "white",
-                "& .MuiSelect-select": { padding: "12px 14px" },
+                width: "100%",
+                backgroundColor: orange[500],
+                "&:hover": {
+                  backgroundColor: orange[700],
+                },
               }}
             >
-              <MenuItem value={UserType.ISSUER}>Issuer</MenuItem>
-              <MenuItem value={UserType.APPLICANT}>Applicant</MenuItem>
-            </Select>
-          </FormControl>
+              Connect to MetaMask
+            </Button>
+          )}
         </Box>
         <Box sx={{ pt: 3 }}>
           {sidebarSections.map((section, index) => (

@@ -9,14 +9,16 @@ import App, { AppContext, AppProps } from "next/app";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 type AccreditationAppProps = Pick<AppProps, "Component" | "pageProps"> & {
+  /** MetaMask address if the user has previously connected to it. */
+  address?: string;
   /** User type, which is determined from a cookie. Defaults to "Issuer". */
   userType: UserType;
 };
 
-function AccreditationApp({ Component, pageProps, userType }: AccreditationAppProps) {
+function AccreditationApp({ Component, pageProps, address, userType }: AccreditationAppProps) {
   return (
     <ThemeProvider theme={muiLightTheme}>
-      <AppContextProvider initUserType={userType}>
+      <AppContextProvider initValues={{ address, userType }}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <CssBaseline />
           <Component {...pageProps} />
@@ -33,6 +35,9 @@ AccreditationApp.getInitialProps = async (
   const res = context.ctx.res;
   const appProps = await App.getInitialProps(context);
 
+  // Get initial MetaMask address if the user has previously connected.
+  const address = getCookie("address", { req, res }) as string | undefined;
+
   // Get the initial user type from the cookie.
   let userType = getCookie("userType", { req, res }) as UserType | undefined;
   if (!userType) {
@@ -42,6 +47,7 @@ AccreditationApp.getInitialProps = async (
 
   return {
     ...appProps,
+    address,
     userType,
   };
 };

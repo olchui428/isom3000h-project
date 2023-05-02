@@ -1,16 +1,15 @@
-import { UserType } from "@/types";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { ethers } from "ethers";
 import {
   ContractAddresses,
-  issuerEndpointABI,
-  applicantEndpointABI,
   accreditationEndpointABI,
+  applicantEndpointABI,
   certificateEndpointABI,
+  issuerEndpointABI,
 } from "@/blockchain/contracts.config";
+import { useAppContext } from "@/contexts/app";
+import { UserType } from "@/types";
 import axios from "axios";
-
-// TODO: add finalized ABI
+import { ethers } from "ethers";
+import { useCallback, useEffect, useMemo } from "react";
 
 /**
  * Number of confirmed mined blocks to wait for for low security operations
@@ -24,12 +23,13 @@ const LOW_SECURITY_NUM_CONFIRMS = 1;
  */
 const HIGH_SECURITY_NUM_CONFIRMS = 1;
 
-// TODO: write a hook for connecting to MetaMask and interacting with Smart Contract, so that front-end only need to call function from here
+/**
+ * Hook for managing MetaMask and interacting with Smart Contract endpoints.
+ */
 const useMetaMask = () => {
-  const [userType, setUserType] = useState<UserType>(UserType.OUTSIDER);
-  const [address, setAddress] = useState<string>();
+  const { address, setAddress, setUserType } = useAppContext();
 
-  const connectToTheMetaMask = useCallback(async () => {
+  const connectToMetaMask = useCallback(async () => {
     // check if the browser has MetaMask installed
     if (!window.ethereum) {
       alert("Please install MetaMask first.");
@@ -39,11 +39,13 @@ const useMetaMask = () => {
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
-    setAddress(accounts[0]);
-  }, []);
+    const address = accounts[0];
+    setAddress(address);
+    console.log(`Connected to MetaMask with address '${address}'`);
+  }, [setAddress]);
 
   const signer = useMemo(() => {
-    if (!address) return null;
+    if (typeof window === "undefined" || !address) return null;
     return new ethers.providers.Web3Provider(window.ethereum).getSigner();
   }, [address]);
 
@@ -91,9 +93,6 @@ const useMetaMask = () => {
     // TODO: clear session content
     setUserType(UserType.OUTSIDER);
   };
-
-  // TODO: add hook content
-  // Reference: https://github.com/mdtanrikulu/use-metamask/blob/main/src/useMetamask.js
 
   const IssuerEndpoint = () => {
     const registerIssuer = async (name: string, description: string, logoUrl: string) => {
@@ -197,7 +196,6 @@ const useMetaMask = () => {
       nature: string,
       description: string
     ) => {
-      // FIXME(Owen): `connectToTheMetaMask()` is unused, causing `signer` to always empty
       if (!signer) return;
       try {
         const accreditationEndpoint = new ethers.Contract(
@@ -273,7 +271,6 @@ const useMetaMask = () => {
       eventId: string,
       remarks: string
     ) => {
-      // FIXME(Owen): `connectToTheMetaMask()` is unused, causing `signer` to always empty
       if (!signer) return;
       try {
         const certificateEndpoint = new ethers.Contract(
@@ -369,7 +366,7 @@ const useMetaMask = () => {
   };
 
   return {
-    userType,
+    connectToMetaMask,
     login,
     logout,
     issuerEndpoint: IssuerEndpoint(),
