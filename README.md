@@ -1,4 +1,4 @@
-# ISOM3000H Group Project
+# ISOM3000H (aka MSBD5017) Group Project
 
 This repository contains the source code of a dApp designed for this HKUST blockchain course project (Spring 2023).  
 Contributors (in alphabetical order):
@@ -6,6 +6,8 @@ Contributors (in alphabetical order):
 > [CHUI, On Lam](https://github.com/olchui428)  
 > [HEUNG, Kai Him](https://github.com/AnsonH)  
 > [LEE, Ho Wan Owen](https://github.com/owen-hwlee)
+
+Note that this course is actually MSBD5017, an MSc Big Data Technology masters level course, in disguise.
 
 ## Accreditation System
 
@@ -77,8 +79,6 @@ Each internally used type has its own Storage system:
 - [`AccreditationStorage`](contract/contracts/storage/nft/AccreditationStorage.sol):
 - [`CertificateStorage`](contract/contracts/storage/nft/CertificateStorage.sol):
 
-A utility library [`Set.sol`](contract/contracts/utils/Set.sol) to facilitate storage functionalities has also been implemented.
-
 ##### Part 1.1.3: NFT
 
 Since every Certificate and Accreditation is issued or established in form of an NFT, the NFT Contracts will be implemented based on the ERC721 token standard. Specifically, 2 smart Contracts will inherit the ERC721 token implemented by OpenZeppelin:
@@ -115,7 +115,7 @@ Unit tests are written for each Storage, NFT, and Endpoint Contract, testing the
 
 After writing the unit tests, they can be executed using the command `npm test`. A complete log of the testing process will be available in the terminal.
 
-Alternatively, instead of directly running unit tests, coverage can be obtained with the command `npm run coverage`. Note that the course TA expects >80% coverage for our project.
+Alternatively, instead of directly running unit tests, coverage can be obtained with the command `npm run coverage`, and the generated files can be removed with the command `npm run clean:coverage`. Note that the course TA expects >80% coverage for our project.
 
 Following the test-driven development pattern, test cases are written alongside Contract implementation to make sure of Contract feature correctness.
 
@@ -132,9 +132,11 @@ A deployment script to a blockchain network is available at [`/scripts/deploy.ts
 
 Network details are configured in [`/hardhat.config.ts`](contract/hardhat.config.ts). See [Instructions](#instructions) section for more details.
 
-In case of errors or overwritten contracts, clean up of compiled files can be performed by the command `npm run clean`.
+In case of errors or overwritten contracts, clean up of compiled files can be performed by the command `npm run clean:build`.
 
-During deployment, logs are generated, printed to console and saved into a log file at `/scripts/logs/`. The command `npm run clear_logs` can be used to delete all log files.
+During deployment, logs are generated, printed to console and saved into a log file at `/scripts/logs/`. The command `npm run clean:logs` can be used to delete all log files.
+
+The command `npm run clean` can be used to clean up all generated files.
 
 ### Part 2: Front-end Interaction
 
@@ -162,8 +164,6 @@ The deliverables include a set of presentation slides, a group presentation wher
       - <TODO: add descriptions>
     - [`endpoints/`](contract/contracts/endpoints): directory that stores endpoint contracts
       - <TODO: add descriptions>
-    - [`utils/`](contract/contracts/utils): directory that stores Soldity utility libraries and functions used in the project
-      - [`Set.sol`](contract/contracts/utils/Set.sol): contains helper library to facilitate data management in storage contracts
   - [`scripts/`](contract/scripts): directory that stores deployment and other miscellaneous scripts
     - [`deploy.ts`](contract/scripts/deploy.ts): script for deployment of contracts in [`contracts/`](contract/contracts) to blockchain
   - [`test/`](contract/test): directory that stores unit tests (each test file is one-to-one for each contract in [`contracts/`](contract/contracts), with the exception of type definition files in [`contracts/types/`](contract/contracts/types))
@@ -179,6 +179,7 @@ The deliverables include a set of presentation slides, a group presentation wher
       - [`contracts.config.ts`](frontend/src/blockchain/contracts.config.ts): stores blockchain name, RPC, deployed contract addresses
     - [`types`](frontend/src/types): directory that stores types used in front-end
       - [`global.d.ts`](frontend/src/types/global.d.ts): defines ethereum in Window interface
+      - [`index.ts`](frontend/src/types/index.ts): defines types and enums used in the project
   - `.env.local`: stores sensitive environment variables (not committed to GitHub)
     - Copy from [`.env.local.example`](frontend/.env.local.example) and add variable values
 - [`presentation/`](presentation): directory that stores presentation slides & supplementary materials (if any) for the presentation, as well as the final report
@@ -187,10 +188,12 @@ The deliverables include a set of presentation slides, a group presentation wher
 ## Instructions
 
 1. Install dependencies:
+
    ```bash
    cd contract && npm install
    cd ../frontend && npm install
    ```
+
 2. In [`contract/`](contract):
 
    1. Set up the provided etherdata network in MetaMask browser extension:
