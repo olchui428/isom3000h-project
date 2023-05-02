@@ -17,6 +17,9 @@ contract ApplicantStorage {
     /// @dev Address of deployed ApplicantEndpoint contract
     address private _applicantEndpointAddress;
 
+    /// @dev Address of deployed CertificateEndpoint contract
+    address private _certificateEndpointAddress;
+
     // TODO(MVP): add addresses
 
     // -------------------- Variables --------------------
@@ -51,10 +54,12 @@ contract ApplicantStorage {
     }
 
     function setAddresses(
-        address applicantEndpointAddress
+        address applicantEndpointAddress,
+        address certificateEndpointAddress
     ) external onlyDeployer addressesHaveNotBeenInitialized {
         _areAddressesFilled = true;
         _applicantEndpointAddress = applicantEndpointAddress;
+        _certificateEndpointAddress = certificateEndpointAddress;
         // TODO(MVP): add required addresses
     }
 
@@ -85,7 +90,9 @@ contract ApplicantStorage {
     }
 
     modifier verifyGettingAddress() {
-        require(msg.sender == _applicantEndpointAddress);
+        require(
+            msg.sender == _applicantEndpointAddress || msg.sender == _certificateEndpointAddress
+        );
         _;
     }
 

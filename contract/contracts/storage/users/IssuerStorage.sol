@@ -21,6 +21,9 @@ contract IssuerStorage {
     /// @dev Address of deployed IssuerEndpoint contract
     address private _issuerEndpointAddress;
 
+    /// @dev Address of deployed CertificateEndpoint contract
+    address private _certificateEndpointAddress;
+
     // /// @dev Address of deployed ApplicantStorage contract
     // address private _applicantStorageAddress;
 
@@ -51,11 +54,13 @@ contract IssuerStorage {
 
     function setAddresses(
         address accreditationStorageAddress,
-        address issuerEndpointAddress
+        address issuerEndpointAddress,
+        address certificateEndpointAddress
     ) external onlyDeployer addressesHaveNotBeenInitialized {
         _areAddressesFilled = true;
         _accreditationStorageAddress = accreditationStorageAddress;
         _issuerEndpointAddress = issuerEndpointAddress;
+        _certificateEndpointAddress = certificateEndpointAddress;
         // TODO(MVP): add required addresses
     }
 
@@ -76,7 +81,7 @@ contract IssuerStorage {
     /// @notice This is a possible entry point from end users
     /// @notice Possible use cases include a new Wallet trying to register itself as a new Issuer
     /// @dev Add an Issuer to mapping
-    /// @param name: Name of the company
+    /// @param name Name of the company
     // TODO(Good to have): add params
     /// @return Status of the registration process, returns true if success, otherwise throw error
     function createIssuer(
@@ -90,7 +95,7 @@ contract IssuerStorage {
     }
 
     modifier verifyGettingAddress() {
-        require(msg.sender == _issuerEndpointAddress);
+        require(msg.sender == _issuerEndpointAddress || msg.sender == _certificateEndpointAddress);
         _;
     }
 

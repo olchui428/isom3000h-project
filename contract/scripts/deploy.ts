@@ -145,9 +145,7 @@ async function deploy() {
     ]);
     const certificateEndpoint = await deployContract(CERTIFICATE_ENDPOINT, [
       issuerStorage.address,
-      issuerEndpoint.address,
       applicantStorage.address,
-      applicantEndpoint.address,
       accreditationStorage.address,
       certificateStorage.address,
       certificateNFT.address,
