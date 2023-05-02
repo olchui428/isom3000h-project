@@ -190,8 +190,8 @@ const useMetaMask = () => {
 
   const AccreditationEndpoint = () => {
     const launchAccreditation = async (
-      issuer: string,
       title: string,
+      createdAt: Date,
       /** Duration of Accreditation before expiry, e.g. 2 years, stored in number of seconds. Input -1 if no expiry date. */
       duration: number,
       nature: string,
@@ -206,9 +206,8 @@ const useMetaMask = () => {
           signer
         );
         const tx = await accreditationEndpoint.launchAccreditation(
-          issuer,
           title,
-          new Date(),
+          createdAt,
           duration,
           nature,
           description
@@ -267,8 +266,8 @@ const useMetaMask = () => {
 
   const CertificateEndpoint = () => {
     const issueCertificate = async (
-      issuerAddress: string,
       applicantAddress: string,
+      createdAt: Date,
       accreditationId: number,
       level: string,
       eventId: string,
@@ -283,9 +282,8 @@ const useMetaMask = () => {
           signer
         );
         const tx = await certificateEndpoint.issueCertificate(
-          issuerAddress,
           applicantAddress,
-          new Date(),
+          createdAt,
           accreditationId,
           level,
           eventId,
