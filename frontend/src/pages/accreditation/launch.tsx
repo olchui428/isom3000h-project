@@ -38,8 +38,8 @@ function AccreditationLaunch() {
       }
 
       await metaMask.accreditationEndpoint.launchAccreditation(
-        "", // FIXME: Pass address
         name,
+        new Date(),
         duration,
         nature,
         description

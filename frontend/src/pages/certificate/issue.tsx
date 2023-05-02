@@ -30,16 +30,13 @@ function CertificateIssue() {
 
   const issueCertificate = async () => {
     try {
-      // FIXME: Obtain addresses
-      const issuerAddress = "";
+      // FIXME: Obtain these values
       const applicantAddress = "";
-
-      // FIXME: Obtain event ID
       const eventId = "";
 
       await metaMask.certificateEndpoint.issueCertificate(
-        issuerAddress,
         applicantAddress,
+        new Date(),
         parseInt(accredId),
         level,
         eventId,
