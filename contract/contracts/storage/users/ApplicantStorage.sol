@@ -74,19 +74,30 @@ contract ApplicantStorage {
         _;
     }
 
+    modifier validateFromApplicantEndpoint() {
+        require(msg.sender == _applicantEndpointAddress);
+        _;
+    }
+
     /// @notice Registers an Applicant into the system
     /// @notice This is a possible entry point from end users
     /// @notice Possible use cases include a new Wallet trying to register itself as a new Applicant
     /// @dev Add an Applicant to mapping
-    /// @param name: Name of the company
-    // TODO(Good to have): add params
+    /// @param applicantAddress Wallet address of Applicant
+    /// @param name Name of the Applicant
     /// @return Status of the registration process, returns true if success, otherwise throw error
     function createApplicant(
         address payable applicantAddress,
         string memory name
-    ) external newApplicant(applicantAddress) returns (bool) {
-        _applicants[applicantAddress] = Applicant(name, applicantAddress, block.timestamp);
-        return true;
+    )
+        external
+        validateFromApplicantEndpoint
+        newApplicant(applicantAddress)
+        returns (Applicant memory)
+    {
+        Applicant memory applicant = Applicant(name, applicantAddress, block.timestamp);
+        _applicants[applicantAddress] = applicant;
+        return applicant;
     }
 
     modifier verifyGettingAddress() {

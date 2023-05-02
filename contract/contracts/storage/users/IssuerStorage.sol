@@ -77,6 +77,11 @@ contract IssuerStorage {
         _;
     }
 
+    modifier validateFromIssuerEndpoint() {
+        require(msg.sender == _issuerEndpointAddress);
+        _;
+    }
+
     /// @notice Registers an Issuer into the system
     /// @notice This is a possible entry point from end users
     /// @notice Possible use cases include a new Wallet trying to register itself as a new Issuer
@@ -89,9 +94,10 @@ contract IssuerStorage {
         string memory name,
         string memory description,
         string memory logoUrl
-    ) external newIssuer(inputAddress) returns (bool) {
-        _issuers[inputAddress] = Issuer(name, inputAddress, description, logoUrl, block.timestamp);
-        return true;
+    ) external validateFromIssuerEndpoint newIssuer(inputAddress) returns (Issuer memory) {
+        Issuer memory issuer = Issuer(name, inputAddress, description, logoUrl, block.timestamp);
+        _issuers[inputAddress] = issuer;
+        return issuer;
     }
 
     modifier verifyGettingAddress() {

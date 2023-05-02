@@ -22,6 +22,14 @@ contract IssuerEndpoint {
 
     // -------------------- Variables --------------------
 
+    event RegisterIssuer(
+        address payable issuerAddress,
+        string name,
+        string description,
+        string logoUrl,
+        uint256 createdAt
+    );
+
     // -------------------- Contracts --------------------
 
     /// @dev Storage contract for Issuers
@@ -50,12 +58,18 @@ contract IssuerEndpoint {
     // -------------------- Functions --------------------
 
     function registerIssuer(
-        address payable issuerAddress,
         string calldata name,
         string calldata description,
         string calldata logoUrl
-    ) external returns (bool) {
-        return _issuerStorage.createIssuer(issuerAddress, name, description, logoUrl);
+    ) external {
+        address payable issuerAddress = payable(msg.sender);
+        Issuer memory issuer = _issuerStorage.createIssuer(
+            issuerAddress,
+            name,
+            description,
+            logoUrl
+        );
+        emit RegisterIssuer(issuerAddress, name, description, logoUrl, issuer.createdAt);
     }
 
     function getIssuerByAddress(

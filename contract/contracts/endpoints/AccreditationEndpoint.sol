@@ -21,6 +21,16 @@ contract AccreditationEndpoint {
 
     // -------------------- Variables --------------------
 
+    event LaunchAccreditation(
+        uint256 id,
+        address payable issuer,
+        string title,
+        uint256 createdAt,
+        uint256 duration,
+        string nature,
+        string description
+    );
+
     // -------------------- Contracts --------------------
 
     /// @dev Storage contract for Accreditations
@@ -60,34 +70,31 @@ contract AccreditationEndpoint {
         _;
     }
 
-    event LaunchAccreditation(
-        uint256 id,
-        address payable issuer,
-        string title,
-        uint256 createdAt,
-        uint256 duration,
-        string nature,
-        string description
-    );
-
     function launchAccreditation(
-        address payable issuer,
         string memory title,
         uint256 createdAt,
         uint256 duration,
         string memory nature,
         string memory description
-    ) external validateAccredInput(title, nature, description) returns (uint256) {
+    ) external validateAccredInput(title, nature, description) {
+        address payable issuerAddress = payable(msg.sender);
         uint256 id = _accreditationNFT.launchAccreditation(
-            issuer,
+            issuerAddress,
             title,
             createdAt,
             duration,
             nature,
             description
         );
-        emit LaunchAccreditation(id, issuer, title, createdAt, duration, nature, description);
-        return 1;
+        emit LaunchAccreditation(
+            id,
+            issuerAddress,
+            title,
+            createdAt,
+            duration,
+            nature,
+            description
+        );
     }
 
     modifier isAccreditationExists(uint256 id) {

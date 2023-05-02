@@ -20,6 +20,8 @@ contract ApplicantEndpoint {
 
     // -------------------- Variables --------------------
 
+    event RegisterApplicant(address payable applicantAddress, string name, uint256 createdAt);
+
     // -------------------- Contracts --------------------
 
     // /// @dev Storage contract for Issuers
@@ -47,11 +49,10 @@ contract ApplicantEndpoint {
 
     // -------------------- Functions --------------------
 
-    function registerApplicant(
-        address payable applicantAddress,
-        string memory name
-    ) external returns (bool) {
-        return _applicantStorage.createApplicant(applicantAddress, name);
+    function registerApplicant(string memory name) external {
+        address payable applicantAddress = payable(msg.sender);
+        Applicant memory applicant = _applicantStorage.createApplicant(applicantAddress, name);
+        emit RegisterApplicant(applicantAddress, name, applicant.createdAt);
     }
 
     function getApplicantByAddress(
