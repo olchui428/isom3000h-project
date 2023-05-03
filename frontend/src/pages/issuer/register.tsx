@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import NotAllowed from "@/components/NotAllowed";
 import { useAppContext } from "@/contexts/app";
 import useMetaMask from "@/hooks/useMetaMask";
 import { UserType } from "@/types";
@@ -8,7 +9,7 @@ import { Alert, Box, TextField } from "@mui/material";
 import { useState } from "react";
 
 function IssuerRegister() {
-  const { showNotification, userTypes } = useAppContext();
+  const { address, showNotification, userTypes } = useAppContext();
   const metaMask = useMetaMask();
 
   const [name, setName] = useState("");
@@ -18,6 +19,14 @@ function IssuerRegister() {
   const [loading, setLoading] = useState(false);
 
   const isAlreadyIssuer = userTypes.includes(UserType.ISSUER);
+
+  if (!address) {
+    return (
+      <Layout title="Register Yourself as Issuer">
+        <NotAllowed />
+      </Layout>
+    );
+  }
 
   const registerIssuer = async () => {
     try {

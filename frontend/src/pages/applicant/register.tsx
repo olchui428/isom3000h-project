@@ -1,14 +1,15 @@
 import Layout from "@/components/Layout";
+import NotAllowed from "@/components/NotAllowed";
 import { useAppContext } from "@/contexts/app";
 import useMetaMask from "@/hooks/useMetaMask";
 import { UserType } from "@/types";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Alert, Box, TextField } from "@mui/material";
 import { useState } from "react";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 function ApplicantRegister() {
-  const { showNotification, userTypes } = useAppContext();
+  const { address, showNotification, userTypes } = useAppContext();
   const metaMask = useMetaMask();
 
   const [name, setName] = useState("");
@@ -16,6 +17,14 @@ function ApplicantRegister() {
   const [loading, setLoading] = useState(false);
 
   const isAlreadyApplicant = userTypes.includes(UserType.APPLICANT);
+
+  if (!address) {
+    return (
+      <Layout title="Register Yourself as Applicant">
+        <NotAllowed />
+      </Layout>
+    );
+  }
 
   const registerApplicant = async () => {
     try {
