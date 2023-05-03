@@ -1,9 +1,10 @@
+import ErrorNotification from "@/components/ErrorNotification";
 import Layout from "@/components/Layout/Layout";
 import NotAllowed from "@/components/NotAllowed";
 import { useAppContext } from "@/contexts/app";
 import useMetaMask from "@/hooks/useMetaMask";
 import { UserType } from "@/types";
-import { Alert, AlertTitle, Box, Button, Snackbar, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -90,23 +91,12 @@ function CertificateIssue() {
           Issue Certificate
         </Button>
       </Box>
-      <Snackbar
-        open={hasError}
+      <ErrorNotification
+        isShown={hasError}
+        title="Failed to Issue Certificate"
+        message={errorMsg}
         onClose={() => setHasError(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        autoHideDuration={6000}
-        sx={{ maxWidth: "40%" }}
-      >
-        <Alert
-          onClose={() => setHasError(false)}
-          severity="error"
-          variant="filled"
-          sx={{ "& .MuiAlert-message": { fontWeight: 400 } }}
-        >
-          <AlertTitle>Failed to Issue Certificate</AlertTitle>
-          {errorMsg}
-        </Alert>
-      </Snackbar>
+      />
     </Layout>
   );
 }

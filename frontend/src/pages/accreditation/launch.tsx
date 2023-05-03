@@ -1,9 +1,10 @@
+import ErrorNotification from "@/components/ErrorNotification";
 import Layout from "@/components/Layout";
 import NotAllowed from "@/components/NotAllowed";
 import { useAppContext } from "@/contexts/app";
 import useMetaMask from "@/hooks/useMetaMask";
 import { UserType } from "@/types";
-import { Alert, AlertTitle, Box, Button, Snackbar, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 import { useRouter } from "next/router";
@@ -83,23 +84,12 @@ function AccreditationLaunch() {
           Launch Accreditation
         </Button>
       </Box>
-      <Snackbar
-        open={hasError}
+      <ErrorNotification
+        isShown={hasError}
+        title="Failed to Launch Accreditation"
+        message={errorMsg}
         onClose={() => setHasError(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        autoHideDuration={6000}
-        sx={{ maxWidth: "40%" }}
-      >
-        <Alert
-          onClose={() => setHasError(false)}
-          severity="error"
-          variant="filled"
-          sx={{ "& .MuiAlert-message": { fontWeight: 400 } }}
-        >
-          <AlertTitle>Failed to Launch Accreditation</AlertTitle>
-          {errorMsg}
-        </Alert>
-      </Snackbar>
+      />
     </Layout>
   );
 }

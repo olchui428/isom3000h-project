@@ -203,6 +203,7 @@ The deliverables include a set of presentation slides, a group presentation wher
    2. _[Optional]_ Set up a test network in MetaMask
       1. Add the [_network_](https://mumbai.polygonscan.com) on MetaMask by scrolling to the bottom, finding the "Add Mumbai Network" button at the bottom right corner and clicking it
       2. Obtain the account private key and place it in `contract/.env` file in the format `TEST_PK=0x<Obtained Private Key>`
+      3. To obtain test tokens, visit [Polygon Faucet](https://faucet.polygon.technology/).
    3. _[Optional]_ Set up a local test network on Ganache
       1. Create a quick local network on Ganache
       2. Obtain an account private key and place it in `contract/.env` file in the format `LOCAL_PK=0x<Obtained Private Key>`
