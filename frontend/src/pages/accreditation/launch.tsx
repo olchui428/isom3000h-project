@@ -1,4 +1,3 @@
-import ErrorNotification from "@/components/ErrorNotification";
 import Layout from "@/components/Layout";
 import NotAllowed from "@/components/NotAllowed";
 import { useAppContext } from "@/contexts/app";
@@ -11,7 +10,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 function AccreditationLaunch() {
-  const { userType } = useAppContext();
+  const { userType, showNotification } = useAppContext();
   const router = useRouter();
   const metaMask = useMetaMask();
 
@@ -19,9 +18,6 @@ function AccreditationLaunch() {
   const [nature, setNature] = useState("");
   const [description, setDescription] = useState("");
   const [expiryDate, setExpiryDate] = useState<Dayjs | null>(null);
-
-  const [hasError, setHasError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
 
   if (userType !== UserType.ISSUER) {
     return (
@@ -48,8 +44,11 @@ function AccreditationLaunch() {
       // TODO: redirect to accreditation page of that new accreditation after successfully create
     } catch (error: any) {
       console.error(error);
-      setHasError(true);
-      setErrorMsg(error.message);
+      showNotification({
+        severity: "error",
+        title: "Failed to Launch Accreditation",
+        message: error.message,
+      });
     }
   };
 
@@ -84,12 +83,6 @@ function AccreditationLaunch() {
           Launch Accreditation
         </Button>
       </Box>
-      <ErrorNotification
-        isShown={hasError}
-        title="Failed to Launch Accreditation"
-        message={errorMsg}
-        onClose={() => setHasError(false)}
-      />
     </Layout>
   );
 }

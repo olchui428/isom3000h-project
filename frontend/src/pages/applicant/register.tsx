@@ -1,16 +1,14 @@
-import ErrorNotification from "@/components/ErrorNotification";
 import Layout from "@/components/Layout";
+import { useAppContext } from "@/contexts/app";
 import useMetaMask from "@/hooks/useMetaMask";
 import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
 
 function ApplicantRegister() {
+  const { showNotification } = useAppContext();
   const metaMask = useMetaMask();
 
   const [name, setName] = useState("");
-
-  const [hasError, setHasError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
 
   const registerApplicant = async () => {
     try {
@@ -18,8 +16,11 @@ function ApplicantRegister() {
       console.log("applicant", applicant);
     } catch (error: any) {
       console.error(error);
-      setHasError(true);
-      setErrorMsg(error.message);
+      showNotification({
+        severity: "error",
+        title: "Failed to Register",
+        message: error.message,
+      });
     }
   };
 
@@ -35,12 +36,6 @@ function ApplicantRegister() {
           Register Applicant
         </Button>
       </Box>
-      <ErrorNotification
-        isShown={hasError}
-        onClose={() => setHasError(false)}
-        title="Failed to Register Applicant"
-        message={errorMsg}
-      />
     </Layout>
   );
 }

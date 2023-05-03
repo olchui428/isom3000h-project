@@ -1,4 +1,3 @@
-import ErrorNotification from "@/components/ErrorNotification";
 import Layout from "@/components/Layout/Layout";
 import NotAllowed from "@/components/NotAllowed";
 import { useAppContext } from "@/contexts/app";
@@ -9,7 +8,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 function CertificateIssue() {
-  const { userType } = useAppContext();
+  const { userType, showNotification } = useAppContext();
   const router = useRouter();
   const metaMask = useMetaMask();
 
@@ -17,9 +16,6 @@ function CertificateIssue() {
   const [recipientId, setRecipientId] = useState("");
   const [level, setLevel] = useState("");
   const [remarks, setRemarks] = useState("");
-
-  const [hasError, setHasError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
 
   if (userType !== UserType.ISSUER) {
     return (
@@ -47,8 +43,11 @@ function CertificateIssue() {
       // TODO: redirect to certificate page of that new certificate after successfully create
     } catch (error: any) {
       console.error(error);
-      setHasError(true);
-      setErrorMsg(error.message);
+      showNotification({
+        severity: "error",
+        title: "Failed to Issue Certificate",
+        message: error.message,
+      });
     }
   };
 
@@ -91,12 +90,6 @@ function CertificateIssue() {
           Issue Certificate
         </Button>
       </Box>
-      <ErrorNotification
-        isShown={hasError}
-        title="Failed to Issue Certificate"
-        message={errorMsg}
-        onClose={() => setHasError(false)}
-      />
     </Layout>
   );
 }
