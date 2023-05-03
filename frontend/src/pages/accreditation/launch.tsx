@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 function AccreditationLaunch() {
-  const { userType, showNotification } = useAppContext();
+  const { userTypes, showNotification } = useAppContext();
   const router = useRouter();
   const metaMask = useMetaMask();
 
@@ -19,7 +19,7 @@ function AccreditationLaunch() {
   const [description, setDescription] = useState("");
   const [expiryDate, setExpiryDate] = useState<Dayjs | null>(null);
 
-  if (userType !== UserType.ISSUER) {
+  if (!userTypes.includes(UserType.ISSUER)) {
     return (
       <Layout title="Launch Accreditation">
         <NotAllowed />

@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 function CertificateIssue() {
-  const { userType, showNotification } = useAppContext();
+  const { userTypes, showNotification } = useAppContext();
   const router = useRouter();
   const metaMask = useMetaMask();
 
@@ -17,7 +17,7 @@ function CertificateIssue() {
   const [level, setLevel] = useState("");
   const [remarks, setRemarks] = useState("");
 
-  if (userType !== UserType.ISSUER) {
+  if (!userTypes.includes(UserType.ISSUER)) {
     return (
       <Layout title="Launch Accreditation">
         <NotAllowed />

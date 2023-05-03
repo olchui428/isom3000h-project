@@ -27,7 +27,7 @@ const HIGH_SECURITY_NUM_CONFIRMS = 1;
  * Hook for managing MetaMask and interacting with Smart Contract endpoints.
  */
 const useMetaMask = () => {
-  const { address, setAddress, setUserType } = useAppContext();
+  const { address, setAddress, setUserTypes } = useAppContext();
 
   /**
    * Connects to the MetaMask extension.
@@ -86,14 +86,14 @@ const useMetaMask = () => {
     const address = await connectToMetaMask();
     if (address) {
       setAddress(address);
-      const userType = await getUserTypeByAddress(address);
-      setUserType(userType);
+      const userTypes = await getUserTypesByAddress(address);
+      setUserTypes(userTypes);
     }
   };
 
   const logout = () => {
     setAddress("");
-    setUserType(UserType.OUTSIDER);
+    setUserTypes([]);
   };
 
   const IssuerEndpoint = () => {
@@ -379,19 +379,20 @@ const useMetaMask = () => {
     }
   };
 
-  const getUserTypeByAddress = async (address: string | undefined): Promise<UserType> => {
-    if (!address) return UserType.OUTSIDER;
+  const getUserTypesByAddress = async (address: string | undefined): Promise<UserType[]> => {
+    if (!address) return [];
+    const userTypes: UserType[] = [];
     try {
       const issuer = await IssuerEndpoint().getIssuerByAddress(address);
-      if (issuer) return UserType.ISSUER;
+      if (issuer) userTypes.push(UserType.ISSUER);
 
       const applicant = await ApplicantEndpoint().getApplicantByAddress(address);
-      if (applicant) return UserType.APPLICANT;
+      if (applicant) userTypes.push(UserType.APPLICANT);
 
-      return UserType.OUTSIDER;
+      return userTypes;
     } catch (error: any) {
       console.log("Error while getting user type", error);
-      return UserType.OUTSIDER;
+      return [];
     }
   };
 
@@ -403,7 +404,7 @@ const useMetaMask = () => {
     accreditationEndpoint: AccreditationEndpoint(),
     certificateEndpoint: CertificateEndpoint(),
     generateCertificate,
-    getUserTypeByAddress,
+    getUserTypesByAddress,
   };
 };
 

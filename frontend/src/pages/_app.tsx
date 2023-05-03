@@ -11,14 +11,14 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 type AccreditationAppProps = Pick<AppProps, "Component" | "pageProps"> & {
   /** MetaMask address if the user has previously connected to it. */
   address?: string;
-  /** User type, which is determined from a cookie. Defaults to "Issuer". */
-  userType: UserType;
+  /** User types. */
+  userTypes: UserType[];
 };
 
-function AccreditationApp({ Component, pageProps, address, userType }: AccreditationAppProps) {
+function AccreditationApp({ Component, pageProps, address, userTypes }: AccreditationAppProps) {
   return (
     <ThemeProvider theme={muiLightTheme}>
-      <AppContextProvider initValues={{ address, userType }}>
+      <AppContextProvider initValues={{ address, userTypes }}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <CssBaseline />
           <Component {...pageProps} />
@@ -38,17 +38,19 @@ AccreditationApp.getInitialProps = async (
   // Get initial MetaMask address if the user has previously connected.
   const address = getCookie("address", { req, res }) as string | undefined;
 
-  // Get the initial user type from the cookie.
-  let userType = getCookie("userType", { req, res }) as UserType | undefined;
-  if (!userType) {
-    userType = UserType.OUTSIDER;
-    setCookie("userType", userType, { req, res, maxAge: 60 * 60 * 24 * 7 });
+  // Get the initial user types from the cookie.
+  const userTypesCookie = getCookie("userTypes", { req, res }) as string | undefined;
+  let userTypes: UserType[] = [];
+  if (userTypesCookie) {
+    userTypes = JSON.parse(userTypesCookie);
+  } else {
+    setCookie("userTypes", JSON.stringify(userTypes), { req, res, maxAge: 60 * 60 * 24 * 7 });
   }
 
   return {
     ...appProps,
     address,
-    userType,
+    userTypes,
   };
 };
 

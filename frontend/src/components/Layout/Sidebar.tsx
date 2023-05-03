@@ -5,10 +5,10 @@ import { UserType } from "@/types";
 import AddIcon from "@mui/icons-material/Add";
 import DomainAddIcon from "@mui/icons-material/DomainAdd";
 import HomeIcon from "@mui/icons-material/Home";
+import LogoutIcon from "@mui/icons-material/Logout";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import SendIcon from "@mui/icons-material/Send";
-import LogoutIcon from "@mui/icons-material/Logout";
 import {
   Avatar,
   Box,
@@ -24,7 +24,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { blueGrey, orange } from "@mui/material/colors";
+import { blueGrey, grey, orange } from "@mui/material/colors";
 import { NextLinkComposed } from "../NextLinkComposed";
 
 interface SidebarProps {
@@ -36,7 +36,7 @@ interface SidebarProps {
  * Sidebar shown at the left.
  */
 function Sidebar({ width }: SidebarProps) {
-  const { address, userType, setUserType } = useAppContext();
+  const { address, userTypes } = useAppContext();
   const { login, logout } = useMetaMask();
 
   return (
@@ -62,18 +62,36 @@ function Sidebar({ width }: SidebarProps) {
         >
           {address ? (
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Avatar sx={{ height: 36, width: 36, bgcolor: orange[700], fontSize: 18 }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                <Avatar sx={{ height: 40, width: 40, bgcolor: orange[700], fontSize: 18 }}>
                   M
                 </Avatar>
-                <Typography>{address.substring(0, 12)}...</Typography>
+                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                  <Typography>{address.substring(0, 12)}</Typography>
+                  <Box sx={{ display: "flex", gap: "4px" }}>
+                    {userTypes.map((type) => (
+                      <Typography
+                        key={type}
+                        sx={{
+                          fontSize: 12,
+                          px: 1,
+                          py: 0.5,
+                          backgroundColor: grey[700],
+                          lineHeight: 1,
+                          borderRadius: 99,
+                        }}
+                      >
+                        {type.substring(0, 1).toUpperCase() + type.substring(1)}
+                      </Typography>
+                    ))}
+                  </Box>
+                </Box>
               </Box>
               <Tooltip title="Logout">
                 <IconButton onClick={logout}>
                   <LogoutIcon />
                 </IconButton>
               </Tooltip>
-              {/* TODO: Show badge of what the user type is */}
             </Box>
           ) : (
             <Button
@@ -107,7 +125,8 @@ function Sidebar({ width }: SidebarProps) {
               </Typography>
               <List>
                 {section.links.map((link) => {
-                  return link.visibleTo && !link.visibleTo.includes(userType) ? null : (
+                  return link.visibleTo &&
+                    !link.visibleTo.some((u) => userTypes.includes(u)) ? null : (
                     <ListItem key={link.label} disablePadding>
                       <ListItemButton component={NextLinkComposed} to={link.href}>
                         <ListItemIcon>{link.icon}</ListItemIcon>

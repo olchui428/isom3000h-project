@@ -17,9 +17,14 @@ interface AppContextType {
   address: string | undefined;
   setAddress: (address: string) => void;
 
-  /** Type of the user. */
-  userType: UserType;
-  setUserType: (userType: UserType) => void;
+  /**
+   * Types of the user. If it is empty, it means the user is an outsider.
+   *
+   * An account may have multiple types because a company may issue accreditations
+   * and also receive certificates from other issuers.
+   */
+  userTypes: UserType[];
+  setUserTypes: (userType: UserType[]) => void;
 
   /** Data about a notification. */
   notification: Notification | undefined;
@@ -38,14 +43,14 @@ interface AppContextProviderProps {
   initValues: {
     /** MetaMask address. */
     address?: string;
-    userType: UserType;
+    userTypes: UserType[];
   };
   children: React.ReactNode;
 }
 
 export function AppContextProvider({ initValues, children }: AppContextProviderProps) {
   const [address, setAddressState] = useState<string | undefined>(initValues.address);
-  const [userType, setUserTypeState] = useState<UserType>(initValues.userType);
+  const [userTypes, setUserTypesState] = useState<UserType[]>(initValues.userTypes);
 
   const [hasNotification, setHasNotification] = useState(false);
   const [notification, setNotification] = useState<Notification | undefined>(undefined);
@@ -55,9 +60,9 @@ export function AppContextProvider({ initValues, children }: AppContextProviderP
     setAddressState(address);
   };
 
-  const setUserType = (userType: UserType) => {
-    setCookie("userType", userType, { maxAge: 60 * 60 * 24 * 7 });
-    setUserTypeState(userType);
+  const setUserTypes = (userTypes: UserType[]) => {
+    setCookie("userTypes", JSON.stringify(userTypes), { maxAge: 60 * 60 * 24 * 7 });
+    setUserTypesState(userTypes);
   };
 
   const showNotification = (notification: Notification) => {
@@ -75,8 +80,8 @@ export function AppContextProvider({ initValues, children }: AppContextProviderP
       value={{
         address,
         setAddress,
-        userType,
-        setUserType,
+        userTypes,
+        setUserTypes,
         notification,
         hasNotification,
         showNotification,
