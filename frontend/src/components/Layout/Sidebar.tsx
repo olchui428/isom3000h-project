@@ -39,6 +39,9 @@ function Sidebar({ width }: SidebarProps) {
   const { address, userTypes } = useAppContext();
   const { login, logout } = useMetaMask();
 
+  const isIssuer = userTypes.includes(UserType.ISSUER);
+  const isApplicant = userTypes.includes(UserType.APPLICANT);
+
   return (
     <ThemeProvider theme={muiDarkTheme}>
       <Drawer
@@ -110,108 +113,91 @@ function Sidebar({ width }: SidebarProps) {
           )}
         </Box>
         <Box sx={{ pt: 3 }}>
-          {sidebarSections.map((section, index) => (
-            <Box key={index} sx={{ mb: 4 }}>
-              <Typography
-                sx={{
-                  mx: 2,
-                  color: blueGrey[300],
-                  fontSize: 14,
-                  fontWeight: 500,
-                  textTransform: "uppercase",
-                }}
-              >
-                {section.title}
-              </Typography>
-              <List>
-                {section.links.map((link) => {
-                  return link.visibleTo &&
-                    !link.visibleTo.some((u) => userTypes.includes(u)) ? null : (
-                    <ListItem key={link.label} disablePadding>
-                      <ListItemButton component={NextLinkComposed} to={link.href}>
-                        <ListItemIcon>{link.icon}</ListItemIcon>
-                        <ListItemText primary={link.label} />
-                      </ListItemButton>
-                    </ListItem>
-                  );
-                })}
-              </List>
-            </Box>
-          ))}
+          <SidebarSection>
+            <SideBarLink label="Home" href="/" icon={<HomeIcon />} />
+          </SidebarSection>
+          {!!address &&
+            (!(isIssuer && isApplicant) ? (
+              <SidebarSection title="Register">
+                <SideBarLink
+                  label="Register as Issuer"
+                  href="/issuer/register"
+                  icon={<DomainAddIcon />}
+                  visible={!isIssuer}
+                />
+                <SideBarLink
+                  label="Register as Applicant"
+                  href="/applicant/register"
+                  icon={<PersonAddIcon />}
+                  visible={!isApplicant}
+                />
+              </SidebarSection>
+            ) : null)}
+          <SidebarSection title="Accreditation">
+            <SideBarLink
+              label="Launch Accreditation"
+              href="/accreditation/launch"
+              icon={<AddIcon />}
+              visible={isIssuer}
+            />
+            <SideBarLink
+              label="Search Accreditation"
+              href="/accreditation/search"
+              icon={<SearchIcon />}
+            />
+          </SidebarSection>
+          <SidebarSection title="Certificate">
+            <SideBarLink
+              label="Issue Certificate"
+              href="/certificate/issue"
+              icon={<SendIcon />}
+              visible={isIssuer}
+            />
+            <SideBarLink
+              label="Search Certificate"
+              href="/certificate/search"
+              icon={<SearchIcon />}
+            />
+          </SidebarSection>
         </Box>
       </Drawer>
     </ThemeProvider>
   );
 }
 
-type SidebarSection = {
-  title?: string;
-  links: {
-    icon: React.ReactNode;
-    label: string;
-    href: string;
-    /** If provided, only the specified user type(s) can see this link. */
-    visibleTo?: UserType[];
-  }[];
-};
+const SidebarSection = ({ title, children }: { title?: string; children: React.ReactNode }) => (
+  <Box sx={{ mb: 4 }}>
+    <Typography
+      sx={{
+        mx: 2,
+        color: blueGrey[300],
+        fontSize: 14,
+        fontWeight: 500,
+        textTransform: "uppercase",
+      }}
+    >
+      {title}
+    </Typography>
+    <List>{children}</List>
+  </Box>
+);
 
-const sidebarSections: SidebarSection[] = [
-  {
-    links: [
-      {
-        icon: <HomeIcon />,
-        label: "Home",
-        href: "/",
-      },
-    ],
-  },
-  {
-    title: "Register",
-    links: [
-      {
-        icon: <DomainAddIcon />,
-        label: "Register as Issuer",
-        href: "/issuer/register",
-      },
-      {
-        icon: <PersonAddIcon />,
-        label: "Register as Applicant",
-        href: "/applicant/register",
-      },
-    ],
-  },
-  {
-    title: "Accreditation",
-    links: [
-      {
-        icon: <AddIcon />,
-        label: "Launch Accreditation",
-        href: "/accreditation/launch",
-        visibleTo: [UserType.ISSUER],
-      },
-      {
-        icon: <SearchIcon />,
-        label: "Search Accreditation",
-        href: "/accreditation/search",
-      },
-    ],
-  },
-  {
-    title: "Certificate",
-    links: [
-      {
-        icon: <SendIcon />,
-        label: "Issue Certificate",
-        href: "/certificate/issue",
-        visibleTo: [UserType.ISSUER],
-      },
-      {
-        icon: <SearchIcon />,
-        label: "Search Certificate",
-        href: "/certificate/search",
-      },
-    ],
-  },
-];
+interface SideBarLinkProps {
+  icon: React.ReactNode;
+  label: string;
+  href: string;
+  visible?: boolean;
+}
+
+const SideBarLink = ({ icon, label, href, visible = true }: SideBarLinkProps) => {
+  return visible ? (
+    <ListItem disablePadding>
+      <ListItemButton component={NextLinkComposed} to={href}>
+        <ListItemIcon>{icon}</ListItemIcon>
+        <ListItemText primary={label} />
+      </ListItemButton>
+    </ListItem>
+  ) : null;
+};
 
 export default Sidebar;

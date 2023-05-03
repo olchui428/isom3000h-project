@@ -19,7 +19,7 @@ function CertificateIssue() {
 
   if (!userTypes.includes(UserType.ISSUER)) {
     return (
-      <Layout title="Launch Accreditation">
+      <Layout title="Issue Certificate">
         <NotAllowed />
       </Layout>
     );
