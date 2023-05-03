@@ -1,3 +1,4 @@
+import ErrorNotification from "@/components/ErrorNotification";
 import Layout from "@/components/Layout";
 import useMetaMask from "@/hooks/useMetaMask";
 import { Box, Button, TextField } from "@mui/material";
@@ -46,6 +47,12 @@ function IssuerRegister() {
           Register Issuer
         </Button>
       </Box>
+      <ErrorNotification
+        isShown={hasError}
+        onClose={() => setHasError(false)}
+        title="Failed to Register Issuer"
+        message={errorMsg}
+      />
     </Layout>
   );
 }

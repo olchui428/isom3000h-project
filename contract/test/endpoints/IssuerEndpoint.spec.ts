@@ -39,7 +39,18 @@ describe(`Given ${CONTRACT_NAME}`, () => {
     const tx = await issuerEndpoint
       .connect(otherAddress)
       .registerIssuer(_issuer.name, _issuer.description, _issuer.logoUrl);
-    await tx.wait();
+    const receipt = await tx.wait();
+    const abiData = receipt.logs[0].data;
+
+    const decodedAbi = ethers.utils.defaultAbiCoder.decode(
+      ["address", "string", "string", "string", "uint256"],
+      abiData
+    );
+
+    expect(decodedAbi[0]).to.equal(_issuer.issuerAddress);
+    expect(decodedAbi[1]).to.equal(_issuer.name);
+    expect(decodedAbi[2]).to.equal(_issuer.description);
+    expect(decodedAbi[3]).to.equal(_issuer.logoUrl);
 
     // Getting issuer
     const issuer = await issuerEndpoint.getIssuerByAddress(_issuer.issuerAddress);

@@ -158,11 +158,15 @@ const useMetaMask = () => {
         const receipt = await tx.wait(LOW_SECURITY_NUM_CONFIRMS);
         const data = receipt.logs[receipt.logs.length - 1].data;
 
-        // // TODO(MVP): decide return what
-        // const [applicantAddress, name, createdAt] = ethers.utils.defaultAbiCoder.decode(
-        //   ["address", "string", "uint256"],
-        //   data
-        // );
+
+        const decodedAbi = ethers.utils.defaultAbiCoder.decode(
+          ["address", "string", "uint256"],
+          data
+        );
+        return {
+          applicantAddress: decodedAbi[0] as string,
+          createdAt: decodedAbi[2] as number,
+        };
       } catch (error) {
         console.log(`Error at ApplicantEndpoint::registerApplicant(): ${error}`);
         throw error;
