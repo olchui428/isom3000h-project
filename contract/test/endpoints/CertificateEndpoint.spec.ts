@@ -151,19 +151,20 @@ describe(`Given ${CONTRACT_NAME}`, () => {
     );
     const receipt = await txCert.wait();
     const data = receipt.logs[1].data;
+    const decodedAbi = utils.defaultAbiCoder.decode(
+      ["uint256", "uint256", "address", "address", "uint256", "string", "string", "string"],
+      data
+    );
     const [
       id,
-      issuerAddress,
-      applicantAddress,
-      createdAt,
       accreditationId,
+      applicantAddress,
+      issuerAddress,
+      createdAt,
       level,
       eventId,
       remarks,
-    ] = utils.defaultAbiCoder.decode(
-      ["uint256", "address", "address", "uint256", "uint256", "string", "string", "string"],
-      data
-    );
+    ] = decodedAbi;
 
     // Get Certificate by ID
     const certificate = await certificateEndpoint.getCertificateById(id);
