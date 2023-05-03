@@ -71,9 +71,7 @@ describe(`Given ${CONTRACT_NAME}`, () => {
     ]);
     const certificateEndpoint = await deployContract(CERTIFICATE_ENDPOINT, [
       issuerStorage.address,
-      issuerEndpoint.address,
       applicantStorage.address,
-      applicantEndpoint.address,
       accreditationStorage.address,
       certificateStorage.address,
       certificateNFT.address,
@@ -86,11 +84,16 @@ describe(`Given ${CONTRACT_NAME}`, () => {
     await setContractAddresses(ISSUER_STORAGE, issuerStorage, [
       accreditationStorage.address,
       issuerEndpoint.address,
+      certificateEndpoint.address,
     ]);
-    await setContractAddresses(APPLICANT_STORAGE, applicantStorage, [applicantEndpoint.address]);
+    await setContractAddresses(APPLICANT_STORAGE, applicantStorage, [
+      applicantEndpoint.address,
+      certificateEndpoint.address,
+    ]);
     await setContractAddresses(ACCREDITATION_STORAGE, accreditationStorage, [
       accreditationNFT.address,
       accreditationEndpoint.address,
+      certificateEndpoint.address,
     ]);
     await setContractAddresses(CERTIFICATE_STORAGE, certificateStorage, [
       certificateNFT.address,
@@ -117,12 +120,12 @@ describe(`Given ${CONTRACT_NAME}`, () => {
       logoUrl: "https://picsum.photos/200/300",
       issuerAddress: owner.address,
     };
-    await issuerEndpoint.registerIssuer(
-      _issuer.issuerAddress,
+    const txIssuer = await issuerEndpoint.registerIssuer(
       _issuer.name,
       _issuer.description,
       _issuer.logoUrl
     );
+    txIssuer.wait();
 
     // Create Accreditation
     const _accreditation = {
@@ -133,15 +136,14 @@ describe(`Given ${CONTRACT_NAME}`, () => {
       nature: "Exam",
       description: "It is a tough exam.",
     };
-    const tx = await accreditationEndpoint.launchAccreditation(
-      _accreditation.issuer,
+    const txAccred = await accreditationEndpoint.launchAccreditation(
       _accreditation.title,
       _accreditation.createdAt,
       _accreditation.duration,
       _accreditation.nature,
       _accreditation.description
     );
-    const receipt = await tx.wait();
+    const receipt = await txAccred.wait();
     const data = receipt.logs[1].data;
     const [id, issuer, title, createdAt, duration, nature, description] =
       utils.defaultAbiCoder.decode(
@@ -150,15 +152,30 @@ describe(`Given ${CONTRACT_NAME}`, () => {
       );
 
     // Get Accreditation by ID
-    const accreditation = await accreditationEndpoint.getAccreditationById(id.toString());
+    const accreditation = await accreditationEndpoint.getAccreditationById(id);
 
     // Assertions
-    expect(_accreditation.issuer).to.equal(accreditation.issuer);
-    expect(_accreditation.title).to.equal(accreditation.title);
-    expect(_accreditation.createdAt).to.equal(accreditation.createdAt);
-    expect(_accreditation.duration).to.equal(accreditation.duration);
-    expect(_accreditation.nature).to.equal(accreditation.nature);
-    expect(_accreditation.description).to.equal(accreditation.description);
+    expect(accreditation.issuer).to.equal(_accreditation.issuer);
+    expect(accreditation.title).to.equal(_accreditation.title);
+    expect(accreditation.createdAt).to.equal(_accreditation.createdAt);
+    expect(accreditation.duration).to.equal(_accreditation.duration);
+    expect(accreditation.nature).to.equal(_accreditation.nature);
+    expect(accreditation.description).to.equal(_accreditation.description);
+
+    // Get Accreditations by Issuer address
+    const accreditations = await accreditationEndpoint.getAccreditationsByIssuerAddress(
+      _accreditation.issuer
+    );
+
+    // Assertions
+    expect(accreditations.length).to.equal(1);
+    const [acc] = accreditations;
+    expect(acc.issuer).to.equal(_accreditation.issuer);
+    expect(acc.title).to.equal(_accreditation.title);
+    expect(acc.createdAt).to.equal(_accreditation.createdAt);
+    expect(acc.duration).to.equal(_accreditation.duration);
+    expect(acc.nature).to.equal(_accreditation.nature);
+    expect(acc.description).to.equal(_accreditation.description);
   });
 });
 

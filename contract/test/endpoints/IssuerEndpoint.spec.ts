@@ -4,22 +4,6 @@ import { ethers } from "hardhat";
 const CONTRACT_NAME = "IssuerEndpoint";
 
 describe(`Given ${CONTRACT_NAME}`, () => {
-  it("Testing registerIssuer error", () => {
-    it("Should raise error if Issuer address already registered", async () => {
-      // TODO(Good to have): implement test
-    });
-
-    it("Should raise error if invalid params", async () => {
-      // TODO(Good to have): implement test
-    });
-  });
-
-  it("Testing getIssuerByAddress error", () => {
-    it("Should raise error if invalid params", async () => {
-      // TODO(Good to have): implement test
-    });
-  });
-
   it("Should store and retrieve issuer (registerIssuer, getIssuerByAddress)", async () => {
     const [owner, otherAddress, ...rest] = await ethers.getSigners();
 
@@ -43,17 +27,21 @@ describe(`Given ${CONTRACT_NAME}`, () => {
       name: "ABC Company",
       description: "It is a good company",
       logoUrl: "https://picsum.photos/200/300",
-      issuerAddress: owner.address,
+      issuerAddress: otherAddress.address,
     };
-    await issuerEndpoint.registerIssuer(
-      _issuer.issuerAddress,
-      _issuer.name,
-      _issuer.description,
-      _issuer.logoUrl
+
+    await issuerStorage.setAddresses(
+      accreditationStorage.address,
+      issuerEndpoint.address,
+      issuerEndpoint.address // should be certificate endpoint address but whatever
     );
 
+    const tx = await issuerEndpoint
+      .connect(otherAddress)
+      .registerIssuer(_issuer.name, _issuer.description, _issuer.logoUrl);
+    await tx.wait();
+
     // Getting issuer
-    await issuerStorage.setAddresses(accreditationStorage.address, issuerEndpoint.address)
     const issuer = await issuerEndpoint.getIssuerByAddress(_issuer.issuerAddress);
 
     // Assertions

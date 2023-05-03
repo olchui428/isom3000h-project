@@ -15,29 +15,7 @@ const APPLICANT_ENDPOINT = "ApplicantEndpoint";
 const ACCREDITATION_ENDPOINT = "AccreditationEndpoint";
 const CERTIFICATE_ENDPOINT = "CertificateEndpoint";
 
-describe.only(`Given ${CONTRACT_NAME}`, () => {
-  it("Testing issueCertificate error", () => {
-    it("Should raise error if not using Applicant address", async () => {
-      // TODO(Good to have): implement test
-    });
-
-    it("Should raise error if invalid params", async () => {
-      // TODO(Good to have): implement test
-    });
-  });
-
-  it("Testing getCertificateById error", () => {
-    it("Should raise error if invalid params", async () => {
-      // TODO(Good to have): implement test
-    });
-  });
-
-  it("Testing getCertificatesByApplicantAddresses error", () => {
-    it("Should raise error if invalid params", async () => {
-      // TODO(Good to have): implement test
-    });
-  });
-
+describe(`Given ${CONTRACT_NAME}`, () => {
   it("Should store Certificates correctly (issueCertificate, getCertificateById, getCertificatesByApplicantAddresses, getCompleteCertById)", async () => {
     const [owner, otherAddress, ...rest] = await ethers.getSigners();
 
@@ -71,9 +49,7 @@ describe.only(`Given ${CONTRACT_NAME}`, () => {
     ]);
     const certificateEndpoint = await deployContract(CERTIFICATE_ENDPOINT, [
       issuerStorage.address,
-      issuerEndpoint.address,
       applicantStorage.address,
-      applicantEndpoint.address,
       accreditationStorage.address,
       certificateStorage.address,
       certificateNFT.address,
@@ -86,11 +62,16 @@ describe.only(`Given ${CONTRACT_NAME}`, () => {
     await setContractAddresses(ISSUER_STORAGE, issuerStorage, [
       accreditationStorage.address,
       issuerEndpoint.address,
+      certificateEndpoint.address,
     ]);
-    await setContractAddresses(APPLICANT_STORAGE, applicantStorage, [applicantEndpoint.address]);
+    await setContractAddresses(APPLICANT_STORAGE, applicantStorage, [
+      applicantEndpoint.address,
+      certificateEndpoint.address,
+    ]);
     await setContractAddresses(ACCREDITATION_STORAGE, accreditationStorage, [
       accreditationNFT.address,
       accreditationEndpoint.address,
+      certificateEndpoint.address,
     ]);
     await setContractAddresses(CERTIFICATE_STORAGE, certificateStorage, [
       certificateNFT.address,
@@ -117,19 +98,20 @@ describe.only(`Given ${CONTRACT_NAME}`, () => {
       logoUrl: "https://picsum.photos/200/300",
       issuerAddress: owner.address,
     };
-    await issuerEndpoint.registerIssuer(
-      _issuer.issuerAddress,
+    const txIssuer = await issuerEndpoint.registerIssuer(
       _issuer.name,
       _issuer.description,
       _issuer.logoUrl
     );
+    txIssuer.wait();
 
     // Create applicant
     const _applicant = {
       name: "Owen Lee",
       applicantAddress: otherAddress.address,
     };
-    await applicantEndpoint.registerApplicant(_applicant.applicantAddress, _applicant.name);
+    const txApplicant = await applicantEndpoint.registerApplicant(_applicant.name);
+    txApplicant.wait();
 
     // Create Accreditation
     const _accreditation = {
@@ -140,14 +122,14 @@ describe.only(`Given ${CONTRACT_NAME}`, () => {
       nature: "Exam",
       description: "It is a tough exam.",
     };
-    await accreditationEndpoint.launchAccreditation(
-      _accreditation.issuer,
+    const txAccred = await accreditationEndpoint.launchAccreditation(
       _accreditation.title,
       _accreditation.createdAt,
       _accreditation.duration,
       _accreditation.nature,
       _accreditation.description
     );
+    txAccred.wait();
 
     // Create Certificate
     const _certificate = {
@@ -159,8 +141,7 @@ describe.only(`Given ${CONTRACT_NAME}`, () => {
       eventId: "777",
       remarks: "Good",
     };
-    const tx = await certificateEndpoint.issueCertificate(
-      _certificate.issuerAddress,
+    const txCert = await certificateEndpoint.issueCertificate(
       _certificate.applicantAddress,
       _certificate.createdAt,
       _certificate.accreditationId,
@@ -168,7 +149,7 @@ describe.only(`Given ${CONTRACT_NAME}`, () => {
       _certificate.eventId,
       _certificate.remarks
     );
-    const receipt = await tx.wait();
+    const receipt = await txCert.wait();
     const data = receipt.logs[1].data;
     const [
       id,
@@ -185,19 +166,35 @@ describe.only(`Given ${CONTRACT_NAME}`, () => {
     );
 
     // Get Certificate by ID
-    const certificate = await certificateEndpoint.getCertificateById(id.toString());
-    const certificateComplete = await certificateEndpoint
-      .connect(applicantEndpoint.address)
-      .getCompleteCertById(id.toString());
+    const certificate = await certificateEndpoint.getCertificateById(id);
 
     // Assertions
-    expect(_certificate.issuerAddress).to.equal(certificate.issuer);
-    expect(_certificate.applicantAddress).to.equal(certificate.applicant);
-    expect(_certificate.createdAt).to.equal(certificate.createdAt);
-    expect(_certificate.accreditationId).to.equal(certificate.accreditationId);
-    expect(_certificate.level).to.equal(certificate.level);
-    expect(_certificate.eventId).to.equal(certificate.eventId);
-    expect(_certificate.remarks).to.equal(certificate.remarks);
+    expect(certificate.issuer).to.equal(_certificate.issuerAddress);
+    expect(certificate.applicant).to.equal(_certificate.applicantAddress);
+    expect(certificate.createdAt).to.equal(_certificate.createdAt);
+    expect(certificate.accreditationId).to.equal(_certificate.accreditationId);
+    expect(certificate.level).to.equal(_certificate.level);
+    expect(certificate.eventId).to.equal(_certificate.eventId);
+    expect(certificate.remarks).to.equal(_certificate.remarks);
+
+    // // TODO(MVP): Get Certificates by Applicant address
+    // const certificates = await certificateEndpoint.getCertificatesByApplicantAddress(
+    //   _applicant.applicantAddress
+    // );
+
+    // Get CompleteCert by ID
+    const {
+      issuer,
+      applicant,
+      accreditation,
+      certificate: cert,
+    } = await certificateEndpoint.getCompleteCertById(id);
+
+    // TODO(Good to have): implement all expects
+    // expect(issuer.).to.equal(_issuer.);
+    // expect(applicant.).to.equal(_applicant.);
+    // expect(accreditation.).to.equal(_accreditation.);
+    // expect(cert.).to.equal(_certificate.);
   });
 });
 

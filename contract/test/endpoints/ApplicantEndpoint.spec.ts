@@ -4,23 +4,7 @@ import { ethers } from "hardhat";
 const CONTRACT_NAME = "ApplicantEndpoint";
 
 describe(`Given ${CONTRACT_NAME}`, () => {
-  it("Testing registerApplicant error", () => {
-    it("Should raise error if Applicant address already registered", async () => {
-      // TODO(Good to have): implement test
-    });
-
-    it("Should raise error if invalid params", async () => {
-      // TODO(Good to have): implement test
-    });
-  });
-
-  it("Testing getApplicantByAddress error", () => {
-    it("Should raise error if invalid params", async () => {
-      // TODO(Good to have): implement test
-    });
-  });
-
-  it("Testing store and retrieve applicant (registerApplicant, getApplicantByAddress)", async () => {
+  it("Should store and retrieve applicant (registerApplicant, getApplicantByAddress)", async () => {
     const [owner, otherAddress, ...rest] = await ethers.getSigners();
 
     // Deploy ApplicantStorage
@@ -33,15 +17,18 @@ describe(`Given ${CONTRACT_NAME}`, () => {
     const applicantEndpoint = await ApplicantEndpoint.deploy(applicantStorage.address);
     await applicantEndpoint.deployed();
 
+    await applicantStorage.setAddresses(applicantEndpoint.address, applicantEndpoint.address);
+
     // Create applicant
     const _applicant = {
       name: "Owen Lee",
-      applicantAddress: owner.address,
+      applicantAddress: otherAddress.address,
     };
-    await applicantEndpoint.registerApplicant(_applicant.applicantAddress, _applicant.name);
+
+    const tx = await applicantEndpoint.connect(otherAddress).registerApplicant(_applicant.name);
+    await tx.wait();
 
     // Getting applicant
-    await applicantStorage.setAddresses(applicantEndpoint.address)
     const applicant = await applicantEndpoint.getApplicantByAddress(_applicant.applicantAddress);
 
     // Assertions
