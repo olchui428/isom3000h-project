@@ -1,6 +1,7 @@
-import { AppBar, Box, Toolbar, Typography } from "@mui/material";
+import { Alert, AlertTitle, AppBar, Box, Snackbar, Toolbar, Typography } from "@mui/material";
 import Sidebar from "./Sidebar";
 import Head from "next/head";
+import { useAppContext } from "@/contexts/app";
 
 interface LayoutProps {
   /** Title to show in the app bar. */
@@ -15,6 +16,8 @@ const sidebarWidth = 250;
  * Wrapper component for providing the layout.
  */
 function Layout({ title, children }: LayoutProps) {
+  const { notification, hasNotification, closeNotification } = useAppContext();
+
   return (
     <>
       <Head>
@@ -46,6 +49,25 @@ function Layout({ title, children }: LayoutProps) {
           {children}
         </Box>
       </Box>
+      <Snackbar
+        open={hasNotification}
+        onClose={closeNotification}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        autoHideDuration={6000}
+        sx={{ maxWidth: "60%" }}
+      >
+        {notification && (
+          <Alert
+            onClose={closeNotification}
+            severity={notification.severity}
+            variant="filled"
+            sx={{ maxWidth: "100%", "& .MuiAlert-message": { fontWeight: 400 } }}
+          >
+            {notification.title && <AlertTitle>{notification.title}</AlertTitle>}
+            {notification.message}
+          </Alert>
+        )}
+      </Snackbar>
     </>
   );
 }

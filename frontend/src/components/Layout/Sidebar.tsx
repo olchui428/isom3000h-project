@@ -149,6 +149,21 @@ const sidebarSections: SidebarSection[] = [
     ],
   },
   {
+    title: "Register",
+    links: [
+      {
+        icon: <DomainAddIcon />,
+        label: "Register as Issuer",
+        href: "/issuer/register",
+      },
+      {
+        icon: <PersonAddIcon />,
+        label: "Register as Applicant",
+        href: "/applicant/register",
+      },
+    ],
+  },
+  {
     title: "Accreditation",
     links: [
       {
@@ -177,21 +192,6 @@ const sidebarSections: SidebarSection[] = [
         icon: <SearchIcon />,
         label: "Search Certificate",
         href: "/certificate/search",
-      },
-    ],
-  },
-  {
-    title: "Register",
-    links: [
-      {
-        icon: <DomainAddIcon />,
-        label: "Register Issuer",
-        href: "/issuer/register",
-      },
-      {
-        icon: <PersonAddIcon />,
-        label: "Register Applicant",
-        href: "/applicant/register",
       },
     ],
   },

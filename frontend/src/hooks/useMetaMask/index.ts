@@ -103,19 +103,18 @@ const useMetaMask = () => {
           signer
         );
         const tx = await issuerEndpoint.registerIssuer(name, description, logoUrl, {
-          // gasLimit: 300000,
+          gasLimit: 300000,
         });
         // Add this line if it is a creation transaction // wait for the transaction to be mined
         const receipt = await tx.wait(LOW_SECURITY_NUM_CONFIRMS);
 
-        console.log("receipt", receipt);
-        console.log("events", receipt.events[0]);
-        console.log("args", receipt.events[0].args);
+        console.log("registerIssuer receipt", receipt);
 
         const registerResult = receipt.events[0].args;
+        const createdAtRaw = registerResult.createdAt as ethers.BigNumber;
         return {
-          issuerAddress: registerResult.issuerAddress,
-          createdAt: new Date(registerResult.createdAt),
+          issuerAddress: registerResult.issuerAddress as string,
+          createdAt: new Date(createdAtRaw.mul(1000).toNumber()),
         };
       } catch (error) {
         console.log(`Error at IssuerEndpoint::registerIssuer(): ${error}`);
@@ -157,7 +156,6 @@ const useMetaMask = () => {
         // Add this line if it is a creation transaction // wait for the transaction to be mined
         const receipt = await tx.wait(LOW_SECURITY_NUM_CONFIRMS);
         const data = receipt.logs[receipt.logs.length - 1].data;
-
 
         const decodedAbi = ethers.utils.defaultAbiCoder.decode(
           ["address", "string", "uint256"],

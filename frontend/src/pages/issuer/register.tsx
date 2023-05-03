@@ -1,36 +1,69 @@
-import ErrorNotification from "@/components/ErrorNotification";
 import Layout from "@/components/Layout";
+import { useAppContext } from "@/contexts/app";
 import useMetaMask from "@/hooks/useMetaMask";
-import { Box, Button, TextField } from "@mui/material";
+import DomainAddIcon from "@mui/icons-material/DomainAdd";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { Alert, Box, TextField } from "@mui/material";
 import { useState } from "react";
 
 function IssuerRegister() {
+  const { address, showNotification } = useAppContext();
   const metaMask = useMetaMask();
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
 
-  const [hasError, setHasError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [isAlreadyIssuer, setIsAlreadyIssuer] = useState(false);
 
   const registerIssuer = async () => {
     try {
+      setLoading(true);
       const issuer = await metaMask.issuerEndpoint.registerIssuer(name, description, logoUrl);
       console.log("issuer", issuer);
-
-      // TODO: redirect to issuer page of that new issuer after successfully create
+      if (issuer) {
+        showNotification({
+          severity: "success",
+          message: "Successfully registered as issuer",
+        });
+      }
     } catch (error: any) {
       console.error(error);
-      setHasError(true);
-      setErrorMsg(error.message);
+      showNotification({
+        severity: "error",
+        title: "Failed to Register",
+        message: error.message,
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
+  const checkIsAlreadyIssuer = async () => {
+    if (!address) return;
+    const issuer = await metaMask.issuerEndpoint.getIssuerByAddress(address);
+    if (issuer) {
+      setIsAlreadyIssuer(true);
+    }
+  };
+  checkIsAlreadyIssuer();
+
   return (
-    <Layout title="Register Issuer">
+    <Layout title="Register Yourself as Issuer">
+      {isAlreadyIssuer && (
+        <Alert severity="warning" variant="filled" sx={{ mb: 2 }}>
+          You have already registered yourself as an issuer.
+        </Alert>
+      )}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <TextField required label="Name" value={name} onChange={(e) => setName(e.target.value)} />
+        <TextField
+          required
+          label="Organization name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
         <TextField
           required
           label="Description"
@@ -39,20 +72,18 @@ function IssuerRegister() {
           onChange={(e) => setDescription(e.target.value)}
         />
         <TextField label="Logo URL" value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} />
-        <Button
+        <LoadingButton
+          loading={loading}
+          loadingPosition="start"
           onClick={registerIssuer}
+          disabled={isAlreadyIssuer}
           variant="contained"
+          startIcon={<DomainAddIcon />}
           sx={{ mt: 1, alignSelf: "flex-start" }}
         >
-          Register Issuer
-        </Button>
+          Register as Issuer
+        </LoadingButton>
       </Box>
-      <ErrorNotification
-        isShown={hasError}
-        onClose={() => setHasError(false)}
-        title="Failed to Register Issuer"
-        message={errorMsg}
-      />
     </Layout>
   );
 }
