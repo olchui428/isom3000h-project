@@ -107,12 +107,18 @@ const useMetaMask = () => {
         const receipt = await tx.wait(LOW_SECURITY_NUM_CONFIRMS);
         const data = receipt.logs[receipt.logs.length - 1].data;
 
-        // // TODO(MVP): decide return what
-        // const [issuerAddress, name, description, logoUrl, createdAt] =
-        //   ethers.utils.defaultAbiCoder.decode(
-        //     ["address", "string", "string", "string", "uint256"],
-        //     data
-        //   );
+        console.log("receipt", receipt);
+        console.log("data", data);
+
+        // FIXME: Integer overflow error
+        const registerResult = ethers.utils.defaultAbiCoder.decode(
+          ["address", "string", "string", "string", "uint256"],
+          data
+        );
+        return {
+          issuerAddress: registerResult[0] as string,
+          createdAt: registerResult[4] as number,
+        };
       } catch (error) {
         console.log(`Error at IssuerEndpoint::registerIssuer(): ${error}`);
         throw error;

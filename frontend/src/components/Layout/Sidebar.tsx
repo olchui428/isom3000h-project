@@ -1,7 +1,11 @@
 import { useAppContext } from "@/contexts/app";
+import useMetaMask from "@/hooks/useMetaMask";
+import { muiDarkTheme } from "@/theme/muiTheme";
 import { UserType } from "@/types";
 import AddIcon from "@mui/icons-material/Add";
+import DomainAddIcon from "@mui/icons-material/DomainAdd";
 import HomeIcon from "@mui/icons-material/Home";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import SendIcon from "@mui/icons-material/Send";
 import {
@@ -22,8 +26,6 @@ import {
 } from "@mui/material";
 import { blueGrey, orange } from "@mui/material/colors";
 import { NextLinkComposed } from "../NextLinkComposed";
-import { muiDarkTheme } from "@/theme/muiTheme";
-import useMetaMask from "@/hooks/useMetaMask";
 
 interface SidebarProps {
   /** Width of the sidebar in px. */
@@ -93,7 +95,7 @@ function Sidebar({ width }: SidebarProps) {
         </Box>
         <Box sx={{ pt: 3 }}>
           {sidebarSections.map((section, index) => (
-            <Box key={index} sx={{ mb: 3 }}>
+            <Box key={index} sx={{ mb: 4 }}>
               <Typography
                 sx={{
                   mx: 2,
@@ -175,6 +177,21 @@ const sidebarSections: SidebarSection[] = [
         icon: <SearchIcon />,
         label: "Search Certificate",
         href: "/certificate/search",
+      },
+    ],
+  },
+  {
+    title: "Register",
+    links: [
+      {
+        icon: <DomainAddIcon />,
+        label: "Register Issuer",
+        href: "/issuer/register",
+      },
+      {
+        icon: <PersonAddIcon />,
+        label: "Register Applicant",
+        href: "/applicant/register",
       },
     ],
   },

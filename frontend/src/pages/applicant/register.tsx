@@ -1,6 +1,7 @@
+import Layout from "@/components/Layout";
+
 function ApplicantRegister() {
-  // TODO: add form to register as an Applicant
-  return <></>;
+  return <Layout title="Register Applicant">TODO</Layout>;
 }
 
 export default ApplicantRegister;
