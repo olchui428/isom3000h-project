@@ -1,13 +1,14 @@
 import Layout from "@/components/Layout";
 import { useAppContext } from "@/contexts/app";
 import useMetaMask from "@/hooks/useMetaMask";
+import { UserType } from "@/types";
 import DomainAddIcon from "@mui/icons-material/DomainAdd";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Alert, Box, TextField } from "@mui/material";
 import { useState } from "react";
 
 function IssuerRegister() {
-  const { address, showNotification } = useAppContext();
+  const { showNotification, userTypes } = useAppContext();
   const metaMask = useMetaMask();
 
   const [name, setName] = useState("");
@@ -16,13 +17,12 @@ function IssuerRegister() {
 
   const [loading, setLoading] = useState(false);
 
-  const [isAlreadyIssuer, setIsAlreadyIssuer] = useState(false);
+  const isAlreadyIssuer = userTypes.includes(UserType.ISSUER);
 
   const registerIssuer = async () => {
     try {
       setLoading(true);
       const issuer = await metaMask.issuerEndpoint.registerIssuer(name, description, logoUrl);
-      console.log("issuer", issuer);
       if (issuer) {
         showNotification({
           severity: "success",
@@ -40,15 +40,6 @@ function IssuerRegister() {
       setLoading(false);
     }
   };
-
-  const checkIsAlreadyIssuer = async () => {
-    if (!address) return;
-    const issuer = await metaMask.issuerEndpoint.getIssuerByAddress(address);
-    if (issuer) {
-      setIsAlreadyIssuer(true);
-    }
-  };
-  checkIsAlreadyIssuer();
 
   return (
     <Layout title="Register Yourself as Issuer">

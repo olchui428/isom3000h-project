@@ -27,7 +27,7 @@ const HIGH_SECURITY_NUM_CONFIRMS = 1;
  * Hook for managing MetaMask and interacting with Smart Contract endpoints.
  */
 const useMetaMask = () => {
-  const { address, setAddress, setUserTypes } = useAppContext();
+  const { address, setAddress, userTypes, setUserTypes } = useAppContext();
 
   /**
    * Connects to the MetaMask extension.
@@ -110,14 +110,19 @@ const useMetaMask = () => {
         });
         // Add this line if it is a creation transaction // wait for the transaction to be mined
         const receipt = await tx.wait(LOW_SECURITY_NUM_CONFIRMS);
-
         console.log("registerIssuer receipt", receipt);
 
         const registerResult = receipt.events[0].args;
-        const createdAtRaw = registerResult.createdAt as ethers.BigNumber;
+        const issuerAddress = registerResult.issuerAddress as string;
+        const createdAt = new Date(
+          (registerResult.createdAt as ethers.BigNumber).mul(1000).toNumber()
+        );
+
+        setUserTypes([...userTypes, UserType.ISSUER]);
+
         return {
-          issuerAddress: registerResult.issuerAddress as string,
-          createdAt: new Date(createdAtRaw.mul(1000).toNumber()),
+          issuerAddress,
+          createdAt,
         };
       } catch (error) {
         console.log(`Error at IssuerEndpoint::registerIssuer(): ${error}`);
