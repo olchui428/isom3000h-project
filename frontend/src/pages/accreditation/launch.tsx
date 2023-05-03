@@ -16,7 +16,7 @@ function AccreditationLaunch() {
   const router = useRouter();
   const metaMask = useMetaMask();
 
-  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
   const [nature, setNature] = useState("");
   const [description, setDescription] = useState("");
   const [expiryDate, setExpiryDate] = useState<Dayjs | null>(null);
@@ -41,7 +41,7 @@ function AccreditationLaunch() {
       }
 
       const result = await metaMask.accreditationEndpoint.launchAccreditation(
-        name,
+        title,
         new Date(),
         duration,
         nature,
@@ -76,7 +76,12 @@ function AccreditationLaunch() {
   return (
     <Layout title="Launch Accreditation">
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <TextField required label="Name" value={name} onChange={(e) => setName(e.target.value)} />
+        <TextField
+          required
+          label="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
         <TextField
           required
           label="Nature"

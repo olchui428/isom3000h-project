@@ -41,6 +41,9 @@ const config: HardhatUserConfig = {
       accounts: parseEnvPKToAccounts(process.env.LOCAL_PK),
     },
   },
+  typechain: {
+    outDir: "../frontend/src/types/typechain-types",
+  },
 };
 
 export default config;

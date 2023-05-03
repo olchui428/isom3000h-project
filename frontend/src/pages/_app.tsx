@@ -4,9 +4,16 @@ import { UserType } from "@/types";
 import { ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { getCookie, setCookie } from "cookies-next";
 import App, { AppContext, AppProps } from "next/app";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Hong_Kong");
 
 type AccreditationAppProps = Pick<AppProps, "Component" | "pageProps"> & {
   /** MetaMask address if the user has previously connected to it. */

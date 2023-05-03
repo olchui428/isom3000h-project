@@ -7,6 +7,7 @@ import {
 } from "@/blockchain/contracts.config";
 import { useAppContext } from "@/contexts/app";
 import { UserType } from "@/types";
+import { AccreditationStructOutput } from "@/types/typechain-types/contracts/storage/nft/AccreditationStorage";
 import axios from "axios";
 import { ethers } from "ethers";
 import { useCallback, useEffect, useMemo } from "react";
@@ -260,7 +261,7 @@ const useMetaMask = () => {
           accreditationEndpointABI,
           provider
         );
-        return await accreditationEndpoint.getAccreditationById(id);
+        return (await accreditationEndpoint.getAccreditationById(id)) as AccreditationStructOutput;
       } catch (error) {
         console.log(`Error at AccreditationEndpoint::getAccreditationById(): ${error}`);
         throw error;
