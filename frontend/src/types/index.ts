@@ -7,5 +7,5 @@ export enum CertificateFormats {
 export enum UserType {
   APPLICANT = "applicant",
   ISSUER = "issuer",
-  OUTSIDER = "n/a",
+  OUTSIDER = "outsider",
 }

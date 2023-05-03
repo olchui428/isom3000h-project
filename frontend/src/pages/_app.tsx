@@ -41,7 +41,7 @@ AccreditationApp.getInitialProps = async (
   // Get the initial user type from the cookie.
   let userType = getCookie("userType", { req, res }) as UserType | undefined;
   if (!userType) {
-    userType = UserType.ISSUER;
+    userType = UserType.OUTSIDER;
     setCookie("userType", userType, { req, res, maxAge: 60 * 60 * 24 * 7 });
   }
 

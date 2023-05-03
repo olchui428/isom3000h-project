@@ -8,20 +8,20 @@ import HomeIcon from "@mui/icons-material/Home";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import SendIcon from "@mui/icons-material/Send";
+import LogoutIcon from "@mui/icons-material/Logout";
 import {
+  Avatar,
   Box,
   Button,
   Drawer,
-  FormControl,
-  InputLabel,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  MenuItem,
-  Select,
   ThemeProvider,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { blueGrey, orange } from "@mui/material/colors";
@@ -37,7 +37,7 @@ interface SidebarProps {
  */
 function Sidebar({ width }: SidebarProps) {
   const { address, userType, setUserType } = useAppContext();
-  const { connectToMetaMask } = useMetaMask();
+  const { login, logout } = useMetaMask();
 
   return (
     <ThemeProvider theme={muiDarkTheme}>
@@ -61,25 +61,23 @@ function Sidebar({ width }: SidebarProps) {
           }}
         >
           {address ? (
-            <FormControl fullWidth>
-              <InputLabel id="user-type-label">User Type</InputLabel>
-              <Select
-                labelId="user-type-label"
-                label="User Type"
-                value={userType}
-                onChange={(event) => setUserType(event.target.value as UserType)}
-                sx={{
-                  color: "white",
-                  "& .MuiSelect-select": { padding: "12px 14px" },
-                }}
-              >
-                <MenuItem value={UserType.ISSUER}>Issuer</MenuItem>
-                <MenuItem value={UserType.APPLICANT}>Applicant</MenuItem>
-              </Select>
-            </FormControl>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Avatar sx={{ height: 36, width: 36, bgcolor: orange[700], fontSize: 18 }}>
+                  M
+                </Avatar>
+                <Typography>{address.substring(0, 12)}...</Typography>
+              </Box>
+              <Tooltip title="Logout">
+                <IconButton onClick={logout}>
+                  <LogoutIcon />
+                </IconButton>
+              </Tooltip>
+              {/* TODO: Show badge of what the user type is */}
+            </Box>
           ) : (
             <Button
-              onClick={() => connectToMetaMask()}
+              onClick={() => login()}
               variant="contained"
               sx={{
                 width: "100%",

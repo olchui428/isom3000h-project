@@ -29,6 +29,10 @@ const HIGH_SECURITY_NUM_CONFIRMS = 1;
 const useMetaMask = () => {
   const { address, setAddress, setUserType } = useAppContext();
 
+  /**
+   * Connects to the MetaMask extension.
+   * @returns The address, or `undefined` if failed to connect.
+   */
   const connectToMetaMask = useCallback(async () => {
     // check if the browser has MetaMask installed
     if (!window.ethereum) {
@@ -39,10 +43,11 @@ const useMetaMask = () => {
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
-    const address = accounts[0];
-    setAddress(address);
+    const address = accounts[0] as string;
     console.log(`Connected to MetaMask with address '${address}'`);
-  }, [setAddress]);
+
+    return address;
+  }, []);
 
   const provider = useMemo(() => {
     // only connect to the contract if the user has MetaMask installed
@@ -77,19 +82,17 @@ const useMetaMask = () => {
     }
   }, [provider /*, loading */]);
 
-  const login = async (loginUserType: UserType) => {
-    if (loginUserType === UserType.APPLICANT) {
-      // TODO: validate with ApplicantEndpoint contract
+  const login = async () => {
+    const address = await connectToMetaMask();
+    if (address) {
+      setAddress(address);
+      const userType = await getUserTypeByAddress(address);
+      setUserType(userType);
     }
-    if (loginUserType === UserType.ISSUER) {
-      // TODO: validate with IssuerEndpoint contract
-    }
-    // TODO: add session content
-    setUserType(loginUserType);
   };
 
   const logout = () => {
-    // TODO: clear session content
+    setAddress("");
     setUserType(UserType.OUTSIDER);
   };
 
@@ -130,7 +133,9 @@ const useMetaMask = () => {
           issuerEndpointABI,
           provider
         );
-        return await issuerEndpoint.getIssuerByAddress(issuerAddress);
+        const issuer = (await issuerEndpoint.getIssuerByAddress(issuerAddress)) as any[];
+        const createdAt = issuer[4] as ethers.BigNumber;
+        return createdAt.isZero() ? undefined : issuer;
       } catch (error) {
         console.log(`Error at IssuerEndpoint::getIssuerByAddress(): ${error}`);
         throw error;
@@ -179,7 +184,11 @@ const useMetaMask = () => {
           applicantEndpointABI,
           provider
         );
-        return await applicantEndpoint.getApplicantByAddress(applicantAddress);
+        const applicant = (await applicantEndpoint.getApplicantByAddress(
+          applicantAddress
+        )) as any[];
+        const createdAt = applicant[2] as ethers.BigNumber;
+        return createdAt.isZero() ? undefined : applicant;
       } catch (error) {
         console.log(`Error at ApplicantEndpoint::getApplicantByAddress(): ${error}`);
         throw error;
@@ -370,8 +379,23 @@ const useMetaMask = () => {
     }
   };
 
+  const getUserTypeByAddress = async (address: string | undefined): Promise<UserType> => {
+    if (!address) return UserType.OUTSIDER;
+    try {
+      const issuer = await IssuerEndpoint().getIssuerByAddress(address);
+      if (issuer) return UserType.ISSUER;
+
+      const applicant = await ApplicantEndpoint().getApplicantByAddress(address);
+      if (applicant) return UserType.APPLICANT;
+
+      return UserType.OUTSIDER;
+    } catch (error: any) {
+      console.log("Error while getting user type", error);
+      return UserType.OUTSIDER;
+    }
+  };
+
   return {
-    connectToMetaMask,
     login,
     logout,
     issuerEndpoint: IssuerEndpoint(),
@@ -379,6 +403,7 @@ const useMetaMask = () => {
     accreditationEndpoint: AccreditationEndpoint(),
     certificateEndpoint: CertificateEndpoint(),
     generateCertificate,
+    getUserTypeByAddress,
   };
 };
 
