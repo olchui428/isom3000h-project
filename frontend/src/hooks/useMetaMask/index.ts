@@ -44,16 +44,16 @@ const useMetaMask = () => {
     console.log(`Connected to MetaMask with address '${address}'`);
   }, [setAddress]);
 
-  const signer = useMemo(() => {
-    if (typeof window === "undefined" || !address) return null;
-    return new ethers.providers.Web3Provider(window.ethereum).getSigner();
-  }, [address]);
-
   const provider = useMemo(() => {
     // only connect to the contract if the user has MetaMask installed
     if (typeof window === "undefined") return null;
     return new ethers.providers.Web3Provider(window.ethereum);
   }, []);
+
+  const signer = useMemo(() => {
+    if (!address || !provider) return null;
+    return provider.getSigner();
+  }, [provider, address]);
 
   // function will be called whenever the address changed
   useEffect(() => {
@@ -78,7 +78,6 @@ const useMetaMask = () => {
   }, [provider /*, loading */]);
 
   const login = async (loginUserType: UserType) => {
-    // TODO: connect to MetaMask wallet
     if (loginUserType === UserType.APPLICANT) {
       // TODO: validate with ApplicantEndpoint contract
     }
