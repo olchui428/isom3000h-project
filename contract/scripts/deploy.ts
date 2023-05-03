@@ -158,11 +158,16 @@ async function deploy() {
     await setContractAddresses(ISSUER_STORAGE, issuerStorage, [
       accreditationStorage.address,
       issuerEndpoint.address,
+      certificateEndpoint.address,
     ]);
-    await setContractAddresses(APPLICANT_STORAGE, applicantStorage, [applicantEndpoint.address]);
+    await setContractAddresses(APPLICANT_STORAGE, applicantStorage, [
+      applicantEndpoint.address,
+      certificateEndpoint.address,
+    ]);
     await setContractAddresses(ACCREDITATION_STORAGE, accreditationStorage, [
       accreditationNFT.address,
       accreditationEndpoint.address,
+      certificateEndpoint.address,
     ]);
     await setContractAddresses(CERTIFICATE_STORAGE, certificateStorage, [
       certificateNFT.address,

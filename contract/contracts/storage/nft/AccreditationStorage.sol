@@ -28,6 +28,9 @@ contract AccreditationStorage {
     /// @dev Address of deployed AccreditationEndpoint contract
     address private _accreditationEndpointAddress;
 
+    /// @dev Address of deployed CertificateEndpoint contract
+    address private _certificateEndpointAddress;
+
     // -------------------- Variables --------------------
 
     /// @dev Get Accreditation by its NFT Token ID
@@ -71,23 +74,27 @@ contract AccreditationStorage {
     /// @param accreditationNFTAddress address of deployed AccreditationNFT contract
     function setAddresses(
         address accreditationNFTAddress,
-        address accreditationEndpointAddress
+        address accreditationEndpointAddress,
+        address certificateEndpointAddress
     ) external onlyDeployer addressesHaveNotBeenInitialized {
         _areAddressesFilled = true;
         _accreditationNFTAddress = accreditationNFTAddress;
         _accreditationEndpointAddress = accreditationEndpointAddress;
+        _certificateEndpointAddress = certificateEndpointAddress;
     }
 
     // -------------------- Functions --------------------
 
     /// @dev Makes sure only the NFT contract address can call this function
     modifier validateCallFromNFT() {
-        // require(msg.sender == _accreditationNFTAddress);
+        require(msg.sender == _accreditationNFTAddress);
         _;
     }
     /// @dev Makes sure only the Endpoint contract address can call this function
     modifier validateCallFromEndpoint() {
-        // require(msg.sender == _accreditationEndpointAddress);
+        require(
+            msg.sender == _accreditationEndpointAddress || msg.sender == _certificateEndpointAddress
+        );
         _;
     }
     /// @dev Makes sure the Issuer address exists in IssuerStorage
