@@ -102,22 +102,20 @@ const useMetaMask = () => {
           issuerEndpointABI,
           signer
         );
-        const tx = await issuerEndpoint.registerIssuer(name, description, logoUrl);
+        const tx = await issuerEndpoint.registerIssuer(name, description, logoUrl, {
+          // gasLimit: 300000,
+        });
         // Add this line if it is a creation transaction // wait for the transaction to be mined
         const receipt = await tx.wait(LOW_SECURITY_NUM_CONFIRMS);
-        const data = receipt.logs[receipt.logs.length - 1].data;
 
         console.log("receipt", receipt);
-        console.log("data", data);
+        console.log("events", receipt.events[0]);
+        console.log("args", receipt.events[0].args);
 
-        // FIXME: Integer overflow error
-        const registerResult = ethers.utils.defaultAbiCoder.decode(
-          ["address", "string", "string", "string", "uint256"],
-          data
-        );
+        const registerResult = receipt.events[0].args;
         return {
-          issuerAddress: registerResult[0] as string,
-          createdAt: registerResult[4] as number,
+          issuerAddress: registerResult.issuerAddress,
+          createdAt: new Date(registerResult.createdAt),
         };
       } catch (error) {
         console.log(`Error at IssuerEndpoint::registerIssuer(): ${error}`);
