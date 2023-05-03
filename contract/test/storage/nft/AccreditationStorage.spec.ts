@@ -17,6 +17,8 @@ describe(`Given ${CONTRACT_NAME}`, async () => {
     const contract = await Contract.deploy(issuerStorage.address);
     await contract.deployed();
 
+    await issuerStorage.setAddresses(contract.address, contract.address, contract.address);
+
     // Create Issuer
     const _issuer = {
       name: "ABC Company",

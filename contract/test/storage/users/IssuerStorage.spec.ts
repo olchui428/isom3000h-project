@@ -23,7 +23,11 @@ describe(`Given ${CONTRACT_NAME}`, async () => {
     await issuerEndpoint.deployed();
 
     // Set Addresses
-    await contract.setAddresses(accreditationStorage.address, issuerEndpoint.address);
+    await contract.setAddresses(
+      accreditationStorage.address,
+      issuerEndpoint.address,
+      issuerEndpoint.address // Should be certificate endpoint address but whatever
+    );
 
     // Create issuer
     const _issuer = {
@@ -48,7 +52,9 @@ describe(`Given ${CONTRACT_NAME}`, async () => {
     console.log("Checking if issuer exists: ", exists);
 
     // Getting issuer
-    const issuer = await contract.connect(issuerEndpoint.address).getIssuerByAddress(_issuer.issuerAddress);
+    const issuer = await contract
+      .connect(issuerEndpoint.address)
+      .getIssuerByAddress(_issuer.issuerAddress);
     console.log(`Get issuer by address (${_issuer.issuerAddress}): ${issuer}`);
 
     // Assertions
