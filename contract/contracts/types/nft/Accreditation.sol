@@ -13,7 +13,7 @@ struct Accreditation {
     string title;
     /// @param createdAt The UTC time of creation of Accreditation / 1000 because Solidity
     uint256 createdAt;
-    /// @param duration Duration of Accreditation before expiry, e.g. 2 years, stored in number of seconds. Input -1 if no expiry date
+    /// @param duration Duration of Accreditation before expiry, e.g. 2 years, stored in number of seconds. Input 0 if no expiry date
     uint256 duration;
     /// @param nature Nature of Accreditation, e.g. Participation, Award, Appreciation, Achievement, Completion, Graduation, Exam, etc.
     string nature;

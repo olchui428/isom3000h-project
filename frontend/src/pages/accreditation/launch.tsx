@@ -3,14 +3,16 @@ import NotAllowed from "@/components/NotAllowed";
 import { useAppContext } from "@/contexts/app";
 import useMetaMask from "@/hooks/useMetaMask";
 import { UserType } from "@/types";
-import { Box, Button, TextField } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { LoadingButton } from "@mui/lab";
+import { Box, TextField } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
 function AccreditationLaunch() {
-  const { userTypes, showNotification } = useAppContext();
+  const { userTypes, showNotification, closeNotification } = useAppContext();
   const router = useRouter();
   const metaMask = useMetaMask();
 
@@ -18,6 +20,8 @@ function AccreditationLaunch() {
   const [nature, setNature] = useState("");
   const [description, setDescription] = useState("");
   const [expiryDate, setExpiryDate] = useState<Dayjs | null>(null);
+
+  const [loading, setLoading] = useState(false);
 
   if (!userTypes.includes(UserType.ISSUER)) {
     return (
@@ -29,19 +33,34 @@ function AccreditationLaunch() {
 
   const launchAccreditation = async () => {
     try {
-      let duration = -1;
+      setLoading(true);
+
+      let duration = 0;
       if (expiryDate) {
         duration = expiryDate.diff(new Date(), "second");
       }
 
-      await metaMask.accreditationEndpoint.launchAccreditation(
+      const result = await metaMask.accreditationEndpoint.launchAccreditation(
         name,
         new Date(),
         duration,
         nature,
         description
       );
-      // TODO: redirect to accreditation page of that new accreditation after successfully create
+
+      if (result) {
+        console.log("launchAccreditation result", result);
+        showNotification({
+          severity: "success",
+          title: "Launch successful",
+          message: "Redirecting to the accreditation page...",
+        });
+
+        // Redirect to the accreditation page after a while
+        await new Promise((resolve) => setTimeout(resolve, 2500));
+        closeNotification();
+        router.push(`/accreditation/${result.id}`);
+      }
     } catch (error: any) {
       console.error(error);
       showNotification({
@@ -49,6 +68,8 @@ function AccreditationLaunch() {
         title: "Failed to Launch Accreditation",
         message: error.message,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,13 +96,16 @@ function AccreditationLaunch() {
           value={expiryDate}
           onChange={(date) => setExpiryDate(date)}
         />
-        <Button
+        <LoadingButton
           onClick={launchAccreditation}
+          loading={loading}
+          loadingPosition="start"
+          startIcon={<AddIcon />}
           variant="contained"
           sx={{ mt: 1, alignSelf: "flex-start" }}
         >
           Launch Accreditation
-        </Button>
+        </LoadingButton>
       </Box>
     </Layout>
   );

@@ -226,20 +226,26 @@ const useMetaMask = () => {
         );
         const tx = await accreditationEndpoint.launchAccreditation(
           title,
-          createdAt,
+          Math.trunc(createdAt.getTime() / 1000),
           duration,
           nature,
           description
         );
         // Wait for `HIGH_SECURITY_NUM_CONFIRMS` blocks to be mined
         const receipt = await tx.wait(HIGH_SECURITY_NUM_CONFIRMS);
+        console.log("launchAccreditation receipt", receipt);
+
         // Retrieve data from emitted event
-        const data = receipt.logs[receipt.logs.length - 1].data;
-        const [id, ...eventData] = ethers.utils.defaultAbiCoder.decode(
-          ["uint256", "address", "string", "uint256", "uint256", "string", "string"],
-          data
-        );
-        return id;
+        const launchEvent = receipt.events.find((e: any) => e.event === "LaunchAccreditation");
+        if (!launchEvent) {
+          throw new Error("No LaunchAccreditation event emitted");
+        }
+
+        const launchResult = launchEvent.args;
+        const id = (launchResult.id as ethers.BigNumber).toNumber();
+        return {
+          id,
+        };
       } catch (error) {
         console.log(`Error at AccreditationEndpoint::launchAccreditation(): ${error}`);
         throw error;
