@@ -14,6 +14,9 @@ contract ApplicantStorage {
     /// @dev Wallet address of deployer, similar to admin address
     address payable private _deployerAddress;
 
+    /// @dev Address of deployed CertificateStorage contract
+    address private _certificateStorageAddress;
+
     /// @dev Address of deployed ApplicantEndpoint contract
     address private _applicantEndpointAddress;
 
@@ -39,7 +42,6 @@ contract ApplicantStorage {
     // -------------------- Setting up contracts --------------------
 
     /// @notice Deploys a storage contract for Applicant
-    // /// @param someAddress TODO: think add what parameters, aka need to decide which contracts this contract will call
     constructor() {
         _deployerAddress = payable(msg.sender);
     }
@@ -54,10 +56,12 @@ contract ApplicantStorage {
     }
 
     function setAddresses(
+        address certificateStorageAddress,
         address applicantEndpointAddress,
         address certificateEndpointAddress
     ) external onlyDeployer addressesHaveNotBeenInitialized {
         _areAddressesFilled = true;
+        _certificateStorageAddress = certificateStorageAddress;
         _applicantEndpointAddress = applicantEndpointAddress;
         _certificateEndpointAddress = certificateEndpointAddress;
         // TODO(MVP): add required addresses
@@ -68,9 +72,12 @@ contract ApplicantStorage {
     /// @dev Verify the address does not exist in the `_applicants` mapping
     /// @dev This is equivalent to checking if all the fields of the obtained mapping object have 0-values
     modifier newApplicant(address payable applicantAddress) {
-        Applicant memory i = _applicants[applicantAddress];
+        Applicant storage i = _applicants[applicantAddress];
         // If possible check all fields of the struct, but this is enough because a payable address cannot be 0-value
-        require(i.applicantAddress == address(0));
+        require(
+            i.applicantAddress == address(0),
+            "This address has already been registered as an Applicant."
+        );
         _;
     }
 
@@ -115,14 +122,16 @@ contract ApplicantStorage {
         return _applicants[inputAddress];
     }
 
-    // modifier validateCallFromAccreditationStorage() {
-    //     require(msg.sender == _accreditationStorageAddress);
-    //     _;
-    // }
+    modifier validateCallFromCertificateStorage() {
+        require(msg.sender == _certificateStorageAddress);
+        _;
+    }
 
     /// @param inputAddress If the address is valid, it is used to search for an Applicant instance
     /// @return Whether the input address exists as an applicant
-    function isApplicantExists(address payable inputAddress) external view returns (bool) {
+    function isApplicantExists(
+        address payable inputAddress
+    ) external view validateCallFromCertificateStorage returns (bool) {
         return _applicants[inputAddress].applicantAddress == inputAddress;
     }
 

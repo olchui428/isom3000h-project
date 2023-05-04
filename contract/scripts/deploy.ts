@@ -125,6 +125,7 @@ async function deploy() {
       issuerStorage.address,
     ]);
     const certificateStorage = await deployContract(CERTIFICATE_STORAGE, [
+      issuerStorage.address,
       applicantStorage.address,
     ]);
 
@@ -157,10 +158,12 @@ async function deploy() {
     createLog("Storage Contracts initialization:");
     await setContractAddresses(ISSUER_STORAGE, issuerStorage, [
       accreditationStorage.address,
+      certificateStorage.address,
       issuerEndpoint.address,
       certificateEndpoint.address,
     ]);
     await setContractAddresses(APPLICANT_STORAGE, applicantStorage, [
+      certificateStorage.address,
       applicantEndpoint.address,
       certificateEndpoint.address,
     ]);

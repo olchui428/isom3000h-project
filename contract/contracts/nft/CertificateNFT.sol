@@ -89,14 +89,11 @@ contract CertificateNFT is ERC721 {
 
     // -------------------- Functions --------------------
 
-    /// @dev Only Issuers can issue Certificates, validate if msg.sender === Issuer.address
-    modifier validateBeforeIssue() {
-        // TODO(MVP): add validation
+    modifier validateCallFromEndpoint() {
+        require(msg.sender == _certificateEndpointAddress);
         _;
     }
 
-    // TODO(MVP): add verification
-    // TODO(MVP): add arguments
     /// @notice Mints an new NFT as a certificate, stores Certificate data
     /// @dev Mints a new NFT, then calls CertificateStorage to store data
     function issueCertificate(
@@ -107,12 +104,7 @@ contract CertificateNFT is ERC721 {
         string memory level,
         string memory eventId,
         string memory remarks
-    )
-        external
-        // TODO(MVP): add arguments
-        validateBeforeIssue
-        returns (uint256)
-    {
+    ) external validateCallFromEndpoint returns (uint256) {
         uint256 newCertId = _tokenIds.current();
         // TODO(MVP): create new Cert and assign to mapping
         _certificateStorage.createCertificate(

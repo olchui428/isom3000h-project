@@ -99,7 +99,10 @@ contract AccreditationStorage {
     }
     /// @dev Makes sure the Issuer address exists in IssuerStorage
     modifier issuerExists(address payable inputAddress) {
-        _issuerStorage.isIssuerExists(inputAddress);
+        require(
+            _issuerStorage.isIssuerExists(inputAddress),
+            "Provided Issuer address is not a registered Issuer."
+        );
         _;
     }
 

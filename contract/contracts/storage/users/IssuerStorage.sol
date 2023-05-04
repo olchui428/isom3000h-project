@@ -18,6 +18,9 @@ contract IssuerStorage {
     /// @dev Address of deployed AccreditationStorage contract
     address private _accreditationStorageAddress;
 
+    /// @dev Address of deployed CertificateStorage contract
+    address private _certificateStorageAddress;
+
     /// @dev Address of deployed IssuerEndpoint contract
     address private _issuerEndpointAddress;
 
@@ -54,11 +57,13 @@ contract IssuerStorage {
 
     function setAddresses(
         address accreditationStorageAddress,
+        address certificateStorageAddress,
         address issuerEndpointAddress,
         address certificateEndpointAddress
     ) external onlyDeployer addressesHaveNotBeenInitialized {
         _areAddressesFilled = true;
         _accreditationStorageAddress = accreditationStorageAddress;
+        _certificateStorageAddress = certificateStorageAddress;
         _issuerEndpointAddress = issuerEndpointAddress;
         _certificateEndpointAddress = certificateEndpointAddress;
         // TODO(MVP): add required addresses
@@ -71,9 +76,12 @@ contract IssuerStorage {
     /// @dev Verify the address does not exist in the `_issuers` mapping
     /// @dev This is equivalent to checking if all the fields of the obtained mapping object have 0-values
     modifier newIssuer(address payable inputAddress) {
-        Issuer memory i = _issuers[inputAddress];
+        Issuer storage i = _issuers[inputAddress];
         // If possible check all fields of the struct, but this is enough because a payable address cannot be 0-value
-        require(i.issuerAddress == address(0));
+        require(
+            i.issuerAddress == address(0),
+            "This address has already been registered as an Issuer."
+        );
         _;
     }
 
@@ -113,14 +121,18 @@ contract IssuerStorage {
         return _issuers[inputAddress];
     }
 
-    modifier validateCallFromAccreditationStorage() {
-        require(msg.sender == _accreditationStorageAddress);
+    modifier validateCallFromAccreditationStorageOrCertificateStorage() {
+        require(
+            msg.sender == _accreditationStorageAddress || msg.sender == _certificateStorageAddress
+        );
         _;
     }
 
     /// @param inputAddress If the address is valid, it is used to search for an Issuer instance
     /// @return Whether the input address exists as an issuer
-    function isIssuerExists(address payable inputAddress) external view returns (bool) {
+    function isIssuerExists(
+        address payable inputAddress
+    ) external view validateCallFromAccreditationStorageOrCertificateStorage returns (bool) {
         return _issuers[inputAddress].issuerAddress == inputAddress;
     }
 }

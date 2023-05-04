@@ -64,9 +64,18 @@ contract AccreditationEndpoint {
         string memory nature,
         string memory description
     ) {
-        require(keccak256(abi.encodePacked(title)) != keccak256(abi.encodePacked("")));
-        require(keccak256(abi.encodePacked(nature)) != keccak256(abi.encodePacked("")));
-        require(keccak256(abi.encodePacked(description)) != keccak256(abi.encodePacked("")));
+        require(
+            keccak256(abi.encodePacked(title)) != keccak256(abi.encodePacked("")),
+            "Title should not be empty."
+        );
+        require(
+            keccak256(abi.encodePacked(nature)) != keccak256(abi.encodePacked("")),
+            "Nature should not be empty."
+        );
+        require(
+            keccak256(abi.encodePacked(description)) != keccak256(abi.encodePacked("")),
+            "Description should not be empty."
+        );
         _;
     }
 
