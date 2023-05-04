@@ -116,6 +116,7 @@ function Sidebar({ width }: SidebarProps) {
         <Box sx={{ pt: 3 }}>
           <SidebarSection>
             <SideBarLink label="Home" href="/" icon={<HomeIcon />} />
+            <SideBarLink label="Search" href="/search" icon={<SearchIcon />} />
           </SidebarSection>
           {!!address &&
             (!(isIssuer && isApplicant) ? (
@@ -134,38 +135,32 @@ function Sidebar({ width }: SidebarProps) {
                 />
               </SidebarSection>
             ) : null)}
-          <SidebarSection title="Accreditation">
-            <SideBarLink
-              label="My Accreditations"
-              href={`/issuer/${address}`}
-              icon={<WorkspacePremiumIcon />}
-              visible={!!address && isIssuer}
-            />
-            <SideBarLink
-              label="Launch Accreditation"
-              href="/accreditation/launch"
-              icon={<AddIcon />}
-              visible={isIssuer}
-            />
-            <SideBarLink
-              label="Search Accreditation"
-              href="/accreditation/search"
-              icon={<SearchIcon />}
-            />
-          </SidebarSection>
-          <SidebarSection title="Certificate">
-            <SideBarLink
-              label="Issue Certificate"
-              href="/certificate/issue"
-              icon={<SendIcon />}
-              visible={isIssuer}
-            />
-            <SideBarLink
-              label="Search Certificate"
-              href="/certificate/search"
-              icon={<SearchIcon />}
-            />
-          </SidebarSection>
+          {isIssuer && (
+            <SidebarSection title="Accreditation">
+              <SideBarLink
+                label="My Accreditations"
+                href={`/issuer/${address}`}
+                icon={<WorkspacePremiumIcon />}
+                visible={!!address && isIssuer}
+              />
+              <SideBarLink
+                label="Launch Accreditation"
+                href="/accreditation/launch"
+                icon={<AddIcon />}
+                visible={isIssuer}
+              />
+            </SidebarSection>
+          )}
+          {(isIssuer || isApplicant) && (
+            <SidebarSection title="Certificate">
+              <SideBarLink
+                label="Issue Certificate"
+                href="/certificate/issue"
+                icon={<SendIcon />}
+                visible={isIssuer}
+              />
+            </SidebarSection>
+          )}
         </Box>
       </Drawer>
     </ThemeProvider>
