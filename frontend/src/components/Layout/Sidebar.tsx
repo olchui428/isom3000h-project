@@ -7,7 +7,6 @@ import DomainAddIcon from "@mui/icons-material/DomainAdd";
 import HomeIcon from "@mui/icons-material/Home";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import SearchIcon from "@mui/icons-material/Search";
 import SendIcon from "@mui/icons-material/Send";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import {
@@ -116,7 +115,6 @@ function Sidebar({ width }: SidebarProps) {
         <Box sx={{ pt: 3 }}>
           <SidebarSection>
             <SideBarLink label="Home" href="/" icon={<HomeIcon />} />
-            <SideBarLink label="Search" href="/search" icon={<SearchIcon />} />
           </SidebarSection>
           {!!address &&
             (!(isIssuer && isApplicant) ? (
@@ -151,7 +149,7 @@ function Sidebar({ width }: SidebarProps) {
               />
             </SidebarSection>
           )}
-          {(isIssuer || isApplicant) && (
+          {isIssuer && (
             <SidebarSection title="Certificate">
               <SideBarLink
                 label="Issue Certificate"

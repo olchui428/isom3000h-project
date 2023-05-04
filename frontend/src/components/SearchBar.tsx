@@ -1,4 +1,3 @@
-import Layout from "@/components/Layout";
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Box,
@@ -9,15 +8,21 @@ import {
   MenuItem,
   Select,
   TextField,
+  Typography,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import BusinessIcon from "@mui/icons-material/Business";
+import DescriptionIcon from "@mui/icons-material/Description";
+import PersonIcon from "@mui/icons-material/Person";
 
 type SearchableItem = "accreditation" | "issuer" | "certificate" | "applicant";
 
 type SearchItemOption = {
   value: SearchableItem;
   optionLabel: string;
+  optionIcon: React.ReactNode;
   textInputLabel: string;
 };
 
@@ -25,26 +30,30 @@ const searchItemOptions: SearchItemOption[] = [
   {
     value: "accreditation",
     optionLabel: "Accreditation",
+    optionIcon: <WorkspacePremiumIcon style={{ height: 24, width: 24 }} />,
     textInputLabel: "Accreditation ID",
   },
   {
     value: "issuer",
     optionLabel: "Issuer",
+    optionIcon: <BusinessIcon style={{ height: 24, width: 24 }} />,
     textInputLabel: "Issuer Address",
   },
   {
     value: "certificate",
     optionLabel: "Certificate",
+    optionIcon: <DescriptionIcon style={{ height: 24, width: 24 }} />,
     textInputLabel: "Certificate ID",
   },
   {
     value: "applicant",
     optionLabel: "Applicant",
+    optionIcon: <PersonIcon style={{ height: 24, width: 24 }} />,
     textInputLabel: "Applicant Address",
   },
 ];
 
-function Search() {
+function SearchBar() {
   const router = useRouter();
 
   const [input, setInput] = useState("");
@@ -52,6 +61,8 @@ function Search() {
 
   const handleSearch = () => {
     const inputTrimmed = input.trim();
+    if (!inputTrimmed) return;
+
     switch (searchItem) {
       case "accreditation":
         router.push(`/accreditation/${inputTrimmed}`);
@@ -69,18 +80,24 @@ function Search() {
   };
 
   return (
-    <Layout title="Search">
-      <Box sx={{ width: "50%", display: "flex", flexDirection: "column", gap: 3 }}>
-        <FormControl required>
+    <Box
+      sx={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}
+    >
+      <Box sx={{ width: "100%", display: "flex", gap: 3 }}>
+        <FormControl>
           <InputLabel>Search Item</InputLabel>
           <Select
             label="Search Item"
             value={searchItem}
             onChange={(e) => setSearchItem(e.target.value as SearchableItem)}
+            sx={{ width: 200 }}
           >
-            {searchItemOptions.map(({ optionLabel, value }) => (
+            {searchItemOptions.map(({ optionLabel, optionIcon, value }) => (
               <MenuItem key={value} value={value}>
-                {optionLabel}
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                  {optionIcon}
+                  <span>{optionLabel}</span>
+                </Box>
               </MenuItem>
             ))}
           </Select>
@@ -97,18 +114,14 @@ function Search() {
             ),
           }}
           variant="outlined"
+          sx={{ flex: 1 }}
         />
-        <Button
-          onClick={handleSearch}
-          variant="contained"
-          sx={{ alignSelf: "flex-start" }}
-          disabled={input.trim() === ""}
-        >
-          Search
-        </Button>
       </Box>
-    </Layout>
+      <Button size="large" onClick={handleSearch} variant="contained">
+        Search
+      </Button>
+    </Box>
   );
 }
 
-export default Search;
+export default SearchBar;
