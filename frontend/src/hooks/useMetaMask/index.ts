@@ -138,7 +138,7 @@ const useMetaMask = () => {
       if (!signer) return;
       try {
         const issuerEndpoint = new ethers.Contract(
-          `"${ContractAddresses.ISSUER_ENDPOINT}"`,
+          ContractAddresses.ISSUER_ENDPOINT,
           issuerEndpointABI,
           signer
         );
