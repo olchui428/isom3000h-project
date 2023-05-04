@@ -148,7 +148,11 @@ contract CertificateEndpoint {
         return _certificateStorage.getCertificateById(id);
     }
 
-    // TODO(Good to have): getCertificatesByApplicantAddress & modifier
+    function getCertificatesByApplicantAddress(
+        address payable inputAddress
+    ) external view returns (Certificate[] memory) {
+        return _certificateStorage.getCertificatesByApplicantAddress(inputAddress);
+    }
 
     function getCompleteCertById(uint256 id) external view returns (CompleteCert memory) {
         Certificate memory certificate = _certificateStorage.getCertificateById(id);

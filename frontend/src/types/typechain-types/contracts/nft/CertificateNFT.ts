@@ -33,6 +33,7 @@ export interface CertificateNFTInterface extends utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
+    "isCertificateValid(uint256)": FunctionFragment;
     "issueCertificate(address,address,uint256,uint256,string,string,string)": FunctionFragment;
     "name()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
@@ -52,6 +53,7 @@ export interface CertificateNFTInterface extends utils.Interface {
       | "balanceOf"
       | "getApproved"
       | "isApprovedForAll"
+      | "isCertificateValid"
       | "issueCertificate"
       | "name"
       | "ownerOf"
@@ -80,6 +82,10 @@ export interface CertificateNFTInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isCertificateValid",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "issueCertificate",
@@ -149,6 +155,10 @@ export interface CertificateNFTInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "isCertificateValid",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -280,6 +290,11 @@ export interface CertificateNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    isCertificateValid(
+      id: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     issueCertificate(
       issuerAddress: PromiseOrValue<string>,
       applicantAddress: PromiseOrValue<string>,
@@ -366,6 +381,11 @@ export interface CertificateNFT extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  isCertificateValid(
+    id: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   issueCertificate(
     issuerAddress: PromiseOrValue<string>,
     applicantAddress: PromiseOrValue<string>,
@@ -449,6 +469,11 @@ export interface CertificateNFT extends BaseContract {
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    isCertificateValid(
+      id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
@@ -574,6 +599,11 @@ export interface CertificateNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    isCertificateValid(
+      id: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     issueCertificate(
       issuerAddress: PromiseOrValue<string>,
       applicantAddress: PromiseOrValue<string>,
@@ -658,6 +688,11 @@ export interface CertificateNFT extends BaseContract {
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isCertificateValid(
+      id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

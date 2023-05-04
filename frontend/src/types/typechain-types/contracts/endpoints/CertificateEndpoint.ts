@@ -154,13 +154,15 @@ export type CompleteCertStructOutput = [
 export interface CertificateEndpointInterface extends utils.Interface {
   functions: {
     "getCertificateById(uint256)": FunctionFragment;
+    "getCertificatesByApplicantAddress(address)": FunctionFragment;
     "getCompleteCertById(uint256)": FunctionFragment;
-    "issueCertificate(address,address,uint256,uint256,string,string,string)": FunctionFragment;
+    "issueCertificate(address,uint256,uint256,string,string,string)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "getCertificateById"
+      | "getCertificatesByApplicantAddress"
       | "getCompleteCertById"
       | "issueCertificate"
   ): FunctionFragment;
@@ -170,13 +172,16 @@ export interface CertificateEndpointInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "getCertificatesByApplicantAddress",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getCompleteCertById",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "issueCertificate",
     values: [
-      PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
@@ -191,6 +196,10 @@ export interface CertificateEndpointInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getCertificatesByApplicantAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getCompleteCertById",
     data: BytesLike
   ): Result;
@@ -200,7 +209,7 @@ export interface CertificateEndpointInterface extends utils.Interface {
   ): Result;
 
   events: {
-    "IssueCertificate(uint256,address,address,uint256,uint256,string,string,string)": EventFragment;
+    "IssueCertificate(uint256,uint256,address,address,uint256,string,string,string)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "IssueCertificate"): EventFragment;
@@ -208,16 +217,16 @@ export interface CertificateEndpointInterface extends utils.Interface {
 
 export interface IssueCertificateEventObject {
   id: BigNumber;
-  issuerAddress: string;
-  applicantAddress: string;
-  createdAt: BigNumber;
   accreditationId: BigNumber;
+  applicantAddress: string;
+  issuerAddress: string;
+  createdAt: BigNumber;
   level: string;
   eventId: string;
   remarks: string;
 }
 export type IssueCertificateEvent = TypedEvent<
-  [BigNumber, string, string, BigNumber, BigNumber, string, string, string],
+  [BigNumber, BigNumber, string, string, BigNumber, string, string, string],
   IssueCertificateEventObject
 >;
 
@@ -256,13 +265,17 @@ export interface CertificateEndpoint extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[CertificateStructOutput]>;
 
+    getCertificatesByApplicantAddress(
+      inputAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[CertificateStructOutput[]]>;
+
     getCompleteCertById(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[CompleteCertStructOutput]>;
 
     issueCertificate(
-      issuerAddress: PromiseOrValue<string>,
       applicantAddress: PromiseOrValue<string>,
       createdAt: PromiseOrValue<BigNumberish>,
       accreditationId: PromiseOrValue<BigNumberish>,
@@ -278,13 +291,17 @@ export interface CertificateEndpoint extends BaseContract {
     overrides?: CallOverrides
   ): Promise<CertificateStructOutput>;
 
+  getCertificatesByApplicantAddress(
+    inputAddress: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<CertificateStructOutput[]>;
+
   getCompleteCertById(
     id: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<CompleteCertStructOutput>;
 
   issueCertificate(
-    issuerAddress: PromiseOrValue<string>,
     applicantAddress: PromiseOrValue<string>,
     createdAt: PromiseOrValue<BigNumberish>,
     accreditationId: PromiseOrValue<BigNumberish>,
@@ -300,13 +317,17 @@ export interface CertificateEndpoint extends BaseContract {
       overrides?: CallOverrides
     ): Promise<CertificateStructOutput>;
 
+    getCertificatesByApplicantAddress(
+      inputAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<CertificateStructOutput[]>;
+
     getCompleteCertById(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<CompleteCertStructOutput>;
 
     issueCertificate(
-      issuerAddress: PromiseOrValue<string>,
       applicantAddress: PromiseOrValue<string>,
       createdAt: PromiseOrValue<BigNumberish>,
       accreditationId: PromiseOrValue<BigNumberish>,
@@ -314,26 +335,26 @@ export interface CertificateEndpoint extends BaseContract {
       eventId: PromiseOrValue<string>,
       remarks: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
   };
 
   filters: {
-    "IssueCertificate(uint256,address,address,uint256,uint256,string,string,string)"(
+    "IssueCertificate(uint256,uint256,address,address,uint256,string,string,string)"(
       id?: null,
-      issuerAddress?: null,
-      applicantAddress?: null,
-      createdAt?: null,
       accreditationId?: null,
+      applicantAddress?: null,
+      issuerAddress?: null,
+      createdAt?: null,
       level?: null,
       eventId?: null,
       remarks?: null
     ): IssueCertificateEventFilter;
     IssueCertificate(
       id?: null,
-      issuerAddress?: null,
-      applicantAddress?: null,
-      createdAt?: null,
       accreditationId?: null,
+      applicantAddress?: null,
+      issuerAddress?: null,
+      createdAt?: null,
       level?: null,
       eventId?: null,
       remarks?: null
@@ -346,13 +367,17 @@ export interface CertificateEndpoint extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getCertificatesByApplicantAddress(
+      inputAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getCompleteCertById(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     issueCertificate(
-      issuerAddress: PromiseOrValue<string>,
       applicantAddress: PromiseOrValue<string>,
       createdAt: PromiseOrValue<BigNumberish>,
       accreditationId: PromiseOrValue<BigNumberish>,
@@ -369,13 +394,17 @@ export interface CertificateEndpoint extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getCertificatesByApplicantAddress(
+      inputAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getCompleteCertById(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     issueCertificate(
-      issuerAddress: PromiseOrValue<string>,
       applicantAddress: PromiseOrValue<string>,
       createdAt: PromiseOrValue<BigNumberish>,
       accreditationId: PromiseOrValue<BigNumberish>,

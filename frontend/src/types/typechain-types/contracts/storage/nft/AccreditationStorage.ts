@@ -67,7 +67,7 @@ export interface AccreditationStorageInterface extends utils.Interface {
     "getAccreditationsByIssuerAddress(address)": FunctionFragment;
     "isAccreditationExists(uint256)": FunctionFragment;
     "revokeAccreditationById(uint256,string,uint256)": FunctionFragment;
-    "setAddresses(address,address)": FunctionFragment;
+    "setAddresses(address,address,address)": FunctionFragment;
   };
 
   getFunction(
@@ -114,7 +114,11 @@ export interface AccreditationStorageInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setAddresses",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
   ): string;
 
   decodeFunctionResult(
@@ -208,6 +212,7 @@ export interface AccreditationStorage extends BaseContract {
     setAddresses(
       accreditationNFTAddress: PromiseOrValue<string>,
       accreditationEndpointAddress: PromiseOrValue<string>,
+      certificateEndpointAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
@@ -248,6 +253,7 @@ export interface AccreditationStorage extends BaseContract {
   setAddresses(
     accreditationNFTAddress: PromiseOrValue<string>,
     accreditationEndpointAddress: PromiseOrValue<string>,
+    certificateEndpointAddress: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -288,6 +294,7 @@ export interface AccreditationStorage extends BaseContract {
     setAddresses(
       accreditationNFTAddress: PromiseOrValue<string>,
       accreditationEndpointAddress: PromiseOrValue<string>,
+      certificateEndpointAddress: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -331,6 +338,7 @@ export interface AccreditationStorage extends BaseContract {
     setAddresses(
       accreditationNFTAddress: PromiseOrValue<string>,
       accreditationEndpointAddress: PromiseOrValue<string>,
+      certificateEndpointAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
@@ -372,6 +380,7 @@ export interface AccreditationStorage extends BaseContract {
     setAddresses(
       accreditationNFTAddress: PromiseOrValue<string>,
       accreditationEndpointAddress: PromiseOrValue<string>,
+      certificateEndpointAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
