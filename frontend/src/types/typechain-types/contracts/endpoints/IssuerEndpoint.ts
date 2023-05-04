@@ -13,7 +13,11 @@ import type {
   Signer,
   utils,
 } from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
+import type {
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
@@ -42,7 +46,7 @@ export type IssuerStructOutput = [string, string, string, string, BigNumber] & {
 export interface IssuerEndpointInterface extends utils.Interface {
   functions: {
     "getIssuerByAddress(address)": FunctionFragment;
-    "registerIssuer(address,string,string,string)": FunctionFragment;
+    "registerIssuer(string,string,string)": FunctionFragment;
   };
 
   getFunction(
@@ -58,7 +62,6 @@ export interface IssuerEndpointInterface extends utils.Interface {
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
-      PromiseOrValue<string>,
       PromiseOrValue<string>
     ]
   ): string;
@@ -72,8 +75,26 @@ export interface IssuerEndpointInterface extends utils.Interface {
     data: BytesLike
   ): Result;
 
-  events: {};
+  events: {
+    "RegisterIssuer(address,string,string,string,uint256)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "RegisterIssuer"): EventFragment;
 }
+
+export interface RegisterIssuerEventObject {
+  issuerAddress: string;
+  name: string;
+  description: string;
+  logoUrl: string;
+  createdAt: BigNumber;
+}
+export type RegisterIssuerEvent = TypedEvent<
+  [string, string, string, string, BigNumber],
+  RegisterIssuerEventObject
+>;
+
+export type RegisterIssuerEventFilter = TypedEventFilter<RegisterIssuerEvent>;
 
 export interface IssuerEndpoint extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -108,7 +129,6 @@ export interface IssuerEndpoint extends BaseContract {
     ): Promise<[IssuerStructOutput]>;
 
     registerIssuer(
-      issuerAddress: PromiseOrValue<string>,
       name: PromiseOrValue<string>,
       description: PromiseOrValue<string>,
       logoUrl: PromiseOrValue<string>,
@@ -122,7 +142,6 @@ export interface IssuerEndpoint extends BaseContract {
   ): Promise<IssuerStructOutput>;
 
   registerIssuer(
-    issuerAddress: PromiseOrValue<string>,
     name: PromiseOrValue<string>,
     description: PromiseOrValue<string>,
     logoUrl: PromiseOrValue<string>,
@@ -136,15 +155,29 @@ export interface IssuerEndpoint extends BaseContract {
     ): Promise<IssuerStructOutput>;
 
     registerIssuer(
-      issuerAddress: PromiseOrValue<string>,
       name: PromiseOrValue<string>,
       description: PromiseOrValue<string>,
       logoUrl: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    "RegisterIssuer(address,string,string,string,uint256)"(
+      issuerAddress?: null,
+      name?: null,
+      description?: null,
+      logoUrl?: null,
+      createdAt?: null
+    ): RegisterIssuerEventFilter;
+    RegisterIssuer(
+      issuerAddress?: null,
+      name?: null,
+      description?: null,
+      logoUrl?: null,
+      createdAt?: null
+    ): RegisterIssuerEventFilter;
+  };
 
   estimateGas: {
     getIssuerByAddress(
@@ -153,7 +186,6 @@ export interface IssuerEndpoint extends BaseContract {
     ): Promise<BigNumber>;
 
     registerIssuer(
-      issuerAddress: PromiseOrValue<string>,
       name: PromiseOrValue<string>,
       description: PromiseOrValue<string>,
       logoUrl: PromiseOrValue<string>,
@@ -168,7 +200,6 @@ export interface IssuerEndpoint extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     registerIssuer(
-      issuerAddress: PromiseOrValue<string>,
       name: PromiseOrValue<string>,
       description: PromiseOrValue<string>,
       logoUrl: PromiseOrValue<string>,

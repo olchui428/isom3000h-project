@@ -16,7 +16,7 @@ const ACCREDITATION_ENDPOINT = "AccreditationEndpoint";
 const CERTIFICATE_ENDPOINT = "CertificateEndpoint";
 
 describe(`Given ${CONTRACT_NAME}`, () => {
-  it("Should store Certificates correctly (issueCertificate, getCertificateById, getCertificatesByApplicantAddresses, getCompleteCertById)", async () => {
+  it("Should store Certificates correctly (issueCertificate, getCertificateById, getCertificatesByApplicantAddress, getCompleteCertById)", async () => {
     const [owner, otherAddress, ...rest] = await ethers.getSigners();
 
     // ========== Deploy ==========

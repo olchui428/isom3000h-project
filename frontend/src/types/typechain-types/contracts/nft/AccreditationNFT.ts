@@ -32,7 +32,7 @@ export interface AccreditationNFTInterface extends utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
-    "isAccreditationExists(uint256)": FunctionFragment;
+    "isAccreditationValid(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "launchAccreditation(address,string,uint256,uint256,string,string)": FunctionFragment;
     "name()": FunctionFragment;
@@ -52,7 +52,7 @@ export interface AccreditationNFTInterface extends utils.Interface {
       | "approve"
       | "balanceOf"
       | "getApproved"
-      | "isAccreditationExists"
+      | "isAccreditationValid"
       | "isApprovedForAll"
       | "launchAccreditation"
       | "name"
@@ -80,7 +80,7 @@ export interface AccreditationNFTInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "isAccreditationExists",
+    functionFragment: "isAccreditationValid",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -153,7 +153,7 @@ export interface AccreditationNFTInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "isAccreditationExists",
+    functionFragment: "isAccreditationValid",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -283,7 +283,7 @@ export interface AccreditationNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    isAccreditationExists(
+    isAccreditationValid(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
@@ -373,7 +373,7 @@ export interface AccreditationNFT extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  isAccreditationExists(
+  isAccreditationValid(
     id: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<boolean>;
@@ -463,7 +463,7 @@ export interface AccreditationNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    isAccreditationExists(
+    isAccreditationValid(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<boolean>;
@@ -589,7 +589,7 @@ export interface AccreditationNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    isAccreditationExists(
+    isAccreditationValid(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -680,7 +680,7 @@ export interface AccreditationNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    isAccreditationExists(
+    isAccreditationValid(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

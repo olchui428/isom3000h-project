@@ -68,7 +68,7 @@ export interface AccreditationEndpointInterface extends utils.Interface {
   functions: {
     "getAccreditationById(uint256)": FunctionFragment;
     "getAccreditationsByIssuerAddress(address)": FunctionFragment;
-    "launchAccreditation(address,string,uint256,uint256,string,string)": FunctionFragment;
+    "launchAccreditation(string,uint256,uint256,string,string)": FunctionFragment;
   };
 
   getFunction(
@@ -89,7 +89,6 @@ export interface AccreditationEndpointInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "launchAccreditation",
     values: [
-      PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
@@ -173,7 +172,6 @@ export interface AccreditationEndpoint extends BaseContract {
     ): Promise<[AccreditationStructOutput[]]>;
 
     launchAccreditation(
-      issuer: PromiseOrValue<string>,
       title: PromiseOrValue<string>,
       createdAt: PromiseOrValue<BigNumberish>,
       duration: PromiseOrValue<BigNumberish>,
@@ -194,7 +192,6 @@ export interface AccreditationEndpoint extends BaseContract {
   ): Promise<AccreditationStructOutput[]>;
 
   launchAccreditation(
-    issuer: PromiseOrValue<string>,
     title: PromiseOrValue<string>,
     createdAt: PromiseOrValue<BigNumberish>,
     duration: PromiseOrValue<BigNumberish>,
@@ -215,14 +212,13 @@ export interface AccreditationEndpoint extends BaseContract {
     ): Promise<AccreditationStructOutput[]>;
 
     launchAccreditation(
-      issuer: PromiseOrValue<string>,
       title: PromiseOrValue<string>,
       createdAt: PromiseOrValue<BigNumberish>,
       duration: PromiseOrValue<BigNumberish>,
       nature: PromiseOrValue<string>,
       description: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
   };
 
   filters: {
@@ -258,7 +254,6 @@ export interface AccreditationEndpoint extends BaseContract {
     ): Promise<BigNumber>;
 
     launchAccreditation(
-      issuer: PromiseOrValue<string>,
       title: PromiseOrValue<string>,
       createdAt: PromiseOrValue<BigNumberish>,
       duration: PromiseOrValue<BigNumberish>,
@@ -280,7 +275,6 @@ export interface AccreditationEndpoint extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     launchAccreditation(
-      issuer: PromiseOrValue<string>,
       title: PromiseOrValue<string>,
       createdAt: PromiseOrValue<BigNumberish>,
       duration: PromiseOrValue<BigNumberish>,
