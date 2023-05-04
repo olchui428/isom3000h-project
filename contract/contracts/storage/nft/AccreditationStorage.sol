@@ -116,11 +116,11 @@ contract AccreditationStorage {
     function createAccreditation(
         uint256 newAccredId,
         address payable issuer,
-        string calldata title,
+        string memory title,
         uint256 createdAt,
         uint256 duration,
-        string calldata nature,
-        string calldata description
+        string memory nature,
+        string memory description
     ) external validateCallFromNFT issuerExists(issuer) returns (bool) {
         Accreditation memory newAccreditation = Accreditation(
             newAccredId,
@@ -159,7 +159,7 @@ contract AccreditationStorage {
 
     function revokeAccreditationById(
         uint256 id,
-        string calldata revokeReason,
+        string memory revokeReason,
         uint256 revokeTime
     ) external validateCallFromNFT returns (bool) {
         Accreditation storage accred = _accreditations[id];

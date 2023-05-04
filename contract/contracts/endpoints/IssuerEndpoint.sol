@@ -58,9 +58,9 @@ contract IssuerEndpoint {
     // -------------------- Functions --------------------
 
     function registerIssuer(
-        string calldata name,
-        string calldata description,
-        string calldata logoUrl
+        string memory name,
+        string memory description,
+        string memory logoUrl
     ) external {
         address payable issuerAddress = payable(msg.sender);
         Issuer memory issuer = _issuerStorage.createIssuer(

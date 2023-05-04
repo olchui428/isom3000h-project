@@ -87,11 +87,11 @@ contract AccreditationNFT is ERC721 {
     /// @return TokenID Accreditation NFT Token ID
     function launchAccreditation(
         address payable issuer,
-        string calldata title,
+        string memory title,
         uint256 createdAt,
         uint256 duration,
-        string calldata nature,
-        string calldata description
+        string memory nature,
+        string memory description
     ) external validateCallFromEndpoint returns (uint256) {
         uint256 newAccredId = _tokenIds.current();
 
