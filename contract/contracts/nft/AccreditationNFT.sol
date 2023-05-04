@@ -112,10 +112,14 @@ contract AccreditationNFT is ERC721 {
         return newAccredId;
     }
 
-    function isAccreditationExists(
+    function isAccreditationValid(
         uint256 id
     ) external view validateCallFromEndpoint returns (bool) {
-        return _exists(id) && _accreditationStorage.isAccreditationExists(id);
+        return
+            _exists(id) &&
+            _accreditationStorage.isAccreditationExists(id) &&
+            ownerOf(id) == _accreditationStorage.getAccreditationById(id).issuer &&
+            !_accreditationStorage.getAccreditationById(id).isRevoked;
     }
 
     /// @dev Likely will not burn any NFTs because it does not make sense to deprive ownership of expired or revoked entities, implementation will hence not pass through NFT contract

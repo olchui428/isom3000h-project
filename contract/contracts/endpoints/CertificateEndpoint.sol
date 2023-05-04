@@ -134,9 +134,17 @@ contract CertificateEndpoint {
         );
     }
 
-    // TODO(MVP): getCertificateById modifier
+    modifier isCertificateExists(uint256 id) {
+        require(
+            _certificateStorage.isCertificateExists(id),
+            "Certificate with provided ID does not exist."
+        );
+        _;
+    }
 
-    function getCertificateById(uint256 id) external view returns (Certificate memory) {
+    function getCertificateById(
+        uint256 id
+    ) external view isCertificateExists(id) returns (Certificate memory) {
         return _certificateStorage.getCertificateById(id);
     }
 

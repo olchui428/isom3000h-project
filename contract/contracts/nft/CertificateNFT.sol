@@ -106,7 +106,7 @@ contract CertificateNFT is ERC721 {
         string memory remarks
     ) external validateCallFromEndpoint returns (uint256) {
         uint256 newCertId = _tokenIds.current();
-        // TODO(MVP): create new Cert and assign to mapping
+
         _certificateStorage.createCertificate(
             newCertId,
             issuerAddress,
@@ -123,6 +123,14 @@ contract CertificateNFT is ERC721 {
         _tokenIds.increment();
 
         return newCertId;
+    }
+
+    function isCertificateValid(uint256 id) external view validateCallFromEndpoint returns (bool) {
+        return
+            _exists(id) &&
+            _certificateStorage.isCertificateExists(id) &&
+            ownerOf(id) == _certificateStorage.getCertificateById(id).applicant &&
+            !_certificateStorage.getCertificateById(id).isRevoked;
     }
 
     // // TODO(Good to have): add validation before burning
