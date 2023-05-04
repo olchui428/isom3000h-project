@@ -3,6 +3,7 @@ import useMetaMask from "@/hooks/useMetaMask";
 import { muiDarkTheme } from "@/theme/muiTheme";
 import { UserType } from "@/types";
 import AddIcon from "@mui/icons-material/Add";
+import DescriptionIcon from "@mui/icons-material/Description";
 import DomainAddIcon from "@mui/icons-material/DomainAdd";
 import HomeIcon from "@mui/icons-material/Home";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -149,8 +150,14 @@ function Sidebar({ width }: SidebarProps) {
               />
             </SidebarSection>
           )}
-          {isIssuer && (
+          {(isIssuer || isApplicant) && (
             <SidebarSection title="Certificate">
+              <SideBarLink
+                label="My Certificates"
+                href={`/applicant/${address}`}
+                icon={<DescriptionIcon />}
+                visible={!!address && isApplicant}
+              />
               <SideBarLink
                 label="Issue Certificate"
                 href="/certificate/issue"

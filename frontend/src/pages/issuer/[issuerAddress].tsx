@@ -167,14 +167,15 @@ function AccreditationsCardContent({
 }) {
   const router = useRouter();
 
-  if (!accreditations)
+  if (!accreditations) {
     return (
       <Box sx={{ width: "50%" }}>
         <Alert severity="error" variant="filled">
-          Failed to fetch the issuer
+          Failed to fetch accreditations
         </Alert>
       </Box>
     );
+  }
 
   const rows: GridRowsProp = accreditations.map((acc) => ({
     id: acc.id.toNumber(),

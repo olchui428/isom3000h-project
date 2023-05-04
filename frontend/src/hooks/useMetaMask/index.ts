@@ -9,6 +9,7 @@ import {
 import { useAppContext } from "@/contexts/app";
 import { UserType } from "@/types";
 import { AccreditationStructOutput } from "@/types/typechain-types/contracts/endpoints/AccreditationEndpoint";
+import { ApplicantStructOutput } from "@/types/typechain-types/contracts/endpoints/ApplicantEndpoint";
 import {
   CertificateStructOutput,
   CompleteCertStructOutput,
@@ -231,9 +232,8 @@ const useMetaMask = () => {
         );
         const applicant = (await applicantEndpoint.getApplicantByAddress(
           applicantAddress
-        )) as any[];
-        const createdAt = applicant[2] as ethers.BigNumber;
-        return createdAt.isZero() ? undefined : applicant;
+        )) as ApplicantStructOutput;
+        return applicant.createdAt.isZero() ? undefined : applicant;
       } catch (error) {
         console.log(`Error at ApplicantEndpoint::getApplicantByAddress(): ${error}`);
         throw error;
@@ -387,21 +387,22 @@ const useMetaMask = () => {
       }
     };
 
-    // TODO(Good to have): implement in endpoint contract then here
-    // const getCertificatesByApplicantAddress = async (address: string) => {
-    //   if (!signer) return;
-    //   try {
-    //     const certificateEndpoint = new ethers.Contract(
-    //       ContractAddresses.CERTIFICATE_ENDPOINT,
-    //       certificateEndpointABI,
-    //       signer
-    //     );
-    //     return await certificateEndpoint.getCertificatesByApplicantAddress(address);
-    //   } catch (error) {
-    //     console.log(`Error at CertificateEndpoint::getCertificatesByApplicantAddress(): ${error}`);
-    //     throw error;
-    //   }
-    // };
+    const getCertificatesByApplicantAddress = async (address: string) => {
+      if (!signer) return;
+      try {
+        const certificateEndpoint = new ethers.Contract(
+          ContractAddresses.CERTIFICATE_ENDPOINT,
+          certificateEndpointABI,
+          signer
+        );
+        return (await certificateEndpoint.getCertificatesByApplicantAddress(
+          address
+        )) as CertificateStructOutput[];
+      } catch (error) {
+        console.log(`Error at CertificateEndpoint::getCertificatesByApplicantAddress(): ${error}`);
+        throw error;
+      }
+    };
 
     const getCompleteCertById = async (id: number) => {
       if (!provider) return;
@@ -421,7 +422,7 @@ const useMetaMask = () => {
     return {
       issueCertificate,
       getCertificateById,
-      // getCertificatesByApplicantAddress,
+      getCertificatesByApplicantAddress,
       getCompleteCertById,
     };
   };
