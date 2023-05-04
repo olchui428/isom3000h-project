@@ -2,4 +2,4 @@
 .DS_Store
 .directory
 
-typechain-types/
+/contract/typechain-types
