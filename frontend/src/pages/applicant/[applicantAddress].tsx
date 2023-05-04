@@ -143,7 +143,7 @@ function ApplicantDetailsCardContent({
   ) : (
     <Box sx={{ width: "50%" }}>
       <Alert severity="error" variant="filled">
-        Failed to fetch the issuer
+        Failed to fetch the applicant
       </Alert>
     </Box>
   );
