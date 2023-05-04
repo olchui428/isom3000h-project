@@ -11,7 +11,7 @@ import { generateCertificate } from "@/utils/generateCertificate";
 import { CompleteCertStructOutput } from "@/types/typechain-types/contracts/endpoints/CertificateEndpoint";
 
 const fileFormats = {
-  PDF: "application/pdf",
+  // PDF: "application/pdf",
   JPG: "image/jpeg",
   PNG: "image/png",
 };
@@ -27,6 +27,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { certificateId: certIdStr } = req.query as { certificateId: string };
   const certificateId = parseInt(certIdStr);
   const exportType: CertificateFormats = req.body?.exportType;
+  if (fileFormats[exportType] === undefined) {
+    return res.status(400).send("Invalid value for input parameter exportType.");
+  }
 
   // Initialize Contract variables
   const { rpc } = networkConfig;

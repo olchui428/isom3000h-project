@@ -1,7 +1,7 @@
 import { CertificateFormats } from "@/types";
 import { CompleteCertStructOutput } from "@/types/typechain-types/contracts/endpoints/CertificateEndpoint";
 // import { createCanvas, loadImage } from "canvas";
-import { GlobalFonts, createCanvas, loadImage } from "@napi-rs/canvas";
+import { createCanvas, loadImage } from "@napi-rs/canvas";
 import path from "path";
 
 export const generateCertificate = async (
@@ -13,16 +13,11 @@ export const generateCertificate = async (
   // Load image
   const certificateTemplatePath: string = path.join(
     process.cwd(),
-    `/public/img/certificate_template.png`
+    `/public/img/certificate_template_even_smaller.png`
   );
   // const certificateTemplatePath = `https://i.ibb.co/qsyqB3T/certificate-template.jpg`;
   const certImage = await loadImage(certificateTemplatePath);
   console.log("Image loaded");
-
-  // // Process fonts
-  // const fontFilePath = ""; // TODO(Good to have): add font file path
-  // registerFont(fontFilePath, { family: "jin" }); // TODO(Good to have): change family attribute
-  // console.log("Font registered");
 
   // Generate Certificate
 
@@ -38,16 +33,26 @@ export const generateCertificate = async (
   ctx.fillStyle = "#000000";
   ctx.textAlign = "center";
   ctx.textBaseline = "alphabetic";
-  // ctx.strokeStyle = "#000000";
-
-  // console.log(GlobalFonts.families);
 
   // Draw details onto Certificate
-  // TODO
 
-  // Certificate title
+  // Accreditation title
   const title = certificateData.accreditation.title;
   ctx.fillText(title, canvas.width / 2, canvas.height / 2);
+
+  // TODO
+  // Issuer name
+  // Applicant name
+  // Level
+  // Nature
+  // Duration
+  // Remarks
+  // Event ID
+  // Issue time
+  // Company logoUrl
+  if (certificateData.issuer.logoUrl !== "") {
+    const logoUrl = certificateData.issuer.logoUrl;
+  }
 
   // For reference: past example
 
@@ -68,24 +73,32 @@ export const generateCertificate = async (
 
   // ctx.fillText(("0" + quantity.toString()).slice(-2), 0, 0);
 
-  // console.log("amount drawn");
+  console.log("Certificate drawn");
 
   // Return Buffer object for API to send
+
+  // // node-canvas
+  // switch (exportType) {
+  //   case CertificateFormats.JPG:
+  //     return canvas.toBuffer("image/jpeg", { quality: 1 });
+  //   case CertificateFormats.PNG:
+  //     return canvas.toBuffer("image/png", { compressionLevel: 0 });
+  //   case CertificateFormats.PDF:
+  //     return canvas.toBuffer("application/pdf", {
+  //       title: `Certificate for ${certificateData.accreditation.title}`,
+  //       author: `${certificateData.issuer.name}`,
+  //       // subject: string,
+  //       // keywords: string,
+  //       creator: `${certificateData.issuer.name}`,
+  //       creationDate: new Date(certificateData.certificate.createdAt.mul(1000).toNumber()),
+  //     });
+  // }
+
+  // @napi-rs/canvas
   switch (exportType) {
     case CertificateFormats.JPG:
-      // return canvas.toBuffer("image/jpeg", { quality: 1 });
       return canvas.toBuffer("image/jpeg", 2160);
     case CertificateFormats.PNG:
-      // return canvas.toBuffer("image/png", { compressionLevel: 0 });
       return canvas.toBuffer("image/png");
-    // case CertificateFormats.PDF:
-    //   return canvas.toBuffer("application/pdf", {
-    //     title: `Certificate for ${certificateData.accreditation.title}`,
-    //     author: `${certificateData.issuer.name}`,
-    //     // subject: string,
-    //     // keywords: string,
-    //     creator: `${certificateData.issuer.name}`,
-    //     creationDate: new Date(certificateData.certificate.createdAt.mul(1000).toNumber()),
-    //   });
   }
 };
