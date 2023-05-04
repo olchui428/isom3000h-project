@@ -39,7 +39,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // Get Certificate data
-    const completeCert: CompleteCertStructOutput = contract.getCompleteCert(certificateId);
+    const completeCert: CompleteCertStructOutput = await contract.getCompleteCertById(
+      certificateId
+    );
 
     // Generate Certificate image
     const certificateBuffer = await generateCertificate(completeCert, exportType);
@@ -47,7 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.setHeader("Content-Type", fileFormats[exportType]);
     return res.send(certificateBuffer);
   } catch (error) {
-    console.log("Error with getCompleteCert():", error);
+    console.log("Error with getCompleteCertById():", error);
     res.status(404).send("Unable to obtain certificate data.");
   }
 }

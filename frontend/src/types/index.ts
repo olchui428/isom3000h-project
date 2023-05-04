@@ -1,7 +1,7 @@
 export enum CertificateFormats {
   PNG = "PNG",
   JPG = "JPG",
-  PDF = "PDF",
+  // PDF = "PDF",
 }
 
 export enum UserType {
