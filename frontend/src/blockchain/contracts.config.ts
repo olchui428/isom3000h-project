@@ -43,10 +43,11 @@ const localNet: NetworkConfigType = {
 // Test network
 enum TestContractsAddresses {
   // SETUP
-  ISSUER_ENDPOINT = "",
-  APPLICANT_ENDPOINT = "",
-  ACCREDITATION_ENDPOINT = "",
-  CERTIFICATE_ENDPOINT = "",
+  // Last contract change: Commit f7fc8c8f66d286f0c8d133b9389f0354035c501f
+  ISSUER_ENDPOINT = "0xb2C60Af8e0A6B7607845708C219D1e4733998877",
+  APPLICANT_ENDPOINT = "0xc6F208422A3F70dD9e4dc9B257597Ac40E739D72",
+  ACCREDITATION_ENDPOINT = "0x1E430a2bC3c3c5eFf0d94820B819a43d87753d4D",
+  CERTIFICATE_ENDPOINT = "0xfa333F2dE4461875eEBb427109a252705e57DbFB",
 }
 const testNet: NetworkConfigType = {
   // SETUP
@@ -71,6 +72,6 @@ const prodNet: NetworkConfigType = {
 };
 
 // SETUP: Depending on which environment, comment out the other 2
-export { LocalContractsAddresses as ContractAddresses, localNet as networkConfig };
-// export { TestContractsAddresses as ContractAddresses, testNet as networkConfig };
+// export { LocalContractsAddresses as ContractAddresses, localNet as networkConfig };
+export { TestContractsAddresses as ContractAddresses, testNet as networkConfig };
 // export { ProdContractsAddresses as ContractAddresses, prodNet as networkConfig };
