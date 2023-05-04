@@ -89,7 +89,7 @@ const useMetaMask = () => {
 
   const provider = useMemo(() => {
     // only connect to the contract if the user has MetaMask installed
-    if (typeof window === "undefined") return null;
+    if (typeof window === "undefined" || !window.ethereum) return null;
     return new ethers.providers.Web3Provider(window.ethereum);
   }, []);
 
