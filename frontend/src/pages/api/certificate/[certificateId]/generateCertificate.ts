@@ -1,20 +1,20 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import {
-  ContractAddresses,
-  certificateEndpointABI,
-  networkConfig,
-} from "@/blockchain/contracts.config";
+// import {
+//   ContractAddresses,
+//   certificateEndpointABI,
+//   networkConfig,
+// } from "@/blockchain/contracts.config";
 import { CertificateFormats } from "@/types";
 import { createCanvas, loadImage } from "canvas";
-import { ethers } from "ethers";
-import type { NextApiRequest, NextApiResponse } from "next";
+// import { ethers } from "ethers";
+// import type { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
 
-const fileFormats = {
-  PDF: "application/pdf",
-  JPG: "image/jpeg",
-  PNG: "image/png",
-};
+// const fileFormats = {
+//   PDF: "application/pdf",
+//   JPG: "image/jpeg",
+//   PNG: "image/png",
+// };
 
 export const generateCertificate = async (
   certificateData: any,

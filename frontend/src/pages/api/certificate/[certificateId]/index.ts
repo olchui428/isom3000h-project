@@ -5,10 +5,10 @@ import {
   networkConfig,
 } from "@/blockchain/contracts.config";
 import { CertificateFormats } from "@/types";
-import { createCanvas, loadImage } from "canvas";
+// import { createCanvas, loadImage } from "canvas";
 import { ethers } from "ethers";
 import type { NextApiRequest, NextApiResponse } from "next";
-import path from "path";
+// import path from "path";
 import { generateCertificate } from "./generateCertificate";
 
 const fileFormats = {
