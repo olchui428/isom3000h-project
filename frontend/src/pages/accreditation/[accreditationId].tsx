@@ -5,7 +5,6 @@ import { AccreditationStructOutput } from "@/types/typechain-types/contracts/sto
 import { Alert, Box, Card, CardContent, Grid, Skeleton, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import dayjs from "dayjs";
-import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -29,7 +28,6 @@ function AccreditationById() {
         const accreditationData = await metamask.accreditationEndpoint.getAccreditationById(
           accreditationId
         );
-        console.log("accreditationData", accreditationData);
         setAccreditation(accreditationData);
       } catch (error: any) {
         console.error(`Error loading accreditation of ID ${accreditationId}`, error);
