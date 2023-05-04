@@ -12,6 +12,10 @@
     "deploy:testnet": "hardhat run scripts/deploy.ts --network polygon",
     "deploy:local": "hardhat run scripts/deploy.ts --network local",
     "deploy": "echo This command has been deprecated. Please execute one of `deploy:prod`, `deploy:testnet` and `deploy:local`, and make sure your environment variables are properly set up in .env file.",
+    "check": "echo Please specify the environment to conduct checking on by executing one of `check:prod`, `check:testnet` and `check:local`.",
+    "check:prod": "hardhat run scripts/check.ts --network etherdata",
+    "check:testnet": "hardhat run scripts/check.ts --network polygon",
+    "check:local": "hardhat run scripts/check.ts --network local",
     "help": "hardhat help"
   },
   "devDependencies": {

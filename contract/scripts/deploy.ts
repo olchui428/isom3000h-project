@@ -17,7 +17,7 @@ const CERTIFICATE_ENDPOINT = "CertificateEndpoint";
 
 /**
  * This function deploys the contracts to blockchain for use
- * - Executed in npm commands `deploy`(for PROD), `testnet`(for test), `local`(for local)
+ * - Executed in npm commands `deploy:prod`(for PROD), `deploy:testnet`(for test), `deploy:local`(for local)
  * - Blockchain network deployed to is chosen by the npm command executed
  * - Blockchain networks are configured in `hardhat.config.ts`
  *
@@ -47,13 +47,15 @@ const CERTIFICATE_ENDPOINT = "CertificateEndpoint";
  *     - Dependent on AccreditationStorage.sol, AccreditationNFT.sol
  *   - CertificateEndpoint.sol
  *     - Dependent on AccreditationStorage.sol, CertificateStorage.sol
+ * 4. Initialize Storage contracts
+ * 5. Initialize NFT contracts
  *
  * Note: deployment of types and libraries are not required
  */
 async function deploy() {
   // Stores deployment logs
   const logs: string[] = [
-    `Deploying on network "${network.name}" at RPC URL ${network.config.url}`,
+    `Deploying on network "${network.name}" at RPC URL ${(network.config as any).url}`,
   ];
 
   // Helper function for logging, adds log to `logs` array and outputs it to console
@@ -197,7 +199,7 @@ async function deploy() {
   if (!fs.existsSync(fileDir)) {
     fs.mkdirSync(fileDir);
   }
-  const filePath: string = path.join(fileDir, `${Date.now()}.log`);
+  const filePath: string = path.join(fileDir, `deploy_${Date.now()}.log`);
   fs.writeFileSync(filePath, fileString, { flag: "w" });
   console.log("Deployment logs written to", filePath);
 }
