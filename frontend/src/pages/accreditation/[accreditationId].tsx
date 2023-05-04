@@ -5,6 +5,7 @@ import { AccreditationStructOutput } from "@/types/typechain-types/contracts/sto
 import { Alert, Box, Card, CardContent, Grid, Skeleton, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import dayjs from "dayjs";
+import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -59,6 +60,17 @@ function AccreditationById() {
         <Box sx={{ width: "50%" }}>
           <Alert severity="error" variant="filled">
             Failed to fetch Accreditation #{accreditationId}
+          </Alert>
+        </Box>
+      </Layout>
+    );
+  }
+  if (parseInt(accreditation.issuer, 16) === 0) {
+    return (
+      <Layout title={`Accreditation #${accreditationId}`}>
+        <Box sx={{ width: "50%" }}>
+          <Alert severity="warning" variant="filled">
+            Accreditation #{accreditationId} does not exist.
           </Alert>
         </Box>
       </Layout>
