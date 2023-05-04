@@ -4,6 +4,7 @@ import {
   applicantEndpointABI,
   certificateEndpointABI,
   issuerEndpointABI,
+  networkConfig,
 } from "@/blockchain/contracts.config";
 import { useAppContext } from "@/contexts/app";
 import { UserType } from "@/types";
@@ -35,11 +36,41 @@ const useMetaMask = () => {
    * @returns The address, or `undefined` if failed to connect.
    */
   const connectToMetaMask = useCallback(async () => {
-    // check if the browser has MetaMask installed
+    // Check if the browser has MetaMask installed
     if (!window.ethereum) {
       alert("Please install MetaMask first.");
       return;
     }
+
+    // Check if the connected network is the correct network with deployed contracts
+    if (window.ethereum.networkVersion !== networkConfig.chainId) {
+      try {
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: ethers.utils.hexValue(networkConfig.chainId) }],
+        });
+      } catch (err: any) {
+        // This error code indicates that the chain has not been added to MetaMask
+        if (err.code === 4902) {
+          // Add network to MetaMask
+          await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [
+              {
+                chainName: networkConfig.name,
+                chainId: ethers.utils.hexValue(networkConfig.chainId),
+                rpcUrls: [networkConfig.rpc],
+              },
+            ],
+          });
+          await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: ethers.utils.hexValue(networkConfig.chainId) }],
+          });
+        }
+      }
+    }
+
     // get the user's account address
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
