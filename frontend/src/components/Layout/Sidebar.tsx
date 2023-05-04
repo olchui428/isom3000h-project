@@ -9,6 +9,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import SendIcon from "@mui/icons-material/Send";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import {
   Avatar,
   Box,
@@ -134,6 +135,12 @@ function Sidebar({ width }: SidebarProps) {
               </SidebarSection>
             ) : null)}
           <SidebarSection title="Accreditation">
+            <SideBarLink
+              label="My Accreditations"
+              href={`/issuer/${address}`}
+              icon={<WorkspacePremiumIcon />}
+              visible={!!address && isIssuer}
+            />
             <SideBarLink
               label="Launch Accreditation"
               href="/accreditation/launch"

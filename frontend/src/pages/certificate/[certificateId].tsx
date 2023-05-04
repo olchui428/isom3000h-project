@@ -120,9 +120,14 @@ function CertificateById() {
                       <Grid item xs={3}>
                         <Typography sx={{ fontWeight: 500 }}>Issuer</Typography>
                       </Grid>
-                      {/* TODO: Show a pop-up to display more info about this issuer */}
                       <Grid item xs={9}>
-                        {completeCert.issuer.name}
+                        <NextLinkComposed
+                          to={`/issuer/${completeCert.issuer.issuerAddress}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {completeCert.issuer.name}
+                        </NextLinkComposed>
                       </Grid>
                     </Grid>
                   </CardContent>

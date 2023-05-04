@@ -13,6 +13,7 @@ import {
   CertificateStructOutput,
   CompleteCertStructOutput,
 } from "@/types/typechain-types/contracts/endpoints/CertificateEndpoint";
+import { IssuerStructOutput } from "@/types/typechain-types/contracts/endpoints/IssuerEndpoint";
 import axios from "axios";
 import { ethers } from "ethers";
 import { useCallback, useEffect, useMemo } from "react";
@@ -173,9 +174,10 @@ const useMetaMask = () => {
           issuerEndpointABI,
           provider
         );
-        const issuer = (await issuerEndpoint.getIssuerByAddress(issuerAddress)) as any[];
-        const createdAt = issuer[4] as ethers.BigNumber;
-        return createdAt.isZero() ? undefined : issuer;
+        const issuer = (await issuerEndpoint.getIssuerByAddress(
+          issuerAddress
+        )) as IssuerStructOutput;
+        return issuer.createdAt.isZero() ? undefined : issuer;
       } catch (error) {
         console.log(`Error at IssuerEndpoint::getIssuerByAddress(): ${error}`);
         throw error;

@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import { NextLinkComposed } from "@/components/NextLinkComposed";
 import { useAppContext } from "@/contexts/app";
 import useMetaMask from "@/hooks/useMetaMask";
 import { AccreditationStructOutput } from "@/types/typechain-types/contracts/storage/nft/AccreditationStorage";
@@ -88,24 +89,23 @@ function AccreditationById() {
       <Card sx={{ width: "100%" }}>
         <CardContent>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography component="h2" variant="h5">
-              Accreditation #{accreditationId}
+            <Typography component="h2" variant="h5" sx={{ fontWeight: 500 }}>
+              {accreditation.title}
             </Typography>
             <Typography sx={{ color: grey[500] }}>Created at {createdAt}</Typography>
           </Box>
           <Grid container spacing={2} sx={{ mt: 1 }}>
-            {/* TODO(Anson): Show details of the issuer. May add a link to new page, or show in pop-up. */}
             <Grid item xs={2}>
               <Typography sx={{ fontWeight: 500 }}>Issuer</Typography>
             </Grid>
             <Grid item xs={10}>
-              {accreditation.issuer}
-            </Grid>
-            <Grid item xs={2}>
-              <Typography sx={{ fontWeight: 500 }}>Title</Typography>
-            </Grid>
-            <Grid item xs={10}>
-              {accreditation.title}
+              <NextLinkComposed
+                to={`/issuer/${accreditation.issuer}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {accreditation.issuer}
+              </NextLinkComposed>
             </Grid>
             <Grid item xs={2}>
               <Typography sx={{ fontWeight: 500 }}>Nature</Typography>
