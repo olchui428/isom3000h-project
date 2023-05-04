@@ -9,7 +9,7 @@ import { CertificateFormats } from "@/types";
 import { ethers } from "ethers";
 import type { NextApiRequest, NextApiResponse } from "next";
 // import path from "path";
-import { generateCertificate } from "./generateCertificate";
+import { generateCertificate } from "@/utils/generateCertificate";
 
 const fileFormats = {
   PDF: "application/pdf",
