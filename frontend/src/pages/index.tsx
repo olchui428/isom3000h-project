@@ -1,11 +1,17 @@
 import Layout from "@/components/Layout";
 import SearchBar from "@/components/SearchBar";
-import { Box, Typography } from "@mui/material";
+import { Alert, AlertTitle, Box, Typography } from "@mui/material";
 import { grey, indigo } from "@mui/material/colors";
 
 export default function Home() {
   return (
     <Layout title="Home">
+      {typeof window !== "undefined" && !window.ethereum ? (
+        <Alert severity="warning" variant="filled" sx={{ fontWeight: 400 }}>
+          <AlertTitle>Please install MetaMask extension</AlertTitle>
+          This app will not work properly without a MetaMask extension.
+        </Alert>
+      ) : null}
       <Typography
         component="h1"
         variant="h2"
