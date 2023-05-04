@@ -386,12 +386,12 @@ const useMetaMask = () => {
     };
 
     const getCertificatesByApplicantAddress = async (address: string) => {
-      if (!signer) return;
+      if (!provider) return;
       try {
         const certificateEndpoint = new ethers.Contract(
           ContractAddresses.CERTIFICATE_ENDPOINT,
           certificateEndpointABI,
-          signer
+          provider
         );
         return (await certificateEndpoint.getCertificatesByApplicantAddress(
           address
