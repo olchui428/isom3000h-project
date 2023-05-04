@@ -307,7 +307,9 @@ const useMetaMask = () => {
           accreditationEndpointABI,
           provider
         );
-        return await accreditationEndpoint.getAccreditationsByIssuerAddress(address);
+        return (await accreditationEndpoint.getAccreditationsByIssuerAddress(
+          address
+        )) as AccreditationStructOutput[];
       } catch (error) {
         console.log(`Error at AccreditationEndpoint::getAccreditationsByIssuerAddress(): ${error}`);
         throw error;
@@ -339,7 +341,7 @@ const useMetaMask = () => {
         );
         const tx = await certificateEndpoint.issueCertificate(
           applicantAddress,
-          createdAt,
+          Math.trunc(createdAt.getTime() / 1000),
           accreditationId,
           level,
           eventId,
@@ -347,13 +349,17 @@ const useMetaMask = () => {
         );
         // Wait for `HIGH_SECURITY_NUM_CONFIRMS` blocks to be mined
         const receipt = await tx.wait(HIGH_SECURITY_NUM_CONFIRMS);
+        console.log("issueCertificate receipt", receipt);
+
         // Retrieve data from emitted event
-        const data = receipt.logs[receipt.logs.length - 1].data;
-        const [id, ...eventData] = ethers.utils.defaultAbiCoder.decode(
-          ["uint256", "uint256", "address", "address", "uint256", "string", "string", "string"],
-          data
-        );
-        return id;
+        const issueEvent = receipt.events.find((e: any) => e.event === "IssueCertificate");
+        if (!issueEvent) {
+          throw new Error("No IssueCertificate event emitted");
+        }
+
+        const issueResult = issueEvent.args;
+        const id = (issueResult.id as ethers.BigNumber).toNumber();
+        return { id };
       } catch (error) {
         console.log(`Error at CertificateEndpoint::issueCertificate(): ${error}`);
         throw error;
