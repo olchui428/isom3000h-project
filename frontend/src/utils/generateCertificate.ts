@@ -1,23 +1,10 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-// import {
-//   ContractAddresses,
-//   certificateEndpointABI,
-//   networkConfig,
-// } from "@/blockchain/contracts.config";
 import { CertificateFormats } from "@/types";
+import { CompleteCertStructOutput } from "@/types/typechain-types/contracts/endpoints/CertificateEndpoint";
 import { createCanvas, loadImage } from "canvas";
-// import { ethers } from "ethers";
-// import type { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
 
-// const fileFormats = {
-//   PDF: "application/pdf",
-//   JPG: "image/jpeg",
-//   PNG: "image/png",
-// };
-
 export const generateCertificate = async (
-  certificateData: any,
+  certificateData: CompleteCertStructOutput,
   exportType: CertificateFormats
 ): Promise<Buffer> => {
   console.log("Certificate data:", certificateData);
@@ -82,7 +69,7 @@ export const generateCertificate = async (
         // subject: string,
         // keywords: string,
         creator: `${certificateData.issuer.name}`,
-        creationDate: new Date(certificateData.certificate.createdAt),
+        creationDate: new Date(certificateData.certificate.createdAt.mul(1000).toNumber()),
       });
   }
 };
