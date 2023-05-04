@@ -26,7 +26,8 @@ const generateCertificate = async (
   // Load image
   const certificateTemplatePath: string = path.join(
     process.cwd(),
-    `/public/img/certificate_template.jpeg`
+    // `/public/img/certificate_template.jpeg`
+    `https://i.ibb.co/qsyqB3T/certificate-template.jpg`
   );
   const certImage = await loadImage(certificateTemplatePath);
   console.log("Image loaded");
