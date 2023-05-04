@@ -19,7 +19,7 @@ const applicantEndpointAbi = applicantEndpointJSON.abi;
 const accreditationEndpointAbi = accreditationEndpointJSON.abi;
 const certificateEndpointAbi = certificateEndpointJSON.abi;
 
-// Local network private keys
+// Local network private keys, copy over from Ganache
 const issuerPK = "0x29d5d48921437ce41b7055334a2a39218e9ffd64ea4f57e9099957128cb86244";
 const applicant1PK = "0x9f6e9baa3c42952325d2c9d723829423bb832f7f34faa51c51b9de662df3e7c7";
 const applicant2PK = "0xe2dd591f223d0d7857f78be8f64aa8b8c8f10ce0bb26c5422fdad47ab467704c";
@@ -36,11 +36,15 @@ const applicant2PK = "0xe2dd591f223d0d7857f78be8f64aa8b8c8f10ce0bb26c5422fdad47a
  * 2. Register Applicant
  * 3. Launch Accreditation
  * 4. Issue Certificate
+ *
+ * Note: this script should only be run after deploying contracts and copying contract addresses and other information to this file
  */
 async function check() {
   // Stores interaction logs
   const logs: string[] = [
-    `Checking deployed contracts on network "${network.name}" at RPC URL ${network.config.url}`,
+    `Checking deployed contracts on network "${network.name}" at RPC URL ${
+      (network.config as any).url
+    }`,
   ];
 
   // Helper function for logging, adds log to `logs` array and outputs it to console
@@ -91,6 +95,7 @@ async function check() {
     const registerIssuerTx = await issuerEndpointContract.connect(issuer).registerIssuer();
     const registerIssuerReceipt = await registerIssuerTx.wait();
     createLog("Successfully registered Issuer");
+    createLog("Registered Issuer: " + (await issuerEndpointContract.getIssuerByAddress()));
 
     createLog("Checking ApplicantEndpoint::registerApplicant()");
     const registerApplicant1Tx = await applicantEndpointContract
@@ -103,6 +108,12 @@ async function check() {
       .registerApplicant();
     const registerApplicant2Receipt = await registerApplicant2Tx.wait();
     createLog("Successfully registered Applicant 2");
+    createLog(
+      "Registered Applicant 1: " + (await applicantEndpointContract.getApplicantByAddress())
+    );
+    createLog(
+      "Registered Applicant 2: " + (await applicantEndpointContract.getApplicantByAddress())
+    );
 
     createLog("Checking AccreditationEndpoint::launchAccreditation()");
     const launchAccreditationTx = await accreditationEndpointContract
@@ -110,6 +121,9 @@ async function check() {
       .launchAccreditation();
     const launchAccreditationReceipt = await launchAccreditationTx.wait();
     createLog("Successfully launched Accreditation");
+    createLog(
+      "Launched Accreditation: " + (await accreditationEndpointContract.getAccreditationById())
+    );
 
     createLog("Checking CertificateEndpoint::issueCertificate()");
     const issueCertificate1Tx = await certificateEndpointContract
@@ -126,11 +140,11 @@ async function check() {
     const completeCert1 = await certificateEndpointContract.getCompleteCertById(
       issueCertificate1Receipt.events[0].args.id
     );
-    createLog("CompleteCert1: " + completeCert1);
+    createLog("CompleteCert 1: " + completeCert1);
     const completeCert2 = await certificateEndpointContract.getCompleteCertById(
       issueCertificate2Receipt.events[0].args.id
     );
-    createLog("CompleteCert2: " + completeCert2);
+    createLog("CompleteCert 2: " + completeCert2);
 
     createLog(`\nChecking complete at ${new Date().toUTCString()}!`);
   } catch (error) {
