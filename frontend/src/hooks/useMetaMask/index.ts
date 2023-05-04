@@ -143,9 +143,7 @@ const useMetaMask = () => {
           issuerEndpointABI,
           signer
         );
-        const tx = await issuerEndpoint.registerIssuer(name, description, logoUrl, {
-          gasLimit: 300000,
-        });
+        const tx = await issuerEndpoint.registerIssuer(name, description, logoUrl);
         const receipt = await tx.wait(LOW_SECURITY_NUM_CONFIRMS);
         console.log("registerIssuer receipt", receipt);
 
