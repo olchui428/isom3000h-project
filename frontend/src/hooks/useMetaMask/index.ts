@@ -8,7 +8,11 @@ import {
 } from "@/blockchain/contracts.config";
 import { useAppContext } from "@/contexts/app";
 import { UserType } from "@/types";
-import { AccreditationStructOutput } from "@/types/typechain-types/contracts/storage/nft/AccreditationStorage";
+import { AccreditationStructOutput } from "@/types/typechain-types/contracts/endpoints/AccreditationEndpoint";
+import {
+  CertificateStructOutput,
+  CompleteCertStructOutput,
+} from "@/types/typechain-types/contracts/endpoints/CertificateEndpoint";
 import axios from "axios";
 import { ethers } from "ethers";
 import { useCallback, useEffect, useMemo } from "react";
@@ -374,7 +378,7 @@ const useMetaMask = () => {
           certificateEndpointABI,
           provider
         );
-        return await certificateEndpoint.getCertificateById(id);
+        return (await certificateEndpoint.getCertificateById(id)) as CertificateStructOutput;
       } catch (error) {
         console.log(`Error at CertificateEndpoint::getCertificateById(): ${error}`);
         throw error;
@@ -405,7 +409,7 @@ const useMetaMask = () => {
           certificateEndpointABI,
           provider
         );
-        return await certificateEndpoint.getCompleteCertById(id);
+        return (await certificateEndpoint.getCompleteCertById(id)) as CompleteCertStructOutput;
       } catch (error) {
         console.log(`Error at CertificateEndpoint::getCompleteCertById(): ${error}`);
         throw error;
