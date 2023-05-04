@@ -96,6 +96,11 @@ contract CertificateStorage {
         require(msg.sender == _certificateEndpointAddress);
         _;
     }
+    /// @dev Makes sure only either NFT or Endpoint contract address can call this function
+    modifier validateCallFromNFTorEndpoint() {
+        require(msg.sender == _certificateEndpointAddress || msg.sender == _certificateNFTAddress);
+        _;
+    }
     /// @dev Makes sure the Issuer address exists in IssuerStorage
     modifier issuerExists(address payable inputAddress) {
         require(
@@ -156,8 +161,24 @@ contract CertificateStorage {
 
     function getCertificatesByApplicantAddress(
         address payable inputAddress
-    ) external view validateCallFromEndpoint returns (Certificate[] memory) {
+    )
+        external
+        view
+        validateCallFromEndpoint
+        applicantExists(inputAddress)
+        returns (Certificate[] memory)
+    {
         return _certsByApplicant[inputAddress];
+    }
+
+    function isCertificateExists(
+        uint256 id
+    ) external view validateCallFromNFTorEndpoint returns (bool) {
+        Certificate storage certificate = _certificates[id];
+        return
+            certificate.id == id &&
+            certificate.issuer != address(0) &&
+            certificate.applicant != address(0);
     }
 
     // TODO(MVP): add CRUD functions

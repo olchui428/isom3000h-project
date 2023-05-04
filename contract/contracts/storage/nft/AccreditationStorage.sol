@@ -97,6 +97,13 @@ contract AccreditationStorage {
         );
         _;
     }
+    /// @dev Makes sure only either NFT or Endpoint contract address can call this function
+    modifier validateCallFromNFTorEndpoint() {
+        require(
+            msg.sender == _accreditationEndpointAddress || msg.sender == _accreditationNFTAddress
+        );
+        _;
+    }
     /// @dev Makes sure the Issuer address exists in IssuerStorage
     modifier issuerExists(address payable inputAddress) {
         require(
@@ -162,7 +169,10 @@ contract AccreditationStorage {
         return true;
     }
 
-    function isAccreditationExists(uint256 id) external view validateCallFromNFT returns (bool) {
-        return _accreditations[id].issuer != address(0);
+    function isAccreditationExists(
+        uint256 id
+    ) external view validateCallFromNFTorEndpoint returns (bool) {
+        Accreditation storage accreditation = _accreditations[id];
+        return accreditation.id == id && accreditation.issuer != address(0);
     }
 }

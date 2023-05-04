@@ -107,7 +107,10 @@ contract AccreditationEndpoint {
     }
 
     modifier isAccreditationExists(uint256 id) {
-        _accreditationNFT.isAccreditationExists(id);
+        require(
+            _accreditationStorage.isAccreditationExists(id),
+            "Accreditation with provided ID does not exist."
+        );
         _;
     }
 
