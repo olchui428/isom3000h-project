@@ -29,49 +29,95 @@ export const generateCertificate = async (
   console.log("Image drawn onto canvas");
 
   // Context settings
-  ctx.font = "400px Comic Sans MS";
-  ctx.fillStyle = "#000000";
   ctx.textAlign = "center";
   ctx.textBaseline = "alphabetic";
 
   // Draw details onto Certificate
 
+  // Nature
+  const accreditationNature = certificateData.accreditation.nature;
+  ctx.font = "70px Times New Roman";
+  ctx.fillStyle = "#666666";
+  ctx.fillText("of " + accreditationNature, 1350, 450);
+  console.log("Nature drawn");
+
   // Accreditation title
   const title = certificateData.accreditation.title;
-  ctx.fillText(title, canvas.width / 2, canvas.height / 2);
+  ctx.font = "100px Times New Roman";
+  ctx.fillStyle = "#000000";
+  ctx.fillText(title, 1150, 600);
+  console.log("Title drawn");
 
-  // TODO
+  ctx.font = "40px Times New Roman";
+  ctx.fillText("Issued by", 1150, 660);
   // Issuer name
+  const issuerName = certificateData.issuer.name;
+  ctx.font = "80px Times New Roman";
+  ctx.fillText(issuerName, 1150, 750);
+  ctx.font = "60px Segoe Script";
+  ctx.fillText(issuerName, 1515, 1200);
+  console.log("Issuer name drawn");
+
+  ctx.font = "40px Times New Roman";
+  ctx.fillText("to", 1150, 800);
   // Applicant name
+  const applicantName = certificateData.applicant.name;
+  ctx.font = "90px Segoe Script";
+  ctx.fillText(applicantName, 1150, 890);
+  console.log("Applicant name drawn");
+
+  ctx.font = "40px Times New Roman";
+  ctx.fillText("with", 1150, 950);
   // Level
-  // Nature
-  // Duration
+  const certLevel = certificateData.certificate.level;
+  ctx.font = "70px Times New Roman";
+  ctx.fillText(certLevel, 1150, 1030);
+  console.log("Level drawn");
+
+  // // Duration
+  // const accreditationDuration = certificateData.accreditation.duration;
+  // if (!accreditationDuration.eq(0)) {
+  //   // TODO: format number into correct time
+  //   ctx.fillText(accreditationDuration.toString(), 1150, 1200);
+  //   console.log("Duration drawn");
+  // }
+
   // Remarks
-  // Event ID
+  const remarks = certificateData.certificate.remarks;
+  ctx.font = "55px Times New Roman";
+  ctx.fillStyle = "#000000";
+  ctx.fillText(`(${remarks})`, 1150, 1100);
+  console.log("Remarks drawn");
+
+  // // Event ID
+  // if (certificateData.certificate.eventId !== "") {
+  //   const eventId = certificateData.certificate.eventId;
+  //   ctx.fillText(eventId, 1150, 1400);
+  //   console.log("EventId drawn");
+  // }
+
   // Issue time
+  const issueTime = certificateData.certificate.createdAt;
+  const issueDate: Date = new Date(issueTime.mul(1000).toNumber());
+  ctx.font = "60px Times New Roman";
+  ctx.fillText(
+    `${issueDate.getFullYear()}-${issueDate.getMonth()}-${issueDate.getDate()}`,
+    860,
+    1210
+  );
+  console.log("Issue time drawn");
+
   // Company logoUrl
   if (certificateData.issuer.logoUrl !== "") {
     const logoUrl = certificateData.issuer.logoUrl;
+    try {
+      const logoImage = await loadImage(logoUrl);
+      ctx.drawImage(logoImage, 200, 820, 400, 400);
+      console.log("Company logo drawn");
+    } catch (error) {
+      console.log("Failed to draw company logo, but can proceed");
+    }
   }
-
-  // For reference: past example
-
-  // ctx.font = '32px "jin"';
-
-  // for (let i = 0; i < id.length; i++) {
-  //   ctx.fillText(id.split("")[i], 840, 240 + 32 * i);
-  // }
-
-  // console.log("ID drawn");
-
-  // ctx.font = '160px "Trebuchet MS"';
-  // ctx.textAlign = "center";
-  // ctx.textBaseline = "alphabetic";
-
-  // ctx.translate(668, 175);
-  // ctx.rotate(Math.PI / 2);
-
-  // ctx.fillText(("0" + quantity.toString()).slice(-2), 0, 0);
 
   console.log("Certificate drawn");
 
