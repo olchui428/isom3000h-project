@@ -19,14 +19,15 @@ const fileFormats = {
 /**
  * This API uses node-canvas to return a rendered image of a certificate
  *
- * Required body data:
- * - exportType
+ * How to call: /api/certificate/[certificateId]?exportType=PNG or JPG
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Parse API input
-  const { certificateId: certIdStr } = req.query as { certificateId: string };
+  const { certificateId: certIdStr, exportType } = req.query as {
+    certificateId: string;
+    exportType: CertificateFormats;
+  };
   const certificateId = parseInt(certIdStr);
-  const exportType: CertificateFormats = req.body?.exportType;
   if (fileFormats[exportType] === undefined) {
     return res.status(400).send("Invalid value for input parameter exportType.");
   }

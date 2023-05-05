@@ -5,9 +5,20 @@ import useMetaMask from "@/hooks/useMetaMask";
 import { CompleteCertStructOutput } from "@/types/typechain-types/contracts/endpoints/CertificateEndpoint";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { Alert, Box, Card, CardContent, Grid, Skeleton, Tooltip, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  Skeleton,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { blue, grey } from "@mui/material/colors";
 import dayjs from "dayjs";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -198,6 +209,11 @@ function CertificateById() {
             </Grid>
             <Grid item xs={10} sx={{ whiteSpace: "pre-wrap" }}>
               {eventId ? eventId : "-"}
+            </Grid>
+            <Grid item xs={10} sx={{ whiteSpace: "pre-wrap" }}>
+              <Link href={`/api/certificate/${certificateId}?exportType=PNG`} target="_blank">
+                <Button>Download Certificate</Button>
+              </Link>
             </Grid>
           </Grid>
         </CardContent>
