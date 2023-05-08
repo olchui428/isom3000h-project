@@ -212,7 +212,7 @@ function CertificateById() {
             </Grid>
             <Grid item xs={10} sx={{ whiteSpace: "pre-wrap" }}>
               <Link href={`/api/certificate/${certificateId}?exportType=PNG`} target="_blank">
-                <Button>Download Certificate</Button>
+                <Button variant="contained">Download Certificate</Button>
               </Link>
             </Grid>
           </Grid>
