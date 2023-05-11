@@ -47,8 +47,6 @@ contract CertificateStorage {
     /// @dev Storage contract for Applicants
     ApplicantStorage private _applicantStorage;
 
-    // TODO(MVP): add Contracts
-
     // ========================= Functions & Modifiers =========================
 
     // -------------------- Setting up contracts --------------------

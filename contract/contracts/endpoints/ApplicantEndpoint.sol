@@ -30,8 +30,6 @@ contract ApplicantEndpoint {
     /// @dev Storage contract for Applicants
     ApplicantStorage private _applicantStorage;
 
-    // TODO(MVP): add Contracts
-
     // ========================= Functions & Modifiers =========================
 
     // -------------------- Setting up contracts --------------------
@@ -60,6 +58,4 @@ contract ApplicantEndpoint {
     ) external view returns (Applicant memory) {
         return _applicantStorage.getApplicantByAddress(applicantAddress);
     }
-
-    // TODO(Good to have): add endpoint functions
 }

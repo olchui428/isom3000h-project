@@ -23,8 +23,6 @@ contract ApplicantStorage {
     /// @dev Address of deployed CertificateEndpoint contract
     address private _certificateEndpointAddress;
 
-    // TODO(MVP): add addresses
-
     // -------------------- Variables --------------------
 
     /// @dev Get Applicant by Applicant address
@@ -32,10 +30,6 @@ contract ApplicantStorage {
 
     /// @dev Get Applicant[] by Issuer address
     mapping(address => Applicant[]) private _appliByIssuer;
-
-    // -------------------- Contracts --------------------
-
-    // TODO(MVP): add Contracts
 
     // ========================= Functions & Modifiers =========================
 
@@ -64,7 +58,6 @@ contract ApplicantStorage {
         _certificateStorageAddress = certificateStorageAddress;
         _applicantEndpointAddress = applicantEndpointAddress;
         _certificateEndpointAddress = certificateEndpointAddress;
-        // TODO(MVP): add required addresses
     }
 
     // -------------------- Functions --------------------
@@ -134,6 +127,4 @@ contract ApplicantStorage {
     ) external view validateCallFromCertificateStorage returns (bool) {
         return _applicants[inputAddress].applicantAddress == inputAddress;
     }
-
-    // TODO(MVP): add CRUD functions
 }

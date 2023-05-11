@@ -65,8 +65,6 @@ contract CertificateEndpoint {
     /// @dev NFT contract for Certificates
     CertificateNFT private _certificateNFT;
 
-    // TODO(MVP): add Contracts
-
     // ========================= Functions & Modifiers =========================
 
     // -------------------- Setting up contracts --------------------
@@ -101,8 +99,6 @@ contract CertificateEndpoint {
     }
 
     // -------------------- Functions --------------------
-
-    // TODO(MVP): issueCertificate modifier
 
     function issueCertificate(
         address payable applicantAddress,
@@ -163,6 +159,4 @@ contract CertificateEndpoint {
         Issuer memory issuer = _issuerStorage.getIssuerByAddress(certificate.issuer);
         return CompleteCert(issuer, applicant, accreditation, certificate);
     }
-
-    // TODO(Good to have): add endpoint functions
 }

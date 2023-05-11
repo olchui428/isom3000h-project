@@ -83,7 +83,6 @@ function AccreditationById() {
       ? "No expire date"
       : dayjs().add(duration, "second").format("YYYY-MM-DD h:mm:ss A");
 
-  // TODO: add toggle to display all certificates of this accreditation, need call endpoint
   return (
     <Layout title={`Accreditation #${accreditationId}`}>
       <Card sx={{ width: "100%" }}>

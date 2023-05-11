@@ -38,8 +38,6 @@ contract IssuerEndpoint {
     // /// @dev Storage contract for Applicants
     // ApplicantStorage applicantStorage;
 
-    // TODO(MVP): add Contracts
-
     // ========================= Functions & Modifiers =========================
 
     // -------------------- Setting up contracts --------------------
@@ -77,6 +75,4 @@ contract IssuerEndpoint {
     ) external view returns (Issuer memory) {
         return _issuerStorage.getIssuerByAddress(issuerAddress);
     }
-
-    // TODO(Good to have): add endpoint functions
 }

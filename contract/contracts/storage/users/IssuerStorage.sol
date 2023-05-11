@@ -66,12 +66,9 @@ contract IssuerStorage {
         _certificateStorageAddress = certificateStorageAddress;
         _issuerEndpointAddress = issuerEndpointAddress;
         _certificateEndpointAddress = certificateEndpointAddress;
-        // TODO(MVP): add required addresses
     }
 
     // -------------------- Functions --------------------
-
-    // TODO(MVP): add CRUD functions
 
     /// @dev Verify the address does not exist in the `_issuers` mapping
     /// @dev This is equivalent to checking if all the fields of the obtained mapping object have 0-values
