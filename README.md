@@ -22,6 +22,12 @@ The specific objectives are as follows:
 
 Note that all Certificates and Accreditations issued are public (obviously because it's on a blockchain, duh).
 
+## UI Screenshots
+
+![home page](https://github.com/olchui428/isom3000h-project/assets/57580593/9402a309-aa09-4d9d-8861-632c556d9d3e)
+
+![issuer details](https://github.com/olchui428/isom3000h-project/assets/57580593/2410b10b-d443-40ba-b803-f058bd877c9f)
+
 ## Terminology
 
 This accreditation system is rather complex for a beginner, and many terms seemingly convey similar concepts. As such, the terminology used in this project shall be explained in this section:
@@ -147,10 +153,9 @@ The deliverables include a set of presentation slides, a group presentation wher
 ## Repository structure
 
 - [`README.md`](README.md): documentation for this course project
-- [`.github.yml`](.github.yml): deployment scripts on GitHub (only to be added if time allows)
 - [`contract/`](contract): directory that stores a hardhat project with smart contracts written in Solidity
   - [`contracts/`](contract/contracts): directory that stores a Solidity smart contract source files
-    - [`types/`](contract/contracts/types): directory that stores Soldity types used in the project
+    - [`types/`](contract/contracts/types): directory that stores Solidity types used in the project
       - <TODO: add descriptions>
     - [`storage/`](contract/contracts/storage): directory that stores storage contracts
       - <TODO: add descriptions>
@@ -271,10 +276,8 @@ The deliverables include a set of presentation slides, a group presentation wher
 - ["Test" RPC endpoint](https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78)
 - ["Test" block explorer UI](https://mumbai.polygonscan.com)
 
-## Reference
+## References
 
 - [ISOM3000H Tutorial Documentation](https://docs.msbd5017.etdchain.net)
 - [ISOM3000H Lab Demo Repo (lottery system front-end)](https://github.com/sirily11/lottery-system-frontend)
 - [ISOM3000H Lab Demo Repo (voting system)](https://github.com/etherdata-blockchain/simple-voting-system)
-
-## This is the end of documentation for ISOM3000H Group Project
