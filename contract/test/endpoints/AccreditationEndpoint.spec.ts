@@ -5,18 +5,7 @@ import { deployTest } from "../deploy";
 
 const CONTRACT_NAME = "AccreditationEndpoint";
 
-const ISSUER_STORAGE = "IssuerStorage";
-const APPLICANT_STORAGE = "ApplicantStorage";
-const ACCREDITATION_STORAGE = "AccreditationStorage";
-const CERTIFICATE_STORAGE = "CertificateStorage";
-const ACCREDITATION_NFT = "AccreditationNFT";
-const CERTIFICATE_NFT = "CertificateNFT";
-const ISSUER_ENDPOINT = "IssuerEndpoint";
-const APPLICANT_ENDPOINT = "ApplicantEndpoint";
-const ACCREDITATION_ENDPOINT = "AccreditationEndpoint";
-const CERTIFICATE_ENDPOINT = "CertificateEndpoint";
-
-describe.only(`Given ${CONTRACT_NAME}`, async () => {
+describe(`Given ${CONTRACT_NAME}`, async () => {
 
   it("Should raise error if not using Issuer address (launchAccreditation)", async () => {
     // ========== Deploy ==========
