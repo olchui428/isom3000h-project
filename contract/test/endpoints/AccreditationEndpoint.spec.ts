@@ -33,7 +33,7 @@ describe(`Given ${CONTRACT_NAME}`, async () => {
       description: "It is a tough exam.",
     };
 
-    // Create Issuer
+    // Register Issuer
     const txIssuer = await issuerEndpoint.registerIssuer(
       _issuer.name,
       _issuer.description,
@@ -41,7 +41,7 @@ describe(`Given ${CONTRACT_NAME}`, async () => {
     );
     txIssuer.wait();
 
-    // Assertion: Create Accreditation
+    // Assertion: Launch Accreditation
     await expect(
       accreditationEndpoint
         .connect(otherAddress)
@@ -81,7 +81,7 @@ describe(`Given ${CONTRACT_NAME}`, async () => {
       description: "It is a tough exam.",
     };
 
-    // Create Issuer
+    // Register Issuer
     const txIssuer = await issuerEndpoint.registerIssuer(
       _issuer.name,
       _issuer.description,
@@ -89,7 +89,7 @@ describe(`Given ${CONTRACT_NAME}`, async () => {
     );
     txIssuer.wait();
 
-    // Assertion: Create Accreditation
+    // Assertion: Launch Accreditation
     await expect(
       accreditationEndpoint.launchAccreditation(
         "",
@@ -101,7 +101,7 @@ describe(`Given ${CONTRACT_NAME}`, async () => {
     ).to.revertedWith("Title should not be empty.");
   });
 
-  it("Should raise error if get by invalid id (getAccreditationById)", async () => {
+  it("Should raise error if get by invalid Accreditation id (getAccreditationById)", async () => {
     // ========== Deploy ==========
 
     const [owner, otherAddress, ...rest] = await ethers.getSigners();
@@ -127,7 +127,7 @@ describe(`Given ${CONTRACT_NAME}`, async () => {
       description: "It is a tough exam.",
     };
 
-    // Create Issuer
+    // Register Issuer
     const txIssuer = await issuerEndpoint.registerIssuer(
       _issuer.name,
       _issuer.description,
@@ -135,7 +135,7 @@ describe(`Given ${CONTRACT_NAME}`, async () => {
     );
     txIssuer.wait();
 
-    // Create Accreditation
+    // Launch Accreditation
     const txAccred = await accreditationEndpoint.launchAccreditation(
       _accreditation.title,
       _accreditation.createdAt,
@@ -182,7 +182,7 @@ describe(`Given ${CONTRACT_NAME}`, async () => {
       description: "It is a tough exam.",
     };
 
-    // Create Issuer
+    // Register Issuer
     const txIssuer = await issuerEndpoint.registerIssuer(
       _issuer.name,
       _issuer.description,
@@ -190,7 +190,7 @@ describe(`Given ${CONTRACT_NAME}`, async () => {
     );
     txIssuer.wait();
 
-    // Create Accreditation
+    // Launch Accreditation
     const txAccred = await accreditationEndpoint.launchAccreditation(
       _accreditation.title,
       _accreditation.createdAt,
@@ -248,7 +248,7 @@ describe(`Given ${CONTRACT_NAME}`, async () => {
       description: "It is a tough exam.",
     };
 
-    // Create Issuer
+    // Register Issuer
     const txIssuer = await issuerEndpoint.registerIssuer(
       _issuer.name,
       _issuer.description,
@@ -256,7 +256,7 @@ describe(`Given ${CONTRACT_NAME}`, async () => {
     );
     txIssuer.wait();
 
-    // Create Accreditation
+    // Launch Accreditation
     const txAccred = await accreditationEndpoint.launchAccreditation(
       _accreditation.title,
       _accreditation.createdAt,
