@@ -57,12 +57,10 @@ The directory for this subsection is [`contracts/`](contract/contracts).
 
 Types are defined in and imported from the [`contracts/types/`](contract/contracts/types) directory. 4 types are defined and used both internally, between contracts, and externally:
 
-<TODO: add descriptions for each types>
-
-- [`Certificate`](contract/contracts/types/nft/Certificate.sol):
-- [`Accreditation`](contract/contracts/types/nft/Accreditation.sol):
-- [`Issuer`](contract/contracts/types/users/Issuer.sol):
-- [`Applicant`](contract/contracts/types/users/Applicant.sol):
+- [`Certificate`](contract/contracts/types/nft/Certificate.sol)
+- [`Accreditation`](contract/contracts/types/nft/Accreditation.sol)
+- [`Issuer`](contract/contracts/types/users/Issuer.sol)
+- [`Applicant`](contract/contracts/types/users/Applicant.sol)
 
 An additional type [`CompleteCert`](contract/contracts/types/CompleteCert.sol) has been implemented to facilitate end users to obtain complete Certificate information, along with the corresponding Accreditation info. Note that this type is only used to return data to end users, and is not used within Contracts.
 
@@ -105,7 +103,7 @@ To clearly segregate the responsibilities of each Contract, each Contract should
 
 After writing the smart Contracts, the Contracts can be compiled to EVM bytecode using the command `npm start`. The unit test command `npm test`, coverage command `npm run coverage` and deployment command `npm run deploy:<insert environment>` will also compile the Contracts before performing the corresponding tasks.
 
-After compilation, 3 directories `artifacts/`, `cache/` and `typechain-types/` will be automatically generated. Do not manually modify these files.
+After compilation, 3 directories `contract/artifacts/`, `contract/cache/` and `frontend/src/types/typechain-types/` will be automatically generated. Do not manually modify these files.
 
 #### Part 1.2: Unit Testing with TypeScript
 
@@ -140,10 +138,6 @@ The command `npm run clean` can be used to clean up all generated files.
 
 ### Part 2: Front-end Interaction
 
-<TODO: add description>
-
-<!-- This project uses the programming language Python, due to its widespread popularity and collection of powerful open-source packages. Python libraries such as `numpy`, `pandas` and `scikit-learn` are utilized to perform data preprocessing, model training, prediction and evaluation. -->
-
 This Next.js project with TypeScript is initialized with the command `npx create-next-app@latest`.
 
 ### Part 3: Final Group Presentation
@@ -172,25 +166,20 @@ The deliverables include a set of presentation slides, a group presentation wher
 - [`frontend/`](frontend): directory that stores a Next.js project containing a simple UI to interact with deployed contracts from [`contract/`](contract) directory
   - [`src/`](frontend/src): directory that stores source code for the project
     - [`pages/`](frontend/src/pages): directory that stores pages available in this Next.js app
-      - <TODO: add description about different .tsx files and API for cert>
     - [`blockchain`](frontend/src/blockchain): directory that stores config data related to blockchain network and smart contract
       - [`abi/`](frontend/src/blockchain/abi): directory that stores abi files copied from [`contract/`](contract)
-        - <TODO: add description about abi JSON files>
       - [`contracts.config.ts`](frontend/src/blockchain/contracts.config.ts): stores blockchain name, RPC, deployed contract addresses
     - [`types`](frontend/src/types): directory that stores types used in front-end
       - [`global.d.ts`](frontend/src/types/global.d.ts): defines ethereum in Window interface
       - [`index.ts`](frontend/src/types/index.ts): defines types and enums used in the project
-  - `.env.local`: stores sensitive environment variables (not committed to GitHub)
-    - Copy from [`.env.local.example`](frontend/.env.local.example) and add variable values
 - [`presentation/`](presentation): directory that stores presentation slides & supplementary materials (if any) for the presentation, as well as the final report
-  - <TODO: add when presentation slides are finalized>
 
 ## Instructions
 
-1. Install dependencies:
+1. Install dependencies and other setup scripts:
 
    ```bash
-   cd contract && npm install
+   cd contract && npm install && npm start
    cd ../frontend && npm install
    ```
 
@@ -271,10 +260,9 @@ The deliverables include a set of presentation slides, a group presentation wher
       - `local`: Ganache UI
 
 3. In [`frontend/`](frontend):
-   1. In `.env.local`, add <TODO: add variables if any>
-   2. Fill in the blockchain network and deployed contract information in [`contracts.config.ts`](frontend/src/blockchain/contracts.config.ts)
-   3. Copy the abi JSON files from `contract/artitacts/contracts/*`
-   4. Start the frontend by the command `npm run dev` or `npm start` and go to the [dev URL](http://localhost:3000)
+   1. Fill in the blockchain network and deployed contract information in [`contracts.config.ts`](frontend/src/blockchain/contracts.config.ts)
+   2. Copy the abi JSON files from `contract/artitacts/contracts/*`
+   3. Start the frontend by the command `npm run dev` or `npm start` and go to the [dev URL](http://localhost:3000)
 
 ## Useful URLs
 
