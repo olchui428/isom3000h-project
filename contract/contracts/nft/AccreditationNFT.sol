@@ -58,7 +58,7 @@ contract AccreditationNFT is ERC721 {
 
     /// @dev Makes sure only the deployer address can call this function
     modifier onlyDeployer() {
-        require(msg.sender == _deployerAddress);
+        require(msg.sender == _deployerAddress, "Caller is not the deployer.");
         _;
     }
     /// @dev Makes sure the function `setAddresses()` can only be called once
@@ -79,7 +79,10 @@ contract AccreditationNFT is ERC721 {
     // -------------------- Functions --------------------
 
     modifier validateCallFromEndpoint() {
-        require(msg.sender == _accreditationEndpointAddress);
+        require(
+            msg.sender == _accreditationEndpointAddress,
+            "Call is not initiated from Endpoint."
+        );
         _;
     }
 

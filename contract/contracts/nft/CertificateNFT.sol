@@ -71,7 +71,7 @@ contract CertificateNFT is ERC721 {
     }
 
     modifier onlyDeployer() {
-        require(msg.sender == _deployerAddress);
+        require(msg.sender == _deployerAddress, "Caller is not the deployer.");
         _;
     }
     modifier addressesHaveNotBeenInitialized() {
@@ -90,7 +90,7 @@ contract CertificateNFT is ERC721 {
     // -------------------- Functions --------------------
 
     modifier validateCallFromEndpoint() {
-        require(msg.sender == _certificateEndpointAddress);
+        require(msg.sender == _certificateEndpointAddress, "Call is not initiated from Endpoint.");
         _;
     }
 
@@ -128,9 +128,11 @@ contract CertificateNFT is ERC721 {
     function isCertificateValid(uint256 id) external view validateCallFromEndpoint returns (bool) {
         return
             _exists(id) &&
-            _certificateStorage.isCertificateExists(id) &&
-            ownerOf(id) == _certificateStorage.getCertificateById(id).applicant &&
-            !_certificateStorage.getCertificateById(id).isRevoked;
+            _certificateStorage.isCertificateExists(id);
+            // &&
+            // ownerOf(id) == _certificateStorage.getCertificateById(id).applicant;
+            //  &&
+            // !_certificateStorage.getCertificateById(id).isRevoked;
     }
 
     // // TODO(Good to have): add validation before burning
@@ -143,49 +145,3 @@ contract CertificateNFT is ERC721 {
     //     _burn(certId);
     // }
 }
-
-// import "./types/Certificate.sol";
-// import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-// import "@openzeppelin/contracts/utils/Counters.sol";
-// import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-
-// contract Accreditation is ReentrancyGuard {
-//     using Counters for Counters.Counter;
-
-//     // ------ Variables
-
-//     Counters.Counter private _certIds;
-//     mapping(uint256 => Certificate) private certificates;
-
-//     // ------ Methods
-
-//     function createCertificate(address _nftAddress) public payable {
-//         _certIds.increment();
-//         uint256 certId = _certIds.current();
-
-//         // Make new certificate object and add to storage (mapping)
-//         // certificates[certId] = Certificate({
-//         //     certId: certId,
-//         //     issuer: payable(msg.sender),
-//         //     applicant: payable(address(0)), // Create new NFT
-//         //     nftAddress: _nftAddress,
-//         //     isTransfered: false,
-//         //     createdAt: block.timestamp
-//         // });
-//     }
-
-//     function transferCertificate(uint256 _certId, address _applicantAddr) public payable {
-//         // Find the certificate from mapping of 'certificates' using _certId
-//         // Transfer the ownership of that certificate from issuer to applicant
-//         // Update this certificate's information in local storage (mapping) about the transferred ownership
-//     }
-
-//     function verifyCertificate(uint256 _ownerAddress, address _nftAddress) public returns (bool) {
-//         // Find the certificate from mapping of 'certificates' using _nftAddress
-//         // Check whether this certificate is transferred to/ has an applicant that matches _ownerAddress
-//     }
-
-//     function viewCertificate(uint256 _applicantAddress) public view returns (Certificate[] memory) {
-//         // Find all certificates with applicant that matches the _applicantAddress
-//     }
-// }

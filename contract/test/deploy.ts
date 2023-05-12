@@ -36,7 +36,7 @@ const createLog = (logStr: any) => {
  * @param deployArgs (Optional) Array of Contract addresses. Only required if the Contract requires other Contract addresses to deploy.
  * @returns A deployed Contract object
  */
-const deployContract = async (
+export const deployContract = async (
   contractName: string,
   deployArgs: string[] = []
 ): Promise<Contract> => {
@@ -65,7 +65,7 @@ const deployContract = async (
  * @param contract Contract to add addresses to
  * @param addresses Array of deployed Contract addresses to add to `contract`
  */
-const setContractAddresses = async (
+export const setContractAddresses = async (
   contractName: string,
   contract: Contract,
   addresses: string[]
@@ -147,5 +147,16 @@ export const deployTest = async () => {
 
   createLog(`\nDeployment success at ${new Date().toUTCString()}!`);
 
-  return { issuerEndpoint, applicantEndpoint, accreditationEndpoint, certificateEndpoint };
+  return {
+    issuerEndpoint,
+    applicantEndpoint,
+    accreditationEndpoint,
+    certificateEndpoint,
+    accreditationNFT,
+    certificateNFT,
+    issuerStorage,
+    applicantStorage,
+    accreditationStorage,
+    certificateStorage,
+  };
 };
