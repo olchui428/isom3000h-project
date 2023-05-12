@@ -1,48 +1,145 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { deployContract, deployTest, setContractAddresses } from "../../deploy";
 
 const CONTRACT_NAME = "ApplicantStorage";
 
 describe(`Given ${CONTRACT_NAME}`, () => {
-  it("Should test registerApplicant, isApplicantExists, getApplicantByAddress", async () => {
-    const [owner, otherAddress, ...rest] = await ethers.getSigners();
+  it("Should raise error if not called by ApplicantEndpoint (createApplicant)", async () => {
+    // ========== Deploy ==========
 
-    // Deploy ApplicantStorage Smart Contract
-    const Contract = await ethers.getContractFactory(CONTRACT_NAME);
-    const contract = await Contract.deploy();
-    await contract.deployed();
+    const [owner, applicantAcct, ...rest] = await ethers.getSigners();
+    const {
+      issuerEndpoint,
+      issuerStorage,
+      applicantStorage,
+      applicantEndpoint,
+      accreditationEndpoint,
+      certificateEndpoint,
+    } = await deployTest();
 
-    // Deploy ApplicantEndpoint Smart Contract
-    const ApplicantEndpoint = await ethers.getContractFactory("ApplicantEndpoint");
-    const applicantEndpoint = await ApplicantEndpoint.deploy(contract.address);
-    await applicantEndpoint.deployed();
+    // ========== Testing ==========
 
-    // Set Addresses
-    await contract.setAddresses(applicantEndpoint.address, applicantEndpoint.address);
-
-    // Create applicant
+    // Testing variables
+    const _issuer = {
+      name: "ABC Company",
+      description: "It is a good company",
+      logoUrl: "https://picsum.photos/200/300",
+      issuerAddress: owner.address,
+    };
     const _applicant = {
       name: "Owen Lee",
-      applicantAddress: owner.address,
+      applicantAddress: applicantAcct.address,
     };
 
     // Register applicant
-    console.log("Using address ", _applicant.applicantAddress);
-    await contract.createApplicant(_applicant.applicantAddress, _applicant.name);
-    console.log("Registered applicant with ", _applicant);
+    await expect(
+      applicantStorage.createApplicant(_applicant.applicantAddress, _applicant.name)
+    ).to.be.revertedWith("Call is not initiated from Endpoint.");
+  });
 
-    // Checking if applicant exists in Storage
-    const exists = await contract.isApplicantExists(_applicant.applicantAddress);
-    console.log("Checking if applicant exists: ", exists);
+  it("Should raise error if not new applicant (createApplicant)", async () => {
+    // ========== Deploy ==========
 
-    // Getting applicant
-    const applicant = await contract
-      .connect(applicantEndpoint.address)
-      .getApplicantByAddress(_applicant.applicantAddress);
-    console.log(`Get applicant by address (${_applicant.applicantAddress}): ${applicant}`);
+    const [owner, applicantAcct, ...rest] = await ethers.getSigners();
+    const {
+      issuerEndpoint,
+      issuerStorage,
+      applicantStorage,
+      applicantEndpoint,
+      accreditationEndpoint,
+      certificateEndpoint,
+    } = await deployTest();
 
-    // Assertions
-    expect(applicant.name).to.equal(_applicant.name);
-    expect(applicant.applicantAddress).to.equal(_applicant.applicantAddress);
+    // ========== Testing ==========
+
+    // Testing variables
+    const _issuer = {
+      name: "ABC Company",
+      description: "It is a good company",
+      logoUrl: "https://picsum.photos/200/300",
+      issuerAddress: owner.address,
+    };
+    const _applicant = {
+      name: "Owen Lee",
+      applicantAddress: applicantAcct.address,
+    };
+
+    // Register applicant
+    await applicantEndpoint.connect(applicantAcct).registerApplicant(_applicant.name);
+
+    await expect(
+      applicantEndpoint.connect(applicantAcct).registerApplicant(_applicant.name)
+    ).to.be.revertedWith("This address has already been registered as an Applicant.");
+  });
+
+  it("Should raise error if not called by Endpoints (getApplicantByAddress)", async () => {
+    // ========== Deploy ==========
+
+    const [owner, applicantAcct, ...rest] = await ethers.getSigners();
+    const {
+      issuerEndpoint,
+      issuerStorage,
+      applicantStorage,
+      applicantEndpoint,
+      accreditationEndpoint,
+      certificateEndpoint,
+    } = await deployTest();
+
+    // ========== Testing ==========
+
+    // Testing variables
+    const _issuer = {
+      name: "ABC Company",
+      description: "It is a good company",
+      logoUrl: "https://picsum.photos/200/300",
+      issuerAddress: owner.address,
+    };
+    const _applicant = {
+      name: "Owen Lee",
+      applicantAddress: applicantAcct.address,
+    };
+
+    // Register applicant
+    await applicantEndpoint.connect(applicantAcct).registerApplicant(_applicant.name);
+
+    await expect(
+      applicantStorage.getApplicantByAddress(_applicant.applicantAddress)
+    ).to.be.revertedWith("Call is not initiated from Endpoint.");
+  });
+
+  it("Should raise error if not called by Storage (isApplicantExists)", async () => {
+    // ========== Deploy ==========
+
+    const [owner, applicantAcct, ...rest] = await ethers.getSigners();
+    const {
+      issuerEndpoint,
+      issuerStorage,
+      applicantStorage,
+      applicantEndpoint,
+      accreditationEndpoint,
+      certificateEndpoint,
+    } = await deployTest();
+
+    // ========== Testing ==========
+
+    // Testing variables
+    const _issuer = {
+      name: "ABC Company",
+      description: "It is a good company",
+      logoUrl: "https://picsum.photos/200/300",
+      issuerAddress: owner.address,
+    };
+    const _applicant = {
+      name: "Owen Lee",
+      applicantAddress: applicantAcct.address,
+    };
+
+    // Register applicant
+    await applicantEndpoint.connect(applicantAcct).registerApplicant(_applicant.name);
+
+    await expect(
+      applicantStorage.isApplicantExists(_applicant.applicantAddress)
+    ).to.be.revertedWith("Unauthorized function call.");
   });
 });
