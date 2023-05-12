@@ -1,56 +1,42 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { Contract, utils } from "ethers";
+import { deployTest } from "../deploy";
 
 const CONTRACT_NAME = "IssuerEndpoint";
 
 describe(`Given ${CONTRACT_NAME}`, () => {
   it("Should store and retrieve issuer (registerIssuer, getIssuerByAddress)", async () => {
+    // ========== Deploy ==========
+
     const [owner, otherAddress, ...rest] = await ethers.getSigners();
+    const { issuerEndpoint, applicantEndpoint, accreditationEndpoint, certificateEndpoint } =
+      await deployTest();
 
-    // Deploy IssuerStorage
-    const IssuerStorage = await ethers.getContractFactory("IssuerStorage");
-    const issuerStorage = await IssuerStorage.deploy();
-    await issuerStorage.deployed();
+    // ========== Testing ==========
 
-    // Deploy AccreditationStorage
-    const AccreditationStorage = await ethers.getContractFactory("AccreditationStorage");
-    const accreditationStorage = await AccreditationStorage.deploy(issuerStorage.address);
-    await accreditationStorage.deployed();
-
-    // Deploy IssuerEndpoint
-    const IssuerEndpoint = await ethers.getContractFactory("IssuerEndpoint");
-    const issuerEndpoint = await IssuerEndpoint.deploy(issuerStorage.address);
-    await issuerEndpoint.deployed();
-
-    // Create issuer
+    // Testing variables
     const _issuer = {
       name: "ABC Company",
       description: "It is a good company",
       logoUrl: "https://picsum.photos/200/300",
-      issuerAddress: otherAddress.address,
+      issuerAddress: owner.address,
     };
 
-    await issuerStorage.setAddresses(
-      accreditationStorage.address,
-      issuerEndpoint.address,
-      issuerEndpoint.address // should be certificate endpoint address but whatever
-    );
-
     const tx = await issuerEndpoint
-      .connect(otherAddress)
+      .connect(owner)
       .registerIssuer(_issuer.name, _issuer.description, _issuer.logoUrl);
     const receipt = await tx.wait();
-    const abiData = receipt.logs[0].data;
-
-    const decodedAbi = ethers.utils.defaultAbiCoder.decode(
+    const [issuerAddress, name, description, logoUrl] = utils.defaultAbiCoder.decode(
       ["address", "string", "string", "string", "uint256"],
-      abiData
+      receipt.logs[0].data
     );
-
-    expect(decodedAbi[0]).to.equal(_issuer.issuerAddress);
-    expect(decodedAbi[1]).to.equal(_issuer.name);
-    expect(decodedAbi[2]).to.equal(_issuer.description);
-    expect(decodedAbi[3]).to.equal(_issuer.logoUrl);
+    
+    // Assertions
+    expect(issuerAddress).to.equal(_issuer.issuerAddress);
+    expect(name).to.equal(_issuer.name);
+    expect(description).to.equal(_issuer.description);
+    expect(logoUrl).to.equal(_issuer.logoUrl);
 
     // Getting issuer
     const issuer = await issuerEndpoint.getIssuerByAddress(_issuer.issuerAddress);
