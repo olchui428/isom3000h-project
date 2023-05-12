@@ -153,7 +153,7 @@ contract CertificateEndpoint {
     function getCompleteCertById(uint256 id) external view returns (CompleteCert memory) {
         Certificate memory certificate = _certificateStorage.getCertificateById(id);
         Accreditation memory accreditation = _accreditationStorage.getAccreditationById(
-            certificate.id
+            certificate.accreditationId
         );
         Applicant memory applicant = _applicantStorage.getApplicantByAddress(certificate.applicant);
         Issuer memory issuer = _issuerStorage.getIssuerByAddress(certificate.issuer);

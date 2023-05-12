@@ -1,35 +1,26 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { Contract, utils } from "ethers";
+import { deployContract, deployTest, setContractAddresses } from "../../deploy";
 
 const CONTRACT_NAME = "IssuerStorage";
 
 describe(`Given ${CONTRACT_NAME}`, async () => {
-  it("Should test registerIssuer, getIssuerByAddress, isExistingIssuer", async () => {
+  it("Should raise error if not called by IssuerEndpoint (createIssuer)", async () => {
+    // ========== Deploy ==========
+
     const [owner, otherAddress, ...rest] = await ethers.getSigners();
+    const {
+      issuerEndpoint,
+      issuerStorage,
+      applicantEndpoint,
+      accreditationEndpoint,
+      certificateEndpoint,
+    } = await deployTest();
 
-    // Deploy IssuerStorage Smart Contract
-    const Contract = await ethers.getContractFactory(CONTRACT_NAME);
-    const contract = await Contract.deploy();
-    await contract.deployed();
+    // ========== Testing ==========
 
-    // Deploy AccreditationStorage Smart Contract
-    const AccreditationStorage = await ethers.getContractFactory("AccreditationStorage");
-    const accreditationStorage = await AccreditationStorage.deploy(contract.address);
-    await accreditationStorage.deployed();
-
-    // Deploy IssuerEndpoint Smart Contract
-    const IssuerEndpoint = await ethers.getContractFactory("IssuerEndpoint");
-    const issuerEndpoint = await IssuerEndpoint.deploy(contract.address);
-    await issuerEndpoint.deployed();
-
-    // Set Addresses
-    await contract.setAddresses(
-      accreditationStorage.address,
-      issuerEndpoint.address,
-      issuerEndpoint.address // Should be certificate endpoint address but whatever
-    );
-
-    // Create issuer
+    // Testing variables
     const _issuer = {
       name: "ABC Company",
       description: "It is a good company",
@@ -38,29 +29,118 @@ describe(`Given ${CONTRACT_NAME}`, async () => {
     };
 
     // Register issuer
-    console.log("Using address ", _issuer.issuerAddress);
-    await contract.createIssuer(
-      _issuer.issuerAddress,
+    await expect(
+      issuerStorage.createIssuer(
+        _issuer.issuerAddress,
+        _issuer.name,
+        _issuer.description,
+        _issuer.logoUrl
+      )
+    ).to.be.revertedWith("Call is not initiated from Endpoint.");
+  });
+
+  it("Should raise error if not new issuer (createIssuer)", async () => {
+    // ========== Deploy ==========
+
+    const [owner, otherAddress, ...rest] = await ethers.getSigners();
+    const {
+      issuerEndpoint,
+      issuerStorage,
+      applicantEndpoint,
+      accreditationEndpoint,
+      certificateEndpoint,
+    } = await deployTest();
+
+    // ========== Testing ==========
+
+    // Testing variables
+    const _issuer = {
+      name: "ABC Company",
+      description: "It is a good company",
+      logoUrl: "https://picsum.photos/200/300",
+      issuerAddress: owner.address,
+    };
+
+    // Register issuer
+    const txIssuer = await issuerEndpoint.registerIssuer(
       _issuer.name,
       _issuer.description,
       _issuer.logoUrl
     );
-    console.log("Registered issuer with ", _issuer);
+    txIssuer.wait();
 
-    // Checking if issuer exists in Storage
-    const exists = await contract.isIssuerExists(_issuer.issuerAddress);
-    console.log("Checking if issuer exists: ", exists);
+    await expect(
+      issuerEndpoint.registerIssuer(_issuer.name, _issuer.description, _issuer.logoUrl)
+    ).to.be.revertedWith("This address has already been registered as an Issuer.");
+  });
 
-    // Getting issuer
-    const issuer = await contract
-      .connect(issuerEndpoint.address)
-      .getIssuerByAddress(_issuer.issuerAddress);
-    console.log(`Get issuer by address (${_issuer.issuerAddress}): ${issuer}`);
+  it("Should raise error if not called by Endpoints (getIssuerByAddress)", async () => {
+    // ========== Deploy ==========
 
-    // Assertions
-    expect(issuer.name).to.equal(_issuer.name);
-    expect(issuer.description).to.equal(_issuer.description);
-    expect(issuer.logoUrl).to.equal(_issuer.logoUrl);
-    expect(issuer.issuerAddress).to.equal(_issuer.issuerAddress);
+    const [owner, otherAddress, ...rest] = await ethers.getSigners();
+    const {
+      issuerEndpoint,
+      issuerStorage,
+      applicantEndpoint,
+      accreditationEndpoint,
+      certificateEndpoint,
+    } = await deployTest();
+
+    // ========== Testing ==========
+
+    // Testing variables
+    const _issuer = {
+      name: "ABC Company",
+      description: "It is a good company",
+      logoUrl: "https://picsum.photos/200/300",
+      issuerAddress: owner.address,
+    };
+
+    // Register issuer
+    const txIssuer = await issuerEndpoint.registerIssuer(
+      _issuer.name,
+      _issuer.description,
+      _issuer.logoUrl
+    );
+    txIssuer.wait();
+
+    await expect(issuerStorage.getIssuerByAddress(_issuer.issuerAddress)).to.be.revertedWith(
+      "Call is not initiated from Endpoint."
+    );
+  });
+
+  it("Should raise error if not called by Storage (isIssuerExists)", async () => {
+    // ========== Deploy ==========
+
+    const [owner, otherAddress, ...rest] = await ethers.getSigners();
+    const {
+      issuerEndpoint,
+      issuerStorage,
+      applicantEndpoint,
+      accreditationEndpoint,
+      certificateEndpoint,
+    } = await deployTest();
+
+    // ========== Testing ==========
+
+    // Testing variables
+    const _issuer = {
+      name: "ABC Company",
+      description: "It is a good company",
+      logoUrl: "https://picsum.photos/200/300",
+      issuerAddress: owner.address,
+    };
+
+    // Register issuer
+    const txIssuer = await issuerEndpoint.registerIssuer(
+      _issuer.name,
+      _issuer.description,
+      _issuer.logoUrl
+    );
+    txIssuer.wait();
+
+    await expect(issuerStorage.isIssuerExists(_issuer.issuerAddress)).to.be.revertedWith(
+      "Unauthorized function call."
+    );
   });
 });

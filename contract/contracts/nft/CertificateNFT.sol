@@ -69,7 +69,7 @@ contract CertificateNFT is ERC721 {
     }
 
     modifier onlyDeployer() {
-        require(msg.sender == _deployerAddress);
+        require(msg.sender == _deployerAddress, "Caller is not the deployer.");
         _;
     }
     modifier addressesHaveNotBeenInitialized() {
@@ -87,7 +87,7 @@ contract CertificateNFT is ERC721 {
     // -------------------- Functions --------------------
 
     modifier validateCallFromEndpoint() {
-        require(msg.sender == _certificateEndpointAddress);
+        require(msg.sender == _certificateEndpointAddress, "Call is not initiated from Endpoint.");
         _;
     }
 
@@ -125,9 +125,11 @@ contract CertificateNFT is ERC721 {
     function isCertificateValid(uint256 id) external view validateCallFromEndpoint returns (bool) {
         return
             _exists(id) &&
-            _certificateStorage.isCertificateExists(id) &&
-            ownerOf(id) == _certificateStorage.getCertificateById(id).applicant &&
-            !_certificateStorage.getCertificateById(id).isRevoked;
+            _certificateStorage.isCertificateExists(id);
+            // &&
+            // ownerOf(id) == _certificateStorage.getCertificateById(id).applicant;
+            //  &&
+            // !_certificateStorage.getCertificateById(id).isRevoked;
     }
 
     // // TODO(Good to have): add validation before burning

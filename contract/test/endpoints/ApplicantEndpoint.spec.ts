@@ -1,25 +1,21 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { Contract, utils } from "ethers";
+import { deployTest } from "../deploy";
 
 const CONTRACT_NAME = "ApplicantEndpoint";
 
 describe(`Given ${CONTRACT_NAME}`, () => {
   it("Should store and retrieve applicant (registerApplicant, getApplicantByAddress)", async () => {
+    // ========== Deploy ==========
+
     const [owner, otherAddress, ...rest] = await ethers.getSigners();
+    const { issuerEndpoint, applicantEndpoint, accreditationEndpoint, certificateEndpoint } =
+      await deployTest();
 
-    // Deploy ApplicantStorage
-    const ApplicantStorage = await ethers.getContractFactory("ApplicantStorage");
-    const applicantStorage = await ApplicantStorage.deploy();
-    await applicantStorage.deployed();
+    // ========== Testing ==========
 
-    // Deploy ApplicantEndpoint
-    const ApplicantEndpoint = await ethers.getContractFactory("ApplicantEndpoint");
-    const applicantEndpoint = await ApplicantEndpoint.deploy(applicantStorage.address);
-    await applicantEndpoint.deployed();
-
-    await applicantStorage.setAddresses(applicantEndpoint.address, applicantEndpoint.address);
-
-    // Create applicant
+    // Testing variables
     const _applicant = {
       name: "Owen Lee",
       applicantAddress: otherAddress.address,
