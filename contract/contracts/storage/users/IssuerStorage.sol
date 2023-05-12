@@ -86,7 +86,7 @@ contract IssuerStorage {
     }
 
     modifier validateFromIssuerEndpoint() {
-        require(msg.sender == _issuerEndpointAddress);
+        require(msg.sender == _issuerEndpointAddress, "Call is not initiated from Endpoint.");
         _;
     }
 
@@ -109,7 +109,10 @@ contract IssuerStorage {
     }
 
     modifier verifyGettingAddress() {
-        require(msg.sender == _issuerEndpointAddress || msg.sender == _certificateEndpointAddress);
+        require(
+            msg.sender == _issuerEndpointAddress || msg.sender == _certificateEndpointAddress,
+            "Call is not initiated from Endpoint."
+        );
         _;
     }
 
@@ -123,7 +126,8 @@ contract IssuerStorage {
 
     modifier validateCallFromAccreditationStorageOrCertificateStorage() {
         require(
-            msg.sender == _accreditationStorageAddress || msg.sender == _certificateStorageAddress
+            msg.sender == _accreditationStorageAddress || msg.sender == _certificateStorageAddress,
+            "Unauthorized function call."
         );
         _;
     }
