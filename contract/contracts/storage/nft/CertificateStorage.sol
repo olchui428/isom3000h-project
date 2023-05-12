@@ -67,7 +67,7 @@ contract CertificateStorage {
     }
 
     modifier onlyDeployer() {
-        require(msg.sender == _deployerAddress);
+        require(msg.sender == _deployerAddress, "Caller is not the deployer.");
         _;
     }
     modifier addressesHaveNotBeenInitialized() {
@@ -88,17 +88,20 @@ contract CertificateStorage {
 
     /// @dev Makes sure only the NFT contract address can call this function
     modifier validateCallFromNFT() {
-        require(msg.sender == _certificateNFTAddress);
+        require(msg.sender == _certificateNFTAddress, "Unauthorized function call.");
         _;
     }
     /// @dev Makes sure only the Endpoint contract address can call this function
     modifier validateCallFromEndpoint() {
-        require(msg.sender == _certificateEndpointAddress);
+        require(msg.sender == _certificateEndpointAddress, "Unauthorized function call.");
         _;
     }
     /// @dev Makes sure only either NFT or Endpoint contract address can call this function
     modifier validateCallFromNFTorEndpoint() {
-        require(msg.sender == _certificateEndpointAddress || msg.sender == _certificateNFTAddress);
+        require(
+            msg.sender == _certificateEndpointAddress || msg.sender == _certificateNFTAddress,
+            "Unauthorized function call."
+        );
         _;
     }
     /// @dev Makes sure the Issuer address exists in IssuerStorage
