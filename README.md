@@ -32,10 +32,10 @@ Note that all Certificates and Accreditations issued are public (obviously becau
 
 This accreditation system is rather complex for a beginner, and many terms seemingly convey similar concepts. As such, the terminology used in this project shall be explained in this section:
 
-- Issuer: An organization that defines and announces Accreditations, and issues Certificates to Applicants
-- Applicant: An individual/entity that applies for an Accreditation and can receive Certificates from Issuers
-- Accreditation: a type of qualification that Applicants can apply for, e.g. public examination such as HKDSE/IB/GCE and product quality standards such as ISO-XXXXX, an NFT is minted with the Issuer as owner
-- Certificate: issued when an Applicant successfully qualifies for an Accreditation, equivalent to certificates issued on paper, e.g. public examination transcript and certificate of a product achieving a quality standard, an NFT is minted with the Applicant as owner
+- **Issuer**: An organization that defines and announces Accreditations, and issues Certificates to Applicants
+- **Applicant**: An individual/entity that applies for an Accreditation and can receive Certificates from Issuers
+- **Accreditation**: a type of qualification that Applicants can apply for, e.g. public examinations such as HKDSE/IB/GCE and product quality standards such as ISO-XXXXX, an NFT is minted with the Issuer as owner
+- **Certificate**: issued when an Applicant successfully qualifies for an Accreditation, equivalent to certificates issued on paper, e.g. public examination transcript and certificate of a product achieving a quality standard, an NFT is minted with the Applicant as owner
 
 ## Methodology
 
@@ -59,6 +59,8 @@ The Solidity language is used to draft smart contracts, due to its widespread po
 
 The directory for this subsection is [`contracts/`](contract/contracts).
 
+The smart contracts in this project adopt a modular design, meaning that each contract shall only serve one specific purpose, making it more scalable and easier to maintain and debug. Each "microservice" apart from the endpoint contracts have implemented access control such that only explicitly authorized contract addresses can call functions from and interact with each contract.
+
 ##### Part 1.1.1: Types
 
 Types are defined in and imported from the [`contracts/types/`](contract/contracts/types) directory. 4 types are defined and used both internally, between contracts, and externally:
@@ -76,21 +78,19 @@ Storage of data is a vital part of the application. The data management system f
 
 Each internally used type has its own Storage system:
 
-<TODO: add descriptions for each Contract>
+- [`IssuerStorage`](contract/contracts/storage/users/IssuerStorage.sol)
+- [`ApplicantStorage`](contract/contracts/storage/users/ApplicantStorage.sol)
+- [`AccreditationStorage`](contract/contracts/storage/nft/AccreditationStorage.sol)
+- [`CertificateStorage`](contract/contracts/storage/nft/CertificateStorage.sol)
 
-- [`IssuerStorage`](contract/contracts/storage/users/IssuerStorage.sol):
-- [`ApplicantStorage`](contract/contracts/storage/users/ApplicantStorage.sol):
-- [`AccreditationStorage`](contract/contracts/storage/nft/AccreditationStorage.sol):
-- [`CertificateStorage`](contract/contracts/storage/nft/CertificateStorage.sol):
+The defined data structure is designed to mirror relational database paradigm to reduce storage costs and maintain data integrity.
 
 ##### Part 1.1.3: NFT
 
 Since every Certificate and Accreditation is issued or established in form of an NFT, the NFT Contracts will be implemented based on the ERC721 token standard. Specifically, 2 smart Contracts will inherit the ERC721 token implemented by OpenZeppelin:
 
-<TODO: add descriptions for each Contract>
-
-- [`CertificateNFT`](contract/contracts/nft/CertificateNFT.sol):
-- [`AccreditationNFT`](contract/contracts/nft/AccrediationNFT.sol):
+- [`CertificateNFT`](contract/contracts/nft/CertificateNFT.sol)
+- [`AccreditationNFT`](contract/contracts/nft/AccrediationNFT.sol)
 
 Note that despite both Certificates and Accreditations have NFT issued to their corresponding owners to signify ownership, Certificate NFTs are much more significant than Accreditation NFTs because the degree of accountability required for Certificate owners and handlers is much higher.
 
@@ -98,12 +98,10 @@ Note that despite both Certificates and Accreditations have NFT issued to their 
 
 To clearly segregate the responsibilities of each Contract, each Contract should only have one functionality. Hence, an endpoint Contract is created for each major use case. Functions in Contracts documented in above sections will not be callable by any addresses other than the explicitly authorized Contracts addresses. Instead, functions in these endpoint Contracts will serve as API endpoints or entry points to our system. The endpoint Contracts are as follows:
 
-<TODO: add descriptions for each Contract>
-
-- [`IssuerEndpoint`](contract/contracts/endpoints/IssuerEndpoint.sol):
-- [`ApplicantEndpoint`](contract/contracts/endpoints/ApplicantEndpoint.sol):
-- [`AccreditationEndpoint`](contract/contracts/endpoints/AccreditationEndpoint.sol):
-- [`CertificateEndpoint`](contract/contracts/endpoints/CertificateEndpoint.sol):
+- [`IssuerEndpoint`](contract/contracts/endpoints/IssuerEndpoint.sol)
+- [`ApplicantEndpoint`](contract/contracts/endpoints/ApplicantEndpoint.sol)
+- [`AccreditationEndpoint`](contract/contracts/endpoints/AccreditationEndpoint.sol)
+- [`CertificateEndpoint`](contract/contracts/endpoints/CertificateEndpoint.sol)
 
 ##### Part 1.1.5: Compilation
 
@@ -114,6 +112,8 @@ After compilation, 3 directories `contract/artifacts/`, `contract/cache/` and `f
 #### Part 1.2: Unit Testing with TypeScript
 
 TypeScript is used for unit testing due to compatibility with hardhat and the fact that similar code can be preliminarily tested and later reused for [front-end development](#part-2-front-end-interaction).
+
+The directory for this subsection is [`test/`](contract/test).
 
 Unit tests are written for each Storage, NFT, and Endpoint Contract, testing the correctness of functions defined in the smart Contracts.
 
@@ -140,15 +140,23 @@ In case of errors or overwritten contracts, clean up of compiled files can be pe
 
 During deployment, logs are generated, printed to console and saved into a log file at `/scripts/logs/`. The command `npm run clean:logs` can be used to delete all log files.
 
+A very simple "checking" script at [`/scripts/check.ts`](contract/scripts/check.ts) is created for easy and rudimentary testing on whether or not the smart contracts can be called and interacted with correctly from clients. The script simulates a simple live demo by calling Endpoint contract functions, and can be used as a seeding script with further fine-tuning. The command `npm run check:<insert environment>` can be used to execute this script.
+
 The command `npm run clean` can be used to clean up all generated files.
 
 ### Part 2: Front-end Interaction
 
-This Next.js project with TypeScript is initialized with the command `npx create-next-app@latest`.
+This Next.js project with TypeScript is initialized with the command `npx create-next-app@latest`, and is styled with the Material UI package.
+
+The page contains several pages for <TODO: add description>
+
+<TODO: add description on hook, context>
+
+An API endpoint is also designed to dynamically generate certificate image given a certificate ID.
 
 ### Part 3: Final Group Presentation
 
-The deliverables include a set of presentation slides, a group presentation where each member has 5 minutes, and a final project report. Upon completion of the project, the materials will be uploaded to [`presentation/`](presentation).
+The deliverables include a set of presentation slides, a live group presentation where each member has 5 minutes, and a final project report. The materials has been uploaded to [`presentation/`](presentation).
 
 ## Repository structure
 
@@ -156,28 +164,65 @@ The deliverables include a set of presentation slides, a group presentation wher
 - [`contract/`](contract): directory that stores a hardhat project with smart contracts written in Solidity
   - [`contracts/`](contract/contracts): directory that stores a Solidity smart contract source files
     - [`types/`](contract/contracts/types): directory that stores Solidity types used in the project
-      - <TODO: add descriptions>
+      - [`nft/`](contract/contracts/types/nft): directory that stores Solidity types for NFT entities
+        - [`Accreditation.sol`](contract/contracts/types/nft/Accreditation.sol): Accreditation type definition
+        - [`Certificate.sol`](contract/contracts/types/nft/Certificate.sol): Certificate type definition
+      - [`users/`](contract/contracts/types/users): directory that stores Solidity types for users
+        - [`Issuer.sol`](contract/contracts/types/users/Issuer.sol): Issuer type definition
+        - [`Applicant.sol`](contract/contracts/types/users/Applicant.sol): Applicant type definition
+      - [`CompleteCert.sol`](contract/contracts/types/CompleteCert.sol): a helper type that contains entire details for a certificate
     - [`storage/`](contract/contracts/storage): directory that stores storage contracts
-      - <TODO: add descriptions>
+      - [`nft/`](contract/contracts/storage/nft): directory that stores NFT entities data
+        - [`AccreditationStorage.sol`](contract/contracts/storage/nft/AccreditationStorage.sol): stores Accreditation data
+        - [`CertificateStorage.sol`](contract/contracts/storage/nft/CertificateStorage.sol): stores Certificate data
+      - [`users/`](contract/contracts/storage/users): directory that stores users data
+        - [`IssuerStorage.sol`](contract/contracts/storage/users/IssuerStorage.sol): stores Issuer data
+        - [`ApplicantStorage.sol`](contract/contracts/storage/users/ApplicantStorage.sol): stores Applicant data
     - [`nft/`](contract/contracts/nft): directory that stores NFT contracts
-      - <TODO: add descriptions>
+      - [`AccreditationNFT.sol`](contract/contracts/nft/AccreditationNFT.sol): Accreditation NFT contract compliant with the ERC721 standard
+      - [`CertificateNFT.sol`](contract/contracts/nft/CertificateNFT.sol): Certificate NFT contract compliant with the ERC721 standard
     - [`endpoints/`](contract/contracts/endpoints): directory that stores endpoint contracts
-      - <TODO: add descriptions>
+      - [`IssuerEndpoint.sol`](contract/contracts/endpoints/IssuerEndpoint.sol): endpoint contract containing Issuer functions
+      - [`ApplicantEndpoint.sol`](contract/contracts/endpoints/ApplicantEndpoint.sol): endpoint contract containing Applicant functions
+      - [`AccreditationEndpoint.sol`](contract/contracts/endpoints/AccreditationEndpoint.sol): endpoint contract containing Accreditation functions
+      - [`CertificateEndpoint.sol`](contract/contracts/endpoints/CertificateEndpoint.sol): endpoint contract containing Certificate functions
   - [`scripts/`](contract/scripts): directory that stores deployment and other miscellaneous scripts
     - [`deploy.ts`](contract/scripts/deploy.ts): script for deployment of contracts in [`contracts/`](contract/contracts) to blockchain
+    - [`check.ts`](contract/scripts/check.ts): script to simulate a live demo, can be used for seeding purposes
   - [`test/`](contract/test): directory that stores unit tests (each test file is one-to-one for each contract in [`contracts/`](contract/contracts), with the exception of type definition files in [`contracts/types/`](contract/contracts/types))
   - `.env`: stores sensitive environment variables (not committed to GitHub)
     - Copy from [`.env.example`](contract/.env.example) and add variable values
+  - [`hardhat.config.ts`](contract/hardhat.config.ts): stores environment settings and loads environment variables from `.env` for `hardhat` to use
 - [`frontend/`](frontend): directory that stores a Next.js project containing a simple UI to interact with deployed contracts from [`contract/`](contract) directory
   - [`src/`](frontend/src): directory that stores source code for the project
+    - [`components/`](frontend/src/components): directory that stores reusable component designs
     - [`pages/`](frontend/src/pages): directory that stores pages available in this Next.js app
-    - [`blockchain`](frontend/src/blockchain): directory that stores config data related to blockchain network and smart contract
-      - [`abi/`](frontend/src/blockchain/abi): directory that stores abi files copied from [`contract/`](contract)
+    - [`blockchain/`](frontend/src/blockchain): directory that stores config data related to blockchain network and smart contract
+      - [`abi/`](frontend/src/blockchain/abi): directory that stores ABI files copied from [`contract/`](contract)
+        - [`IssuerEndpoint.json`](frontend/src/blockchain/abi/IssuerEndpoint.json): ABI for IssuerEndpoint
+        - [`ApplicantEndpoint.json`](frontend/src/blockchain/abi/ApplicantEndpoint.json): ABI for ApplicantEndpoint
+        - [`AccreditationEndpoint.json`](frontend/src/blockchain/abi/AccreditationEndpoint.json): ABI for AccreditationEndpoint
+        - [`CertificateEndpoint.json`](frontend/src/blockchain/abi/CertificateEndpoint.json): ABI for CertificateEndpoint
       - [`contracts.config.ts`](frontend/src/blockchain/contracts.config.ts): stores blockchain name, RPC, deployed contract addresses
-    - [`types`](frontend/src/types): directory that stores types used in front-end
+    - [`contexts/`](frontend/src/contexts): directory that stores React contexts
+      - [`app.tsx`](frontend/src/contexts/app.tsx): context that saves user status
+    - [`hooks/`](frontend/src/hooks): directory that stores React hooks
+      - [`useMetaMask/`](frontend/src/hooks/useMetaMask): directory that stores the useMetaMask hook
+        - [`index.ts`](frontend/src/hooks/useMetaMask/index.ts): implementation of the useMetaMask hook. Essentially all interactions with the MetaMask browser extension and the blockchain are implemented here, only exposing high level descriptive function names to the frontend developers
+    - [`theme/`](frontend/src/theme): directory that stores MUI theme definition
+      - [`muiTheme.ts`](frontend/src/theme/muiTheme.ts): defines the Material UI theme for this project
+    - [`types/`](frontend/src/types): directory that stores types used in front-end
       - [`global.d.ts`](frontend/src/types/global.d.ts): defines ethereum in Window interface
       - [`index.ts`](frontend/src/types/index.ts): defines types and enums used in the project
+    - [`utils/`](frontend/src/utils/): directory that stores utility functions
+      - [`generateCertificate.ts`](frontend/src/utils/generateCertificate.ts): extracts the dynamic certificate generation process
+  - [`public/`](frontend/public): directory that stores statically served files
+    - [`img/`](frontend/public/img): directory that stores images used in the project
+      - [`certificate_template.png`](frontend/public/img/certificate_template.png): certificate template image
+      - [`certificate_template_smaller.png`](frontend/public/img/certificate_template_smaller.png): same certificate template image, but of smaller dimension
+      - [`certificate_template_even_smaller.png`](frontend/public/img/certificate_template_even_smaller.png): same certificate template image, but of even smaller dimension. This version is currently used to in dynamic certificate generation due to size limitation of Vercel deployment
 - [`presentation/`](presentation): directory that stores presentation slides & supplementary materials (if any) for the presentation, as well as the final report
+  - [`ISOM3000H_Presentation.pptx`](presentation/ISOM3000H_Presentation.pptx): PPT slides used in the final presentation
 
 ## Instructions
 
@@ -266,7 +311,7 @@ The deliverables include a set of presentation slides, a group presentation wher
 
 3. In [`frontend/`](frontend):
    1. Fill in the blockchain network and deployed contract information in [`contracts.config.ts`](frontend/src/blockchain/contracts.config.ts)
-   2. Copy the abi JSON files from `contract/artitacts/contracts/*`
+   2. Copy the abi JSON files for Endpoint contracts from `contract/artitacts/contracts/*` to [`frontend/src/blockchain/abi/`](frontend/src/blockchain/abi)
    3. Start the frontend by the command `npm run dev` or `npm start` and go to the [dev URL](http://localhost:3000)
 
 ## Useful URLs
