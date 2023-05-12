@@ -13,7 +13,11 @@ import type {
   Signer,
   utils,
 } from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
+import type {
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
@@ -38,7 +42,7 @@ export type ApplicantStructOutput = [string, string, BigNumber] & {
 export interface ApplicantEndpointInterface extends utils.Interface {
   functions: {
     "getApplicantByAddress(address)": FunctionFragment;
-    "registerApplicant(address,string)": FunctionFragment;
+    "registerApplicant(string)": FunctionFragment;
   };
 
   getFunction(
@@ -51,7 +55,7 @@ export interface ApplicantEndpointInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "registerApplicant",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [PromiseOrValue<string>]
   ): string;
 
   decodeFunctionResult(
@@ -63,8 +67,25 @@ export interface ApplicantEndpointInterface extends utils.Interface {
     data: BytesLike
   ): Result;
 
-  events: {};
+  events: {
+    "RegisterApplicant(address,string,uint256)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "RegisterApplicant"): EventFragment;
 }
+
+export interface RegisterApplicantEventObject {
+  applicantAddress: string;
+  name: string;
+  createdAt: BigNumber;
+}
+export type RegisterApplicantEvent = TypedEvent<
+  [string, string, BigNumber],
+  RegisterApplicantEventObject
+>;
+
+export type RegisterApplicantEventFilter =
+  TypedEventFilter<RegisterApplicantEvent>;
 
 export interface ApplicantEndpoint extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -99,7 +120,6 @@ export interface ApplicantEndpoint extends BaseContract {
     ): Promise<[ApplicantStructOutput]>;
 
     registerApplicant(
-      applicantAddress: PromiseOrValue<string>,
       name: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -111,7 +131,6 @@ export interface ApplicantEndpoint extends BaseContract {
   ): Promise<ApplicantStructOutput>;
 
   registerApplicant(
-    applicantAddress: PromiseOrValue<string>,
     name: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -123,13 +142,23 @@ export interface ApplicantEndpoint extends BaseContract {
     ): Promise<ApplicantStructOutput>;
 
     registerApplicant(
-      applicantAddress: PromiseOrValue<string>,
       name: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    "RegisterApplicant(address,string,uint256)"(
+      applicantAddress?: null,
+      name?: null,
+      createdAt?: null
+    ): RegisterApplicantEventFilter;
+    RegisterApplicant(
+      applicantAddress?: null,
+      name?: null,
+      createdAt?: null
+    ): RegisterApplicantEventFilter;
+  };
 
   estimateGas: {
     getApplicantByAddress(
@@ -138,7 +167,6 @@ export interface ApplicantEndpoint extends BaseContract {
     ): Promise<BigNumber>;
 
     registerApplicant(
-      applicantAddress: PromiseOrValue<string>,
       name: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -151,7 +179,6 @@ export interface ApplicantEndpoint extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     registerApplicant(
-      applicantAddress: PromiseOrValue<string>,
       name: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;

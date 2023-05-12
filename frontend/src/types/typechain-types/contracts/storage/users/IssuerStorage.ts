@@ -44,7 +44,7 @@ export interface IssuerStorageInterface extends utils.Interface {
     "createIssuer(address,string,string,string)": FunctionFragment;
     "getIssuerByAddress(address)": FunctionFragment;
     "isIssuerExists(address)": FunctionFragment;
-    "setAddresses(address,address)": FunctionFragment;
+    "setAddresses(address,address,address,address)": FunctionFragment;
   };
 
   getFunction(
@@ -74,7 +74,12 @@ export interface IssuerStorageInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setAddresses",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
   ): string;
 
   decodeFunctionResult(
@@ -144,7 +149,9 @@ export interface IssuerStorage extends BaseContract {
 
     setAddresses(
       accreditationStorageAddress: PromiseOrValue<string>,
+      certificateStorageAddress: PromiseOrValue<string>,
       issuerEndpointAddress: PromiseOrValue<string>,
+      certificateEndpointAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
@@ -169,7 +176,9 @@ export interface IssuerStorage extends BaseContract {
 
   setAddresses(
     accreditationStorageAddress: PromiseOrValue<string>,
+    certificateStorageAddress: PromiseOrValue<string>,
     issuerEndpointAddress: PromiseOrValue<string>,
+    certificateEndpointAddress: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -180,7 +189,7 @@ export interface IssuerStorage extends BaseContract {
       description: PromiseOrValue<string>,
       logoUrl: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<IssuerStructOutput>;
 
     getIssuerByAddress(
       inputAddress: PromiseOrValue<string>,
@@ -194,7 +203,9 @@ export interface IssuerStorage extends BaseContract {
 
     setAddresses(
       accreditationStorageAddress: PromiseOrValue<string>,
+      certificateStorageAddress: PromiseOrValue<string>,
       issuerEndpointAddress: PromiseOrValue<string>,
+      certificateEndpointAddress: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -222,7 +233,9 @@ export interface IssuerStorage extends BaseContract {
 
     setAddresses(
       accreditationStorageAddress: PromiseOrValue<string>,
+      certificateStorageAddress: PromiseOrValue<string>,
       issuerEndpointAddress: PromiseOrValue<string>,
+      certificateEndpointAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
@@ -248,7 +261,9 @@ export interface IssuerStorage extends BaseContract {
 
     setAddresses(
       accreditationStorageAddress: PromiseOrValue<string>,
+      certificateStorageAddress: PromiseOrValue<string>,
       issuerEndpointAddress: PromiseOrValue<string>,
+      certificateEndpointAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

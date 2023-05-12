@@ -68,6 +68,7 @@ export interface CertificateStorageInterface extends utils.Interface {
     "createCertificate(uint256,address,address,uint256,uint256,string,string,string)": FunctionFragment;
     "getCertificateById(uint256)": FunctionFragment;
     "getCertificatesByApplicantAddress(address)": FunctionFragment;
+    "isCertificateExists(uint256)": FunctionFragment;
     "setAddresses(address,address)": FunctionFragment;
   };
 
@@ -76,6 +77,7 @@ export interface CertificateStorageInterface extends utils.Interface {
       | "createCertificate"
       | "getCertificateById"
       | "getCertificatesByApplicantAddress"
+      | "isCertificateExists"
       | "setAddresses"
   ): FunctionFragment;
 
@@ -101,6 +103,10 @@ export interface CertificateStorageInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "isCertificateExists",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setAddresses",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
@@ -115,6 +121,10 @@ export interface CertificateStorageInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getCertificatesByApplicantAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "isCertificateExists",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -174,6 +184,11 @@ export interface CertificateStorage extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[CertificateStructOutput[]]>;
 
+    isCertificateExists(
+      id: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     setAddresses(
       certificateNFTAddress: PromiseOrValue<string>,
       certificateEndpointAddress: PromiseOrValue<string>,
@@ -203,6 +218,11 @@ export interface CertificateStorage extends BaseContract {
     overrides?: CallOverrides
   ): Promise<CertificateStructOutput[]>;
 
+  isCertificateExists(
+    id: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   setAddresses(
     certificateNFTAddress: PromiseOrValue<string>,
     certificateEndpointAddress: PromiseOrValue<string>,
@@ -231,6 +251,11 @@ export interface CertificateStorage extends BaseContract {
       inputAddress: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<CertificateStructOutput[]>;
+
+    isCertificateExists(
+      id: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     setAddresses(
       certificateNFTAddress: PromiseOrValue<string>,
@@ -264,6 +289,11 @@ export interface CertificateStorage extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    isCertificateExists(
+      id: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     setAddresses(
       certificateNFTAddress: PromiseOrValue<string>,
       certificateEndpointAddress: PromiseOrValue<string>,
@@ -291,6 +321,11 @@ export interface CertificateStorage extends BaseContract {
 
     getCertificatesByApplicantAddress(
       inputAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isCertificateExists(
+      id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
