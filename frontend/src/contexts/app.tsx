@@ -28,6 +28,7 @@ interface AppContextType {
 
   /** Data about a notification. */
   notification: Notification | undefined;
+  /** Whether the page currently has a notification. */
   hasNotification: boolean;
   /** Shows a notification at the top right corner. */
   showNotification: (notification: Notification) => void;

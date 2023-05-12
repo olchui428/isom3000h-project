@@ -148,15 +148,25 @@ The command `npm run clean` can be used to clean up all generated files.
 
 This Next.js project with TypeScript is initialized with the command `npx create-next-app@latest`, and is styled with the Material UI package.
 
-The page contains several pages for <TODO: add description>
+The page contains several pages for registering, launching and viewing accreditations, and issuing and viewing certificates. The typical workflow is as follows:
 
-<TODO: add description on hook, context>
+- Issuer:
+  1. Connect to MetaMask to login
+  2. Register as an issuer
+  3. Launch an accreditation
+  4. Issue a certificate to an applicant
+- Applicant:
+  1. Connect to MetaMask to login
+  2. Register as an applicant
+  3. View certificates that he/she has received
+- Outsider (Guest):
+  - Search an accreditation, issuer, certificate, or applicant
 
 An API endpoint is also designed to dynamically generate certificate image given a certificate ID.
 
 ### Part 3: Final Group Presentation
 
-The deliverables include a set of presentation slides, a live group presentation where each member has 5 minutes, and a final project report. The materials has been uploaded to [`presentation/`](presentation).
+The deliverables include a set of presentation slides, a live group presentation where each member has 5 minutes, and a final project report. The materials have been uploaded to [`presentation/`](presentation).
 
 ## Repository structure
 

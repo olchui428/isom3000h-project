@@ -98,28 +98,9 @@ const useMetaMask = () => {
     return provider.getSigner();
   }, [provider, address]);
 
-  // function will be called whenever the address changed
-  useEffect(() => {
-    if (provider) {
-      (async () => {
-        // // get latest candidate names
-        // const ballotContract = new ethers.Contract(
-        //   CONTRACT_ADDRESS,
-        //   abi,
-        //   provider
-        // );
-        // // get the list of candidates
-        // const results = await ballotContract.getResults();
-        // const endTime = ethers.utils.formatUnits(
-        //   await ballotContract.endTime(),
-        //   0
-        // );
-        // setEndTime(dayjs.unix(parseInt(endTime)).format("YYYY-MM-DD HH:mm:ss"));
-        // setCandidateResults(results);
-      })();
-    }
-  }, [provider /*, loading */]);
-
+  /**
+   * Logs in the user by connecting to MetaMask and getting the user's address.
+   */
   const login = async () => {
     const address = await connectToMetaMask();
     if (address) {
@@ -426,7 +407,6 @@ const useMetaMask = () => {
   };
 
   const generateCertificate = async (certificateId: number) => {
-    // TODO: refine
     try {
       return await axios.get(`/api/certificate/${certificateId}`);
     } catch (error) {
