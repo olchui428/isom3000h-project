@@ -233,6 +233,7 @@ The deliverables include a set of presentation slides, a live group presentation
       - [`certificate_template_even_smaller.png`](frontend/public/img/certificate_template_even_smaller.png): same certificate template image, but of even smaller dimension. This version is currently used to in dynamic certificate generation due to size limitation of Vercel deployment
 - [`presentation/`](presentation): directory that stores presentation slides & supplementary materials (if any) for the presentation, as well as the final report
   - [`ISOM3000H_Presentation.pptx`](presentation/ISOM3000H_Presentation.pptx): PPT slides used in the final presentation
+  - [`ISOM3000H_Report.docx`](presentation/ISOM3000H_Report.docx): final report of the project
 
 ## Instructions
 
